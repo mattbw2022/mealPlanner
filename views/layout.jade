@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    title= mealPlanner
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+  header 
+    h1 mealPlanner
+    nav 
+      li 
+        a(href='http://localhost:3000/meals') meals 
+      li 
+        a(href='http://localhost:3000/calendar') calendar
+      if authenticated === true
+        li
+          a(href='http://localhost:3000/profile') profile
+      else 
+        li 
+          a(href='http://localhost:3000/login') login
+          span    / 
+          a(href='http://localhost:3000/signup') sign up
+      
+      
+  block content

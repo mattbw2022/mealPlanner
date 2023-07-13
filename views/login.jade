@@ -1,0 +1,10 @@
+extends layout
+block content
+            form.login-form(action="./profile", method="get")
+                h1 Login
+                input#email(type="email", name="email", placeholder="Email") 
+                input#password(type="password", name="password", placeholder="Password")
+                button(type="submit") Login
+                p.login-text new user?
+                    span 
+                    a(href="http://localhost3000/signup") sign up  

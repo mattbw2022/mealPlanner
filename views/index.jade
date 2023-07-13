@@ -1,0 +1,9 @@
+extends layout
+block content
+  body
+    div
+      h2 Meal of the Day!
+        h3=meal.title
+        div.meal-card
+          img.meal-img( src=meal.image, alt=meal.imageAlt)
+
