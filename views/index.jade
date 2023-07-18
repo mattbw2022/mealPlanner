@@ -1,9 +1,9 @@
 extends layout
 block content
   body
-    div
+    div.meal-card
       h2 Meal of the Day!
         h3=meal.title
-        div.meal-card
+        div.meal-img-card
           img.meal-img( src=meal.image, alt=meal.imageAlt)
 

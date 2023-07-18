@@ -5,7 +5,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
   header 
-    h1 mealPlanner
+    h1 
+      a(href='http://localhost:3000/') mealPlanner
     nav 
       li 
         a(href='http://localhost:3000/meals') meals 
@@ -18,7 +19,7 @@ html
         li 
           a(href='http://localhost:3000/login') login
           span    / 
-          a(href='http://localhost:3000/signup') sign up
+          a(href='http://localhost:3000/register') sign up
       
       
   block content

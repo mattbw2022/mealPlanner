@@ -1,14 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
+
 body {
   margin: 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   display: grid;
   background-image: url(../images/steak.jpg);
   background-position: center;
   background-size: cover;
-}
-
-a {
-  color: #00B7FF;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* nav styling */
@@ -19,11 +17,13 @@ header {
   align-items: center;
   justify-content: space-between;
   background-color: black;
+  font-family: 'Open Sans', sans-serif;
 }
 
 header h1 {
   margin: 1em;
 }
+
 
 nav {
   display: flex;
@@ -36,12 +36,24 @@ nav {
 nav li{
   margin: 1em;
 }
+header a {
+  color: white;
+  text-decoration: none;
+}
+
+header a:hover{
+  color: gray;
+}
 
 /* index styling */
 
 .meal-card{
   max-height: 100%;  
   max-width: 20%;
+  color: white;
+  background-color: black;
+  margin: 5em 0 2em 5em;
+  padding: 2em;
 }
 
 .meal-img{
@@ -84,6 +96,12 @@ nav li{
   height: 2em;
   width: 50%;
   justify-self: center;
+  background-color: white;
+  border: none;
+}
+
+.login-form button:hover{
+  background-color: gainsboro;
 }
 
 .login-form button:hover{
