@@ -1,3 +1,25 @@
 extends layout
+block styles
+    link(rel="stylesheet", href="/stylesheets/register.css")
 block content
-    h1 Registration
+    form.register-form(action="/register", method="post") 
+        h1 Register
+        input.register-input(type="text", name="firstname", placeholder="First Name")
+        if noInput === "firstname"
+            p.err-msg First name is required
+        input.register-input(type="text", name="lastname", placeholder="Last Name")
+        if noInput === "lastname"
+            p.err-msg Last name is required
+        input.register-input(type="email", name="email", placeholder="Email")
+        if noInput === "email"
+            p.err-msg Email is required
+        input.register-input(type="password", name="password" placeholder="Password")
+        if noInput === "password"
+            p.err-msg Password is required 
+        if insecurePassword
+            p.err-msg Password Requirements: 
+            ul.err-msg 
+                li 12 characters long
+                li 1 capital letter 
+                li 1 special character 
+        button.register-button(type="submit") Sign Up

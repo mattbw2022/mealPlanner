@@ -1,39 +1,46 @@
 const pg = require('pg');
 const pool = require('./connection');
 
- 
-async function query (pool, query){
-    try {
-        const res = await pool.query(query);
-        console.log(res.rows)
-     } catch (err) {
-        console.error(err);
-     } finally {
-        await pool.end()
-     }
-}
 
 async function createUser(user){
-   
    try{
-      await pool.query(`INSERT users (firstname, lastname, email, password) VALUES(${user.firstname}, ${user.lastname}, ${user.email}, ${user.password})`)
+      let query = 'INSERT INTO public.users (firstname, lastname, email, password) VALUES ($1, $2, $3, $4)';
+      const values = [user.firstname, user.lastname, user.email, user.password];
+
+      await pool.query(query, values);
+      query = 'SELECT * FROM public.users WHERE email = $1::varchar';
+      const newUser = await pool.query(query, [user.email]);
+      return newUser;
 
    }catch(err){
       console.log(err);
    }
 }
 
-// const getUsers = async (request, response) => {
-//    pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
-//      if (error) {
-//        throw error
-//      }
-//      response.status(200).json(results.rows)
-//    })
-//  }
-
-const queries = {
-   createUser: createUser(),
+async function findUserByEmail(email){
+   query = 'SELECT * FROM public.users WHERE email = $1::varchar';
+   const results = await pool.query(query, [email]);
+   if (results.rows.length > 1){
+      console.log('duplicate emails!');
+   }
+   const user = results.rows[0];
+   return user;
 }
 
-modules.export = queries;
+async function findUserById(id){
+   query = 'SELECT * FROM public.users WHERE id = $1::varchar';
+   const results = await pool.query(query, [id]);
+   if (results.rows.length > 1){
+      console.log('duplicate id!');
+   }
+   const user = results.rows[0];
+   return user;
+}
+
+const queries = {
+   createUser: createUser,
+   findUserByEmail: findUserByEmail,
+   findUserById: findUserById
+}
+
+module.exports = queries;

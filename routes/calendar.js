@@ -1,7 +1,8 @@
 var express = require('express');
+const { ensureAuthentication } = require('../helper');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', ensureAuthentication, function(req, res, next) {
     res.render('calendar', undefined);
   });
 
