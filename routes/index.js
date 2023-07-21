@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const helper = require('../helper');
 
 const meals = [
   {image: 'images/kabob.jpg',
@@ -21,11 +22,10 @@ function randomIndex(max) {
   return Math.floor(Math.random() * max);
 }
 
-var authenticated = false;
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', {meal: meals[randomIndex(mealsNum)], authenticated: authenticated});
+  console.log(req.session);
+  res.render('index', {meal: meals[randomIndex(mealsNum)]});
 });
 
 module.exports = router;

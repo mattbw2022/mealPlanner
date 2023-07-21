@@ -2,19 +2,23 @@ doctype html
 html
   head
     title= mealPlanner
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    link(rel='stylesheet', href='/stylesheets/layout.css')
+    block styles
+  block body
+    body
   header 
     h1 
       a(href='http://localhost:3000/') mealPlanner
     nav 
       li 
         a(href='http://localhost:3000/meals') meals 
-      li 
-        a(href='http://localhost:3000/calendar') calendar
-      if authenticated === true
+      if authenticated
         li
           a(href='http://localhost:3000/profile') profile
+        li 
+          a(href='http://localhost:3000/calendar') calendar
+        li 
+          a(href='http://localhost:3000/logout') logout
       else 
         li 
           a(href='http://localhost:3000/login') login

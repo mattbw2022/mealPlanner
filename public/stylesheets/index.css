@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
+
+body {
+  background-color: rgb(255, 232, 164);
+}
+
+.meal-card{
+  max-height: 100%;  
+  max-width: 20%;
+  color: white;
+  background-color: black;
+  margin: 5em 0 2em 5em;
+  padding: 2em;
+}
+
+.meal-img{
+  max-width: 100%;
+  max-height: 100%;
+}
+

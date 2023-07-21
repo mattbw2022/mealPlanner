@@ -1,0 +1,92 @@
+body{
+    margin: 0;
+    display: grid;
+    background-image: url(../images/pizza.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+h1{
+    color: white;
+}
+
+.register-form{
+    display: grid;
+    width: 35%;
+    justify-self: center;
+    margin-top: 5%;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 2%;
+  }
+  
+  .register-form h1{
+    margin-top: 0;
+  }
+  
+  .register-form input {
+    height: 3em;
+    margin: 0.5em 0 0.5em 0;
+    width: 80%;
+    justify-self: center;
+  }
+  
+  .register-form input::placeholder {
+    text-align: center;
+    font-size: 1.5em;
+  }
+  
+  .err-msg{
+    color: red;
+    display: block;
+  }
+
+  ul.err-msg{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    margin-top: 0;
+  }
+  
+  .register-form button{
+    font-size: 1.5em;
+    margin-top: 0.5em;
+    height: 2em;
+    width: 50%;
+    justify-self: center;
+    background-color: white;
+    border: none;
+  }
+  
+  .register-form button:hover{
+    background-color: gainsboro;
+  }
+  
+  .register-form button:hover{
+    cursor: pointer;
+  }
+  
+  .register-text{
+    text-align: center;
+  }
+  
+  .register-text a{
+    text-decoration: none;
+    color: rgb(255, 232, 164);
+  }
+  
+  .register-text a:hover{
+    font-weight: bold;
+  }
+
+  .more-info{
+    border:solid;
+    background-color: white;
+  }
+
+  .special-chars{
+    display: none;
+  }

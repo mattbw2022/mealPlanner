@@ -1,10 +1,16 @@
 extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/login.css")
 block content
-            form.login-form(action="./profile", method="get")
+            form.login-form(action="/login", method="post")
                 h1 Login
-                input#email(type="email", name="email", placeholder="Email") 
+                input#email(type="email", name="email", placeholder="Email")
+                if noUser
+                    p.err-msg No user found. Please try again or sign up.
                 input#password(type="password", name="password", placeholder="Password")
+                if wrongPassword
+                    p.err-msg Incorrect password!
                 button(type="submit") Login
                 p.login-text new user?
                     span 
-                    a(href="http://localhost3000/signup") sign up  
+                    a(href="http://localhost:3000/register") sign up
