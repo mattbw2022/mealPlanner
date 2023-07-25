@@ -1,8 +1,15 @@
 
-function ensureAuthentication(req, res, next) {
+function isLoggedIn(req, res, next) {
     res.locals.authenticated = req.session.authenticated || false;
     next();
   }
+
+function ensureAuthentication(req, res, next){
+  if(!req.session.authenticated){
+    res.redirect('/login')
+  }
+  next();
+}
 
   
 function checkPasswordStrength(password){
@@ -37,6 +44,7 @@ function checkPasswordStrength(password){
 }
 
   module.exports = {
-    ensureAuthentication: ensureAuthentication,
-    checkPasswordStrength: checkPasswordStrength
+    isLoggedIn: isLoggedIn,
+    checkPasswordStrength: checkPasswordStrength,
+    ensureAuthentication: ensureAuthentication
   }

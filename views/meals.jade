@@ -1,4 +1,11 @@
 extends layout 
 body 
 block content 
-    h2 test meal
+    a(href="http://localhost:3000/meals/addMeals") addMeals
+    form(action="/meals/filter", method="post")  
+        label(for="cuisine") Cuisine 
+        select(name="cuisine")
+            option(value="") Select a cuisine
+
+        
+    input(type="text" placeholder="What's for dinner?" )  

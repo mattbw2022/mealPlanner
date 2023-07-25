@@ -1,0 +1,23 @@
+
+#newMeal{
+    justify-self: center;
+    display: grid;
+    width: 80%;
+}
+
+#ingredient-container{
+    display: flex;
+}
+
+.ingredients{
+    width: 100%;
+}
+
+.amounts{
+    width: 10%;
+}
+
+#addRow{
+    width: min-content;
+    justify-self: right;
+}

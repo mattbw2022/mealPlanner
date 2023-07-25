@@ -54,7 +54,7 @@ app.use(session({
   store: store,
 }));
 
-app.use(helper.ensureAuthentication);
+app.use(helper.isLoggedIn);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
