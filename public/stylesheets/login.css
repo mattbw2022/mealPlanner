@@ -34,10 +34,6 @@ body {
   font-size: 1.5em;
 }
 
-.err-msg{
-  color: red;
-  display: block;
-}
 
 .login-form button{
   font-size: 1.5em;

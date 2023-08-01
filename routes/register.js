@@ -7,9 +7,10 @@ const saltRounds = 10;
 
 let noInput;
 let insecurePassword = false;
+let emailInUse = false;
 
 router.get('/', function(req, res, next) {
-    res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
+     res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
   });
 
 router.post("/", async (req, res) => {
@@ -25,6 +26,17 @@ router.post("/", async (req, res) => {
     noInput = 'email'
     return res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
   }
+  const queryResult = await queries.allEmails();
+  queryResult.rows.forEach(element => {
+    if (element.email === req.body.email){
+      emailInUse = true;
+    }
+  });
+
+  if(emailInUse){
+    return res.render('register', {noInput: noInput , insecurePassword: insecurePassword, emailInUse:emailInUse});  
+  }
+
   if (!req.body.password){
     noInput = 'password'
     return res.render('register', );

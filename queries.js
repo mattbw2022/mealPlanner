@@ -1,4 +1,3 @@
-const pg = require('pg');
 const pool = require('./connection');
 
 
@@ -27,6 +26,12 @@ async function findUserByEmail(email){
    return user;
 }
 
+async function allEmails(){
+   query = 'SELECT email FROM users';
+   const results = await pool.query(query);
+   return results;
+}
+
 async function findUserById(id){
    query = 'SELECT * FROM public.users WHERE id = $1::varchar';
    const results = await pool.query(query, [id]);
@@ -37,10 +42,46 @@ async function findUserById(id){
    return user;
 }
 
+async function addMeal(meal, user_id, image, time){
+   try{
+      let query = 'INSERT INTO public.meals (user_id, title, ingredients, directions, tag_ids, image, time) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+      const values = [user_id, meal.title, meal.ingredients, meal.directions, meal.tags, image, time];
+
+      await pool.query(query, values);
+
+      query = 'SELECT * FROM public.meals WHERE user_id = $1::integer ORDER BY time DESC';
+      const newMeal = await pool.query(query, [user_id]);
+      return newMeal.rows[0];
+
+   }catch(err){
+      console.log(err);
+   }
+}
+
+// async function getMealImage(){
+//    'SELECT image FROM meals WHERE id = $1::varchar'
+// }
+
+async function getAllMeals(){
+   let query = `SELECT * FROM meals`;
+   const results = await pool.query(query);
+   return results.rows;
+}
+
+async function getTags(input){
+   let query = `SELECT * from tags WHERE type = $1`;
+   const results = await pool.query(query, [input]);
+   return results.rows;
+}
+
 const queries = {
    createUser: createUser,
    findUserByEmail: findUserByEmail,
-   findUserById: findUserById
+   findUserById: findUserById,
+   allEmails: allEmails,
+   addMeal: addMeal,
+   getAllMeals: getAllMeals,
+   getTags: getTags
 }
 
 module.exports = queries;
