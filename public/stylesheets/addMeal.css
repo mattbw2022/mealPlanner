@@ -21,3 +21,26 @@
     width: min-content;
     justify-self: right;
 }
+
+#tag-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.help-label{
+    display: none;
+}
+
+.tag-type-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.checklist{
+    display: flex;
+    margin: 0.5em 0;
+}
+
+.help{
+    margin-left: 1em;
+}

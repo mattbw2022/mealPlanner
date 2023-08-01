@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -9,6 +10,7 @@ var app = express();
 var passport = require('passport');
 const queries = require('./queries');
 const helper = require('./helper');
+
 
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {

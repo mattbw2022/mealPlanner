@@ -40,3 +40,9 @@ header {
   header a:hover{
     color: rgb(255, 232, 164);
   }
+
+  .err-msg{
+    color: red;
+    display: block;
+    margin-bottom: 0.5em;
+  }

@@ -7,16 +7,44 @@ block content
     - var ingredientsHelper = 'Example:\n1 large egg\n½ teaspoon salt\n½ teaspoon ground black pepper\n1 pound ground beef\n½ cup fine dry bread crumbs'
     - var instructionsHelper = 'Example:\n1)Make patties\n2)cook\n3)eat'
     h1 addmeals
-    form#newMeal(action="/meals/addMeals", method="post")
+    form#newMeal(action="/meals/addMeals", method="post", enctype="multipart/form-data")
         h2 Meal Title 
         input(type="text", name="title")
+        if isDuplicate === true
+            p.err-msg The meal title entered already exists, please choose another name.
         h2 Ingredients
         textarea#ingredients(name="ingredients", cols="30", rows="10", placeholder=ingredientsHelper)
         h2 Cooking Instructions 
         textarea#cookingInstruction(name="directions", cols="30", rows="10", placeholder=instructionsHelper)
+        h2 Tags (Optional)
+        div#tag-container
+            div.tag-type-container
+                h3 Cuisine
+                for cuisine in cuisineTags
+                    div.checklist
+                        input(type="checkbox", value=cuisine.id, name="tags") 
+                        label=cuisine.name
+            div.tag-type-container 
+                h3 Time
+                for time in timeTags
+                    div.checklist
+                        input(type="checkbox", value=time.id, name="tags") 
+                        label=time.name
+            div.tag-type-container
+                h3 Difficulty
+                for difficulty in difficultyTags
+                    div.checklist
+                        input(type="checkbox", value=difficulty.id, name="tags") 
+                        label=difficulty.name
+            div.tag-type-container 
+                h3 Category
+                for category in categoryTags
+                    div.checklist
+                        input(type="checkbox", value=category.id, name="tags") 
+                        label=category.name            
+                
+
         h2 Add a picture 
         <input type = "file" name = "image" accept = "image/*" />
-        h2 Add a video
-        <input type = "file" name = "upload" accept = "video/*" />
         button(type="submit") Add Meal
        

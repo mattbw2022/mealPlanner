@@ -33,4 +33,9 @@ router.post('/', async function(req, res, next) {
     }
 });
 
+router.get('/recoverPassword', (req, res, next) =>{
+  res.render('recoverPassword', undefined)
+});
+
+//add post route to handle user email entered. Will need messaging service to send email.
 module.exports = router;
