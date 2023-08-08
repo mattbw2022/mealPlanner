@@ -1,4 +1,41 @@
 extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/profile.css")
 block content
-    h1 profile
-    img(src=profileImg, alt="profile picture")
+    - var welcome = "Welcome " + firstName
+    - var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+    div#welcome
+        h1=welcome
+        img.profile-img(src=profileImg, alt="profile picture")
+    div#my-week-container
+        h2 myWeek
+        div#week-container
+            each day, i in days
+                - var isDayActive = (dayOfWeek === day)
+                div.day(class=isDayActive ? 'active' : '')
+                    h3=days[i]
+                    if weekOfMeals[i] === 0
+                        a(href='/meals') add a meal
+                    if weekOfMeals[i].length === 0
+                        a(href='/meals') add a meal
+                    else
+                        for meal in weekOfMeals[i]
+                            form.dailyMeal(action="profile/removeMeal/" + meal.id + "/" + userWeek[i].day_id, method="post")
+                                a(href="/meals/individualMeal/" + meal.id)=meal.title
+                                img(src=meal.image)
+                                button(type="submit", value=meal.id) -
+                            a(href='/meals') add a meal
+
+                           
+    div#card-container 
+        div.profile-card
+            h2 myMeals
+            div.meal
+                h3 title 
+                img(src="/images/steak.jpg", alt="meal image")
+        div.profile-card
+            h2 myGroups
+        div.profile-card
+            h2 myFriends
+

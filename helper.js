@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const { env } = require('process');
+
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESSKEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -7,7 +8,6 @@ AWS.config.update({
 });
 
 const S3 = new AWS.S3();
-const bucketName = 'mealplanner-meal-images';
 
 function isLoggedIn(req, res, next) {
     res.locals.authenticated = req.session.authenticated || false;
@@ -55,7 +55,7 @@ function checkPasswordStrength(password){
 
 
 const s3 = new AWS.S3();
-async function getSignedUrl(key) {
+async function getSignedUrl(key, bucketName) {
   try {
     const expiration = 3600;
     const params = {

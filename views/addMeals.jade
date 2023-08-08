@@ -10,12 +10,18 @@ block content
     form#newMeal(action="/meals/addMeals", method="post", enctype="multipart/form-data")
         h2 Meal Title 
         input(type="text", name="title")
+        if noTitle === true 
+            p.err-msg A meal title is required.
         if isDuplicate === true
             p.err-msg The meal title entered already exists, please choose another name.
         h2 Ingredients
         textarea#ingredients(name="ingredients", cols="30", rows="10", placeholder=ingredientsHelper)
+        if noIngredients === true
+            p.err-msg Ingredients are required.
         h2 Cooking Instructions 
         textarea#cookingInstruction(name="directions", cols="30", rows="10", placeholder=instructionsHelper)
+        if noDirections === true 
+            p.err-msg Instructions are required.
         h2 Tags (Optional)
         div#tag-container
             div.tag-type-container

@@ -46,3 +46,8 @@ header {
     display: block;
     margin-bottom: 0.5em;
   }
+  
+  .profile-img{
+    width: 3em;
+    height: 3em;
+  }

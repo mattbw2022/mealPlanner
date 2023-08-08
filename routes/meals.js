@@ -8,7 +8,8 @@ const fs = require('fs');
 const multer = require('multer');
 const query = require('../queries');
 const path = require('path');
-const { all } = require('./login');
+const { all, options } = require('./login');
+const calendar = require('../calendar');
 
 
 AWS.config.update({
@@ -33,51 +34,58 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-let isDuplicate = false;
-let mealImages = [];
 router.get('/', async function(req, res, next) {
+    let mealImages = [];
+
     const allMeals = await query.getAllMeals();
     allMeals.forEach(async (meal) => {
-      mealImages.push(await helper.getSignedUrl(meal.image));
+      mealImages.push(await helper.getSignedUrl(meal.image, bucketName));
     });
     console.log(mealImages);
-    res.render('meals', {allMeals:allMeals, mealImages:mealImages});
+    setTimeout(()=>{
+      res.render('meals', {allMeals:allMeals, mealImages:mealImages});
+    }, 250);
   });
 
 router.get('/addMeals', helper.ensureAuthentication, async function(req, res, next){
-
-  const cuisineTags = await query.getTags('cuisine');
-  const timeTags = await query.getTags('time');
-  const difficultyTags = await query.getTags('difficulty');
-  const categoryTags = await query.getTags('category');
-
-  res.render('addMeals', {cuisineTags:cuisineTags, timeTags:timeTags, difficultyTags:difficultyTags, categoryTags:categoryTags});
+  let options = await query.getAllTags();
+  options.noTitle = false;
+  options.isDuplicate = false;
+  options.noIngredients = false;
+  options.noDirections = false;
+  console.log(options);
+  res.render('addMeals', options);
 });
 
 router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'upload', maxCount: 1 }]), async function(req, res, next){
+  let filename;
   const meal = req.body;
-  console.log(meal);
+  let options = await query.getAllTags();
+  options.noTitle = false;
+  options.isDuplicate = false;
+  options.noIngredients = false;
+  options.noDirections = false;
+
   if(!meal.title){
-    console.log('no title')
-    return res.redirect('addMeals');
+    options.noTitle = true;
+    return res.render('addMeals', options);
   }
   const allMeals = await query.getAllMeals();
   // Check for duplicate title
   const duplicateMeal = allMeals.filter(currentMeal => currentMeal.title.toLowerCase() === meal.title.toLowerCase());
   if (duplicateMeal.length >= 1){
     console.log(duplicateMeal.length)
-    isDuplicate = true;
-    return res.render('addMeals', {isDuplicate: isDuplicate})
+    options.isDuplicate = true;
+    return res.render('addMeals', options)
   }
 
   if(!meal.ingredients){
-    console.log('no ingredients')
-
-    return res.redirect('addMeals');
+    options.noIngredients = true;
+    return res.render('addMeals', options);
   }
   if(!meal.directions){
-    console.log('no directions')
-    return res.redirect('addMeals');
+    options.noDirections = true;
+    return res.render('addMeals', options);
   }
 
       // Check if the uploaded image exists and read it
@@ -99,8 +107,7 @@ router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: '
             fs.unlinkSync(imageFile.path); 
             return res.status(400).json({ error: 'File size exceeds the allowed limit.' });
         }
-
-        const filename = `meal-image-${Date.now()}.${fileInfo.ext}`;
+        filename = `meal-image-${Date.now()}.${fileInfo.ext}`;
         const params = {
           Bucket: bucketName,
           Key: filename,
@@ -116,29 +123,61 @@ router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: '
           // Clean up temp file
           fs.unlinkSync(imageFile.path);
         });
-
+        
     }
 
     else{
       filename = 'yum-default.png'
     }
-
-
+    
     const time = Date.now();
+    const newMeal = await query.addMeal(meal, req.session.user.id, filename, time);
+
     //function to add the new meal
     setTimeout(async () => {
-      const newMeal = await query.addMeal(meal, req.session.user.id, filename, time);
-
-      console.log(newMeal)
       //function to get the signed link
-      const mealImg = await helper.getSignedUrl(newMeal.image);
-      console.log(mealImg);
-      console.log(typeof mealImg);
+      const mealImg = await helper.getSignedUrl(newMeal.image, bucketName);
       const mealTitle = newMeal.title;
-      console.log(newMeal.title);
       res.render('mealAdded', {mealImg:mealImg, mealTitle:mealTitle});
-    }, 500);
+    }, 1000);
 
 
 });
+
+router.get('/individualMeal/:meal_id', async function (req, res, next) {
+  const userBucket = 'mealplanner-profile-images';
+  const mealBucket = 'mealplanner-meal-images';
+  let options = {};
+
+  const meal_id = req.params.meal_id;
+  const mealDetails = await query.getMealById(meal_id);
+  const creatorInfo = await query.findUserById(mealDetails.user_id);
+
+  options.firstName = creatorInfo.firstname;
+  options.lastName = creatorInfo.lastname;
+  options.userImage = await helper.getSignedUrl(creatorInfo.profile_img, userBucket);
+
+  options.title = mealDetails.title;
+  options.ingredients = mealDetails.ingredients;
+  options.directions = mealDetails.directions;
+  options.mealImage = await helper.getSignedUrl(mealDetails.image, mealBucket);
+  let timestamp = helper.createTimestamp(parseInt(mealDetails.time));
+  const date = calendar.getDate(timestamp);
+  options.date = calendar.getFormatedDate(date);
+
+  let tagArray = [];
+  let tagObj;
+  console.log(mealDetails.tag_ids);
+  if (mealDetails.tag_ids) {
+    for (let i = 0; i < mealDetails.tag_ids.length; i++){
+      tagObj = await query.getTagsById(mealDetails.tag_ids[i]);
+      console.log(tagObj[0].name);
+      tagArray.push(tagObj[0].name);
+    }
+  }
+  options.tags = tagArray;
+  console.log(options);
+  res.render('individualMeal', options);
+});
+
 module.exports = router;

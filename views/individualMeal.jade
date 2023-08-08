@@ -1,0 +1,16 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/individualMeal.css")
+block content
+    - var credit = `Added by ${firstName} ${lastName}`
+    h1=title
+    img(src=mealImage alt='picture of meal or default image')
+    h2=credit
+        span 
+        img(src=userImage alt='user profile picture')
+    p=date 
+    p=ingredients 
+    p=directions 
+    ul 
+    for tag in tags 
+        li=tag

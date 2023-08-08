@@ -50,20 +50,21 @@ router.post("/", async (req, res) => {
     }
     }
   
-
   let user = req.body;
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(user.password, salt);
   user.password = hash;
   const newUser = await queries.createUser(user);
+  console.log(newUser);
   if (newUser) {
     
     req.session.authenticated = true;
     req.session.user= {
-      id: user.id,
+      id: newUser.id,
       sessionID: req.sessionID
     }
 
+    queries.populateCalendarForNewUser(req.session.user.id);
     res.redirect('/profile');
   } else {
     res.status(500).json({ msg: "Unable to create user" });

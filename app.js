@@ -11,7 +11,6 @@ var passport = require('passport');
 const queries = require('./queries');
 const helper = require('./helper');
 
-
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {
   done(null, user.id);
