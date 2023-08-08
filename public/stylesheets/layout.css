@@ -15,6 +15,10 @@ header {
     background-color: black;
     font-family: 'Open Sans', sans-serif;
   }
+
+  button {
+    font-family: 'Open Sans', sans-serif;
+  }
   
   header h1 {
     margin: 1em;
@@ -45,4 +49,11 @@ header {
     color: red;
     display: block;
     margin-bottom: 0.5em;
+  }
+  
+  .profile-img{
+    width: 4%;
+    border: solid;
+    border-color: black;
+    border-radius: 2em;
   }

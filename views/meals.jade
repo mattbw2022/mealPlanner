@@ -1,7 +1,8 @@
-extends layout 
-body 
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/meals.css")
 block content 
-    a(href="http://localhost:3000/meals/addMeals") addMeals
+    a(href="http://localhost:3000/meals/createMeal") createMeal
     form(action="/meals/filter", method="post")  
         h2 Need to add filter section
 
@@ -9,6 +10,6 @@ block content
     input(type="text" placeholder="What's for dinner?" )
 
     each meal, i in allMeals
-        img(src=mealImages[i], alt=meal.title)
-        p=meal.title
-        p=i
+        form(action="") 
+            img.meal-img(src=mealImages[i], alt=meal.title)
+            p=meal.title
