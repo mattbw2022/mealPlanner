@@ -24,7 +24,7 @@ block content
                             form.dailyMeal(action="profile/removeMeal/" + meal.id + "/" + userWeek[i].day_id, method="post")
                                 a(href="/meals/individualMeal/" + meal.id)=meal.title
                                 img(src=meal.image)
-                                button(type="submit", value=meal.id) -
+                                button(type="submit", value=meal.id) Remove
                             a(href='/meals') add a meal
 
                            

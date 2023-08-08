@@ -6,8 +6,8 @@ block scripts
 block content 
     - var ingredientsHelper = 'Example:\n1 large egg\n½ teaspoon salt\n½ teaspoon ground black pepper\n1 pound ground beef\n½ cup fine dry bread crumbs'
     - var instructionsHelper = 'Example:\n1)Make patties\n2)cook\n3)eat'
-    h1 addmeals
-    form#newMeal(action="/meals/addMeals", method="post", enctype="multipart/form-data")
+    h1 createMeal
+    form#newMeal(action="/meals/createMeal", method="post", enctype="multipart/form-data")
         h2 Meal Title 
         input(type="text", name="title")
         if noTitle === true 

@@ -47,17 +47,17 @@ router.get('/', async function(req, res, next) {
     }, 250);
   });
 
-router.get('/addMeals', helper.ensureAuthentication, async function(req, res, next){
+router.get('/createMeal', helper.ensureAuthentication, async function(req, res, next){
   let options = await query.getAllTags();
   options.noTitle = false;
   options.isDuplicate = false;
   options.noIngredients = false;
   options.noDirections = false;
   console.log(options);
-  res.render('addMeals', options);
+  res.render('createMeal', options);
 });
 
-router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'upload', maxCount: 1 }]), async function(req, res, next){
+router.post('/createMeal',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'upload', maxCount: 1 }]), async function(req, res, next){
   let filename;
   const meal = req.body;
   let options = await query.getAllTags();
@@ -68,7 +68,7 @@ router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: '
 
   if(!meal.title){
     options.noTitle = true;
-    return res.render('addMeals', options);
+    return res.render('createMeal', options);
   }
   const allMeals = await query.getAllMeals();
   // Check for duplicate title
@@ -76,16 +76,16 @@ router.post('/addMeals',upload.fields([{ name: 'image', maxCount: 1 }, { name: '
   if (duplicateMeal.length >= 1){
     console.log(duplicateMeal.length)
     options.isDuplicate = true;
-    return res.render('addMeals', options)
+    return res.render('createMeal', options)
   }
 
   if(!meal.ingredients){
     options.noIngredients = true;
-    return res.render('addMeals', options);
+    return res.render('createMeal', options);
   }
   if(!meal.directions){
     options.noDirections = true;
-    return res.render('addMeals', options);
+    return res.render('createMeal', options);
   }
 
       // Check if the uploaded image exists and read it

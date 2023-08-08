@@ -14,6 +14,11 @@
     justify-content: space-evenly;
     margin-bottom: 3em;
 }
+
+#my-week-container{
+    border: solid;
+    margin: 1em;
+}
 #my-week-container h2{
     text-align: center;
 }
@@ -23,12 +28,44 @@
     border: solid;
     background-color: black;
     width: 12%;
+    height: fit-content;
     text-align: center;
+    padding-bottom: 1em;
 }
+
+.day h3{
+    margin: 0.5em, 0;
+}
+
+.day a{
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.5em;
+    font-weight: 100;
+}
+
+.day a:visited{
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.5em;
+}
+
+.day a:hover{
+    color: rgb(255, 232, 164);
+}
+
 
 .active{
     color: black;
     background-color: rgb(255, 232, 164);
+}
+
+.day.active a{
+    color: black;
+}
+
+.active a:hover{
+    color: white
 }
 
 
@@ -52,20 +89,35 @@
 }
 
 .dailyMeal{
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .dailyMeal p{
-    justify-self: center;
     font-weight: bold;
     margin-bottom: 0.25em;
 }
 
 .dailyMeal img{
-    justify-self: center;
+    border: solid;
+    border-radius: 2em;
+    color: white;
     width: 75%;
 }
 .dailyMeal button{
-    justify-self: center;
-    width: 50%;
+    font-size: 1em;
+    margin: 0.5em 0;
+    border: solid;
+    border-radius: 2em;
+    border-color: rgb(255, 232, 164);
+    color: black;
+    background-color: white;
+
+}
+.dailyMeal button:hover{
+    cursor: pointer;
+    background-color: black;
+    color: white;
 }
