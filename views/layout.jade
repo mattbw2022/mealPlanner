@@ -9,22 +9,24 @@ html
     body
   header 
     h1 
-      a(href='http://localhost:3000/') mealPlanner
+      a(href='/') mealPlanner
     nav 
       li 
-        a(href='http://localhost:3000/meals') meals 
+        a(href='/meals') meals 
       if authenticated
         li
-          a(href='http://localhost:3000/profile') profile
+          a(href='/profile') profile
         li 
-          a(href='http://localhost:3000/calendar') calendar
+          a(href='/calendar') calendar
         li 
-          a(href='http://localhost:3000/logout') logout
+          a(href='/logout') logout
       else 
         li 
-          a(href='http://localhost:3000/login') login
+          a(href='/login') login
           span    / 
-          a(href='http://localhost:3000/register') sign up
-      
-      
+          a(href='/register') sign up
+
+  if messages.error
+    .error-box
+      p.error-message= messages.error
   block content

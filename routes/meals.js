@@ -1,5 +1,6 @@
 var express = require('express');
 const AWS = require('aws-sdk');
+const sharp = require('sharp');
 const bodyParser = require('body-parser');
 var router = express.Router();
 var helper = require('../helper');
@@ -35,17 +36,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/', async function(req, res, next) {
-    let mealImages = [];
-
-    const allMeals = await query.getAllMeals();
-    allMeals.forEach(async (meal) => {
-      mealImages.push(await helper.getSignedUrl(meal.image, bucketName));
-    });
-    console.log(mealImages);
-    setTimeout(()=>{
-      res.render('meals', {allMeals:allMeals, mealImages:mealImages});
-    }, 250);
+    let options = {};
+    options.allTags = await query.getAllTags();
+    options.allMeals = await query.getAllMeals();
+    helper.renderAllMeals(res, options);
   });
+
+router.post('/search', async function(req, res, next){
+  let options = {};
+  const search = req.body.search;
+  const searchResults = await query.getMealsContaining(search);
+  options.allMeals = searchResults;
+  options.allTags = await query.getAllTags();
+  options.search = search;
+  helper.renderAllMeals(res, options);
+
+});
 
 router.get('/createMeal', helper.ensureAuthentication, async function(req, res, next){
   let options = await query.getAllTags();
@@ -53,7 +59,6 @@ router.get('/createMeal', helper.ensureAuthentication, async function(req, res, 
   options.isDuplicate = false;
   options.noIngredients = false;
   options.noDirections = false;
-  console.log(options);
   res.render('createMeal', options);
 });
 
@@ -74,7 +79,6 @@ router.post('/createMeal',upload.fields([{ name: 'image', maxCount: 1 }, { name:
   // Check for duplicate title
   const duplicateMeal = allMeals.filter(currentMeal => currentMeal.title.toLowerCase() === meal.title.toLowerCase());
   if (duplicateMeal.length >= 1){
-    console.log(duplicateMeal.length)
     options.isDuplicate = true;
     return res.render('createMeal', options)
   }
@@ -107,11 +111,26 @@ router.post('/createMeal',upload.fields([{ name: 'image', maxCount: 1 }, { name:
             fs.unlinkSync(imageFile.path); 
             return res.status(400).json({ error: 'File size exceeds the allowed limit.' });
         }
+
+          // Resize the image while maintaining aspect ratio
+        const targetAspectRatio = 4 / 3; // For example, a 16:9 aspect ratio
+        const targetWidth = 800; // Your desired width
+
+        const targetHeight = Math.round(targetWidth / targetAspectRatio);
+        const resizedImageBuffer = await sharp(buffer)
+        .resize({
+          width: targetWidth, // Replace with your desired width
+          height: targetHeight, // Replace with your desired height
+          fit: sharp.fit.cover,
+          withoutEnlargement: true,
+        })
+        .toBuffer();
+
         filename = `meal-image-${Date.now()}.${fileInfo.ext}`;
         const params = {
           Bucket: bucketName,
           Key: filename,
-          Body: buffer,
+          Body: resizedImageBuffer,
           ContentType: imageFile.mimetype,
         };
         
@@ -129,7 +148,6 @@ router.post('/createMeal',upload.fields([{ name: 'image', maxCount: 1 }, { name:
     else{
       filename = 'yum-default.png'
     }
-    
     const time = Date.now();
     const newMeal = await query.addMeal(meal, req.session.user.id, filename, time);
 
@@ -167,16 +185,13 @@ router.get('/individualMeal/:meal_id', async function (req, res, next) {
 
   let tagArray = [];
   let tagObj;
-  console.log(mealDetails.tag_ids);
   if (mealDetails.tag_ids) {
     for (let i = 0; i < mealDetails.tag_ids.length; i++){
       tagObj = await query.getTagsById(mealDetails.tag_ids[i]);
-      console.log(tagObj[0].name);
       tagArray.push(tagObj[0].name);
     }
   }
   options.tags = tagArray;
-  console.log(options);
   res.render('individualMeal', options);
 });
 

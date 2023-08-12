@@ -10,6 +10,8 @@ var app = express();
 var passport = require('passport');
 const queries = require('./queries');
 const helper = require('./helper');
+const flash = require('connect-flash');
+
 
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {
@@ -55,8 +57,13 @@ app.use(session({
   store: store,
 }));
 
-app.use(helper.isLoggedIn);
+app.use(flash());
 
+app.use(helper.isLoggedIn);
+app.use((req, res, next) => {
+  res.locals.messages = req.flash();
+  next();
+});
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var mealsRouter = require('./routes/meals');

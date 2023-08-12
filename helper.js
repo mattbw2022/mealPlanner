@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const { env } = require('process');
+const query = require('./queries');
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESSKEY_ID,
@@ -14,12 +15,16 @@ function isLoggedIn(req, res, next) {
     next();
   }
 
-function ensureAuthentication(req, res, next){
-  if(!req.session.authenticated){
-    res.redirect('/login')
+  function ensureAuthentication(req, res, next) {
+    if (!req.session.authenticated || !req.session.user || !req.session.user.id) {
+      req.flash('error', 'You must be logged in to add meals to a calendar or create meals.');
+      return res.redirect('/login');
+    }
+    next();
+
   }
-  next();
-}
+  
+  
 
   
 function checkPasswordStrength(password){
@@ -85,10 +90,23 @@ function createTimestamp(milliseconds) {
 }
 
 
+async function renderAllMeals(res, options){
+  const bucketName = 'mealplanner-meal-images';
+
+  options.mealImages = [];
+  options.allMeals.forEach(async (meal) => {
+    options.mealImages.push(await getSignedUrl(meal.image, bucketName));
+  });
+  setTimeout(()=>{
+    res.render('meals', {options});
+  }, 250);
+}
+
   module.exports = {
     isLoggedIn: isLoggedIn,
     checkPasswordStrength: checkPasswordStrength,
     ensureAuthentication: ensureAuthentication,
+    renderAllMeals: renderAllMeals,
     getSignedUrl: getSignedUrl,
     createTimestamp:createTimestamp
   }

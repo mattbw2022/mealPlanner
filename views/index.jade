@@ -5,7 +5,15 @@ block content
   body
     div.meal-card
       h2 Meal of the Day!
-        h3=meal.title
-        div.meal-img-card
-          img.meal-img( src=meal.image, alt=meal.imageAlt)
-
+      a#random-meal-link(href="/meals/individualMeal/" + options.randomMealId)=options.randomMealName
+      div.meal-img-card
+        img.meal-img( src=options.randomMealImg, alt=options.randomMealName)
+  .new-meal-tracker-container 
+    h2 New Meals 
+  .newsfeed-container 
+    h2 Newsfeed
+    for article in options.articles
+      div.news-article
+        a(href=article.url)=article.title
+        img(src=article.img)
+      

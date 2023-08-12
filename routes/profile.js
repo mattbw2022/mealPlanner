@@ -10,6 +10,9 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     let options = {};
     let mealIds = [];
     //get user_id and retrieve firstname
+    if (!req.session.user.id){
+      res.redirect('/login');
+    }
     const userId = req.session.user.id;
     const activeUser = await query.findUserById(userId);
     options.firstName = activeUser.firstname;
@@ -59,8 +62,6 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
         }
       }
     }
-    console.log(options.weekOfMeals);
-    console.log(options.userWeek);
     setTimeout(() => {
       res.render('profile', options);
     }, 250);    
@@ -73,7 +74,6 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
   const userId = req.session.user.id;
   const dayId = req.params.day_id;
 
-  console.log(`mealID: ${mealId}\nuserId: ${userId}\ndayId: ${dayId}`);
   query.removeMealFromCalendar(userId, mealId, dayId);
   res.redirect('/profile');
 });

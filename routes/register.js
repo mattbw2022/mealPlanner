@@ -55,7 +55,6 @@ router.post("/", async (req, res) => {
   const hash = bcrypt.hashSync(user.password, salt);
   user.password = hash;
   const newUser = await queries.createUser(user);
-  console.log(newUser);
   if (newUser) {
     
     req.session.authenticated = true;

@@ -43,10 +43,37 @@ async function findUserById(id){
    return user;
 }
 
-async function addMeal(meal, user_id, image, time){
+async function addToCalendar(day, month, year, user_id, meal_id){
    try{
-      let query = 'INSERT INTO public.meals (user_id, title, ingredients, directions, tag_ids, image, time) VALUES ($1, $2, $3, $4, $5, $6, $7)';
-      const values = [user_id, meal.title, meal.ingredients, meal.directions, meal.tags, image, time];
+         let query = `UPDATE calendars
+         SET meal_ids = array_append(meal_ids, $1)
+         WHERE user_id = $2
+         AND day = $3
+         AND month = $4
+         AND year = $5`;
+         let values = [meal_id, user_id, day, month, year];
+         await pool.query(query, values);
+         return 0;
+   }
+   catch(error){
+      return 'Querry error';
+   }
+}
+
+async function addMeal(meal, user_id, image, time){
+   let tagIds;
+   try{
+      if (meal.tags){
+         if (meal.tags.length > 1){
+            tagIds = meal.tags.map(tag => parseInt(tag, 10)); 
+         }
+         else{
+            tagIds = [parseInt(meal.tags, 10)];
+         }
+      }
+
+      query = 'INSERT INTO public.meals (user_id, title, ingredients, directions, tag_ids, image, time) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+      const values = [user_id, meal.title, meal.ingredients, meal.directions, tagIds, image, time];
 
       await pool.query(query, values);
 
@@ -117,8 +144,6 @@ async function populateCalendarForNewUser(userId) {
          try {
            await pool.query(query, values);
            dayId++;
-           console.log(dayId);
-           console.log(`Row inserted for ${month}/${day}/${year}`);
          } catch (error) {
            console.error('Error populating calendar:', error);
          }
@@ -140,11 +165,19 @@ async function populateCalendarForNewUser(userId) {
    return results.rows[0];
  }
 
+ async function getMealsContaining(search){
+   let query = `SELECT * FROM meals
+                  WHERE title LIKE $1
+                  OR ingredients LIKE $1
+                  OR directions LIKE $1`;
+   const results = await pool.query(query, [`%${search}%`]);
+   return results.rows;
+ }
+
 
  async function getUserWeek(day_id, user_id, dayOfWeek){
    let starting_id;
    let ending_id;
-   console.log(dayOfWeek);
    switch(dayOfWeek){
       case 'Monday':
         starting_id = day_id
@@ -199,7 +232,9 @@ const queries = {
    findUserById: findUserById,
    allEmails: allEmails,
    addMeal: addMeal,
+   addToCalendar:addToCalendar,
    getAllMeals: getAllMeals,
+   getMealsContaining:getMealsContaining,
    getMealById:getMealById,
    getTagsByType: getTagsByType,
    getTagsById:getTagsById,

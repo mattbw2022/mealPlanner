@@ -6,6 +6,7 @@ body{
     font-family: 'Open Sans', sans-serif;
 }
 
+
 header {
     color: white;
     display: flex;
@@ -57,3 +58,48 @@ header {
     border-color: black;
     border-radius: 2em;
   }
+
+  .error-box {
+    background-color: #ffcccc;
+    border: 1px solid #ff0000;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .error-message {
+    color: #ff0000;
+    font-weight: bold;
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.5em;
+  }
+  a:visited{
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.5em;
+  }
+
+  a:hover{
+      color: rgb(255, 232, 164);
+      cursor: pointer;
+  }
+  
+  button{
+    font-size: 1em;
+    margin: 0.5em 0;
+    border: solid;
+    border-radius: 2em;
+    border-color: rgb(255, 232, 164);
+    color: black;
+    background-color: white;
+
+}
+  button:hover{
+    cursor: pointer;
+    background-color: rgb(255, 232, 164);
+    color: black;
+}
