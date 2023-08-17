@@ -101,6 +101,7 @@ async function getTagsByType(input){
 async function getTagsById(tag_id){
    let query = `SELECT * FROM tags WHERE id = $1`;
    const results = await pool.query(query, [tag_id]);
+   console.log(results.rows);
    return results.rows;
 }
 
@@ -174,6 +175,28 @@ async function populateCalendarForNewUser(userId) {
    return results.rows;
  }
 
+ async function getMealsByTag(tag_arr){
+      let tagIds;
+      try{
+         if (tag_arr){
+            if (tag_arr.length > 1){
+               console.log('Array Length: ' + tag_arr.length);
+               tagIds = tag_arr.map(tag => parseInt(tag, 10)); 
+            }
+            else{
+               tagIds = [parseInt(tag_arr, 10)];
+            }
+         }
+         console.log(tagIds);
+         let query = `SELECT * FROM meals WHERE tag_ids && $1`
+         const results = await pool.query(query, [tagIds]);
+         return results.rows;
+         
+      }
+      catch(err){
+         console.log(err)
+      }
+ }
 
  async function getUserWeek(day_id, user_id, dayOfWeek){
    let starting_id;
@@ -235,6 +258,7 @@ const queries = {
    addToCalendar:addToCalendar,
    getAllMeals: getAllMeals,
    getMealsContaining:getMealsContaining,
+   getMealsByTag: getMealsByTag,
    getMealById:getMealById,
    getTagsByType: getTagsByType,
    getTagsById:getTagsById,

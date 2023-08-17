@@ -1,24 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
 
+
 #create-meal{
-    margin: 1em;
-    color: black;
+    margin: 1em 1em 0 1em;
+    color: white;
     font-size: x-large;
     font-weight: bold;
     justify-self: center;
     border: solid;
     border-radius: 2em;
     border-color: rgb(255, 232, 164);
+    border-width: 0.25em;
+    background-color: black;
     padding: 0.5em;
 }
 #create-meal:hover{
     color: black;
     background-color: rgb(255, 232, 164);
+    border-color: black;
+}
+
+#adjustment-container{
+    background-color: black;
+    margin: 1.5em 2em 2em 2em;
+}
+
+#search-filter-container{
+    display: flex;
+    justify-content: space-around;
+    justify-self: center;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1em;
 }
 
 #filter-btn{
-    font-size: normal;
-    width: 5%;
     margin-left: 1em;
 }
 
@@ -30,16 +46,12 @@
 #filters{
     display: flex;
     justify-content: space-evenly;
-}
-
-
-#apply-filters-btn{
-    width: 10%;
+    justify-self: center;
 }
 
 
 .filter-label{
-    color: black;
+    color: white;
     font-weight: normal;
 }
 
@@ -57,7 +69,6 @@
 
 #search-container{
     display: flex;
-    padding-bottom: 1em;
     justify-self: center;
 }
 
@@ -78,6 +89,17 @@
 
 #search-term{
     font-weight: bold;
+}
+
+#active-filters-list{
+    display: flex;
+    color: white;
+    list-style: none;
+}
+
+#active-filters-list li{
+    color: rgb(255, 232, 164);
+    margin: 0 0.5em;
 }
 .meal-container{
     display: flex;

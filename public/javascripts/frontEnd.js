@@ -8,7 +8,13 @@
     //     clone.querySelector('input').value = '';
     //     container.appendChild(clone);
     // }
-
+// Inside your JavaScript code
+function activeFiltersCheck(tagId) {
+  if (options.activeFilters && options.activeFilters.includes(tagId)) {
+      return true;
+  }
+  return false;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -19,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function prepAddMeal(event) {
         const button = event.target;
         const form = button.nextElementSibling;
-        form.style.display = 'flex';
+        form.style.display = 'grid';
         button.style.display = 'none';
     }
 
@@ -36,5 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         div.style.display = 'none';
       }
     }
+
     
 });
+
+

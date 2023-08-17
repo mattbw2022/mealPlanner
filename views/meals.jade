@@ -7,43 +7,76 @@ block content
     - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Decemeber'];
     - var days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
     - var years = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033'];
+    
     a#create-meal(href="/meals/createMeal") createMeal
-    button#filter-btn Filters 
-    form(action="/meals/filter", method="post")#filter-container
-        div#filters
-            ul.filter-category Cuisine
-                each tag, i in options.allTags.cuisineTags
-                    div.filter-option 
-                        input(type="checkbox", value=tag.id, name="tags") 
-                        label.filter-label=tag.name
-            ul.filter-category Type of Food 
-                each tag, i in options.allTags.categoryTags
-                    div.filter-option 
-                        input(type="checkbox", value=tag.id, name="tags") 
-                        label.filter-label=tag.name
-            ul.filter-category Time 
-                each tag, i in options.allTags.timeTags
-                    div.filter-option 
-                        input(type="checkbox", value=tag.id, name="tags") 
-                        label.filter-label=tag.name
-            ul.filter-category Difficulty
-                each tag, i in options.allTags.difficultyTags
-                    div.filter-option 
-                        input(type="checkbox", value=tag.id, name="tags") 
-                        label.filter-label=tag.name
-        button#apply-filters-btn(type='submit') Apply Filters
-    form(action="/meals/search" method="post")#search-container
-        input#search-bar(type="text" name="search" placeholder="Search by title, ingredients or directions" )
-        button(type="submit")#search-btn Search
+    div#adjustment-container
+        div#search-filter-container
+            button#filter-btn Filters
+            button#apply-filters-btn(type='submit' form="filter-container") Apply Filters
+            form(action="/meals/search" method="post")#search-container
+                input#search-bar(type="text" name="search" placeholder="Search by title, ingredients or directions" )
+                button(type="submit")#search-btn Search
+        if options.activeFilters
+            ul#active-filters-list Active Filters:  
+                for filter in options.activeFilters 
+                    li=filter      
+        form(action="/meals/filter", method="post")#filter-container
+            div#filters
+                ul.filter-category Cuisine
+                    each tag, i in options.allTags.cuisineTags
+                        div.filter-option
+                            if options.activeFilters
+                                if options.activeFilters.includes(tag.name) 
+                                    input(type="checkbox", value=tag.id, name="tags", checked="true")
+                                else 
+                                    input(type="checkbox", value=tag.id, name="tags") 
+                            else 
+                                input(type="checkbox", value=tag.id, name="tags") 
+                            label.filter-label=tag.name
+                ul.filter-category Type of Food 
+                    each tag, i in options.allTags.categoryTags
+                        div.filter-option
+                            if options.activeFilters
+                                if options.activeFilters.includes(tag.name) 
+                                    input(type="checkbox", value=tag.id, name="tags", checked="true")
+                                else 
+                                    input(type="checkbox", value=tag.id, name="tags") 
+                            else 
+                                input(type="checkbox", value=tag.id, name="tags") 
+                            label.filter-label=tag.name
+                ul.filter-category Time 
+                    each tag, i in options.allTags.timeTags
+                        div.filter-option
+                            if options.activeFilters
+                                if options.activeFilters.includes(tag.name) 
+                                    input(type="checkbox", value=tag.id, name="tags", checked="true")
+                                else 
+                                    input(type="checkbox", value=tag.id, name="tags") 
+                            else 
+                                input(type="checkbox", value=tag.id, name="tags") 
+                            label.filter-label=tag.name
+                ul.filter-category Difficulty
+                    each tag, i in options.allTags.difficultyTags
+                        div.filter-option
+                            if options.activeFilters
+                                if options.activeFilters.includes(tag.name) 
+                                    input(type="checkbox", value=tag.id, name="tags", checked="true")
+                                else 
+                                    input(type="checkbox", value=tag.id, name="tags") 
+                            else 
+                                input(type="checkbox", value=tag.id, name="tags") 
+                            label.filter-label=tag.name   
     if options.search 
         - var searchTerm = `"${options.search}"`
         p(style="text-align: center;") Showing search results for 
             span#search-term=searchTerm
     div.meal-container
+        if options.allMeals.length === 0
+            h3 Whoops! No meals in those categories....Try again.
         each meal, i in options.allMeals
             div.meal
                 img.meal-img(src=options.mealImages[i], alt=meal.title)
-                a(href='/individualMeal/' + meal.id)=meal.title
+                a(href='meals/individualMeal/' + meal.id)=meal.title
                 button.addMeal-btn(type="button") Add Meal
                 form.addMeal(action="calendar/addMeal/" + meal.id method="post")
                     div.select-container

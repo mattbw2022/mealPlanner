@@ -53,6 +53,37 @@ router.post('/search', async function(req, res, next){
 
 });
 
+router.post('/filter', async function(req, res, next) {
+  let options = {};
+  const body = req.body.tags;
+
+  let filters = [];
+  if (typeof body === 'string'){
+    filters = [parseInt(body, 10)];
+  }
+  else {
+    filters = body;
+  }
+
+  const filteredMeals = await query.getMealsByTag(filters);
+  options.allMeals = filteredMeals;
+  options.allTags = await query.getAllTags();
+  options.activeFilters = [];
+
+  if (!body){
+    req.flash('error', 'No filters selected!');
+    return res.render('meals', {options});
+  }
+  
+  let filterName;
+  for (let i = 0; i < filters.length; i++){
+    filterName = await query.getTagsById(filters[i]);
+    options.activeFilters.push(filterName[0].name);
+  }
+  console.log(options.activeFilters);
+  helper.renderAllMeals(res, options);
+});
+
 router.get('/createMeal', helper.ensureAuthentication, async function(req, res, next){
   let options = await query.getAllTags();
   options.noTitle = false;
