@@ -9,6 +9,8 @@
     //     container.appendChild(clone);
     // }
 // Inside your JavaScript code
+
+
 function activeFiltersCheck(tagId) {
   if (options.activeFilters && options.activeFilters.includes(tagId)) {
       return true;
@@ -32,17 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterButton = document.getElementById('filter-btn');
     filterButton.addEventListener('click', toggleFilters);
     
-    function toggleFilters(event) {
+    function toggleFilters() {
       const div = document.getElementById('filter-container');
-      
+      const button = document.getElementById('apply-filters-btn');
       // Toggle the display property of the filter container
       if (div.style.display === 'none' || div.style.display === '') {
         div.style.display = 'flex';
+        button.style.display = 'flex';
       } else {
         div.style.display = 'none';
+        button.style.display = 'none';
       }
     }
+    
+    
 
+    
     
 });
 

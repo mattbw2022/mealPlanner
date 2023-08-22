@@ -39,7 +39,14 @@ router.get('/', async function(req, res, next) {
     let options = {};
     options.allTags = await query.getAllTags();
     options.allMeals = await query.getAllMeals();
-    helper.renderAllMeals(res, options);
+    options.mealImages = [];
+    options.allMeals.forEach(async (meal) => {
+    options.mealImages.push(await helper.getSignedUrl(meal.image, bucketName));
+    });
+    setTimeout(() =>{
+      res.render('meals', {options});
+
+    }, 250);
   });
 
 router.post('/search', async function(req, res, next){

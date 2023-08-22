@@ -1,3 +1,56 @@
 extends layout
+block styles
+    link(rel="stylesheet", href="/stylesheets/calendar.css")
+block scripts
+    script(src="/javascripts/calendar.js") 
 block content
-    h1 Calendar
+    - var daysOfWeek = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa']
+    #month-nav
+        a(href="/calendar") Last Month 
+        a(href="/calendar") Next Month 
+    h2 #{options.calendar.monthName} #{options.calendar.year}
+    if options.selectedMeal
+        h2=options.selectedMeal.name
+    div#calendar-container
+        .days-of-week
+            for day, i in daysOfWeek
+                h3=day
+        for week, i in options.calendar.weeksArray 
+            div.week
+                for object, j in options.calendar.weeksArray[i]
+                    if object.day === 'x'
+                        div(class="day blank-day")
+                    else 
+                        div.day
+                            h4=object.day
+                            if object.meals.length === 0
+                                .meal-container
+                                    p No meals selected 
+                                    a(href="/meals") Add Meal 
+                            if object.meals.length === 1
+                                for item in object.meals
+                                    .meal-container
+                                        a(href='meals/individualMeal/' + item.id)
+                                            p=item.title 
+                                            img(src=item.image, alt=item.title)
+                                        form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
+                                            button(type='submit') Remove
+                            if object.meals.length > 1
+                                .meal-container
+                                    p.multi-meal=object.meals.length
+                                        span
+                                        p.multi-meal Meals
+                                    button(class="expand-btn" data-meal-list="meal-list-" + object.day)  
+                                        img(src="/images/expand-btn-img.PNG", alt="expand button")
+                                    div(id="meal-list-" + object.day class="meal-list")
+                                        for item in object.meals
+                                            a(href='meals/individualMeal/' + item.id)
+                                                p=item.title 
+                                                img(src=item.image, alt=item.title)
+                                            form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
+                                                    button(type='submit') Remove
+                                    
+
+
+                            
+

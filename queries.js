@@ -160,10 +160,24 @@ async function populateCalendarForNewUser(userId) {
    return results.rows[0].day_id;
  }
 
+ async function getMealIdsByMonth(year, month, user_id){
+   let query = `SELECT meal_ids FROM calendars WHERE year = $1 AND month = $2 AND user_id = $3 ORDER BY day`;
+   let values = [year, month, user_id];
+
+   const results = await pool.query(query, values);
+   return results.rows;
+ }
+
  async function getMealById(meal_id){
    let query = `SELECT * FROM meals WHERE id = $1`;
    const results = await pool.query(query, [meal_id]);
    return results.rows[0];
+ }
+
+ async function getMultipleMealsById(meal_id_array){
+   let query = `SELECT * FROM meals WHERE id = ANY($1)`
+   const results = await pool.query(query, [meal_id_array]);
+   return results.rows;
  }
 
  async function getMealsContaining(search){
@@ -240,6 +254,7 @@ async function populateCalendarForNewUser(userId) {
     return results.rows;
  }
 
+
  async function removeMealFromCalendar(user_id, meal_id, day_id){
    query = `UPDATE calendars
             SET meal_ids = array_remove(meal_ids, $1)
@@ -260,13 +275,15 @@ const queries = {
    getMealsContaining:getMealsContaining,
    getMealsByTag: getMealsByTag,
    getMealById:getMealById,
+   getMultipleMealsById: getMultipleMealsById,
    getTagsByType: getTagsByType,
    getTagsById:getTagsById,
    getAllTags:getAllTags,
    populateCalendarForNewUser:populateCalendarForNewUser,
    getDayId:getDayId,
    getUserWeek:getUserWeek,
-   removeMealFromCalendar:removeMealFromCalendar
+   removeMealFromCalendar:removeMealFromCalendar,
+   getMealIdsByMonth:getMealIdsByMonth
 }
 
 module.exports = queries;

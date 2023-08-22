@@ -1,0 +1,134 @@
+#month-nav{
+    margin: 1em 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: black;
+    font-size: larger;
+    font-weight: bold;
+}
+
+#month-nav a{
+    margin: 1em;
+}   
+
+h2{
+    font-size: 3em;
+    margin: 0.5em;
+    text-shadow:
+    -1px -1px 0 rgb(255, 232, 164),
+    1px -1px 0 rgb(255, 232, 164),
+    -1px 1px 0 rgb(255, 232, 164),
+    1px 1px 0 rgb(255, 232, 164);
+}
+
+#calendar-container{
+    display: grid;
+    margin: 1em;
+}
+
+.days-of-week{
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    margin: 0 1em;
+}
+
+.week{
+    display: flex;
+    justify-content: space-between;
+}
+
+.day{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border: solid;
+    width: 14%;
+    border-style: groove;
+    align-items: baseline;
+    min-height: 10em;
+}
+
+.day h4{
+    margin-top: 0;
+    color: white;
+    background-color: black;
+    width: 2em;
+    padding-left: 1em;
+}
+
+.day a{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: black;
+    border: solid;
+    border-color: rgb(255, 232, 164);
+    padding: 0 0.5em;
+    margin: 0.5em 1em;
+}
+
+.day a:hover {
+    color: white;
+    background-color: black;
+}
+
+.day img{
+    width: 50%;
+    margin-bottom: 0.5em;
+    border-radius: 1em;
+    border: solid;
+}
+
+.expand-btn{
+    margin-left: 0.5em;
+    width: 20%;
+}
+
+.expand-btn:hover{
+    background-color: white;
+    border-color: black;
+
+}
+
+.expand-btn img{
+    margin: 0;
+    border: none;
+    width:  100%;
+}
+
+.meal-container{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+
+.blank-day{
+    border-color: white;
+
+}
+
+.multi-meal{
+    font-size: larger;
+    font-weight: bold;
+    color: rgb(255, 232, 164);
+    margin: 0.5em;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.meal-list{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+    width: 100%;
+    height: fit-content;
+}

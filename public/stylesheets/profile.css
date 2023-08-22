@@ -15,15 +15,19 @@
     margin-bottom: 3em;
 }
 
-#my-week-container{
+.card{
     border: solid;
     margin: 1em;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
-#my-week-container h2{
+.card h2{
     text-align: center;
 }
 
 .day{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: white;
     border: solid;
     background-color: black;
@@ -38,20 +42,32 @@
 }
 
 .day a{
-    text-decoration: none;
-    color: white;
-    margin-bottom: 0.5em;
-    font-weight: 100;
+    width: 75%;
+    padding: 0.25em;
+    font-size: 1em;
+    margin: 0.5em 0;
+    border: solid;
+    border-radius: 2em;
+    border-color: rgb(255, 232, 164);
+    color: black;
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .day a:visited{
-    text-decoration: none;
-    color: white;
-    margin-bottom: 0.5em;
+    padding: 0.25em;
+    font-size: 1em;
+    margin: 0.5em 0;
+    border: solid;
+    border-radius: 2em;
+    border-color: rgb(255, 232, 164);
+    color: black;
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .day a:hover{
-    color: rgb(255, 232, 164);
+    background-color: rgb(255, 232, 164);
 }
 
 
@@ -61,23 +77,30 @@
 }
 
 .day.active a{
+    border-color: black;
     color: black;
 }
 
 .active a:hover{
-    color: white
+    color: white;
+    background-color: black;
+    border-color: white;
 }
 
 
 #card-container{
     display: flex;
     justify-content: space-around;
+
     
 }
 
 .profile-card{
     width: 30%;
     text-align: center;
+    border: solid;
+    margin: 1em;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
 .meal{
@@ -93,6 +116,8 @@
     flex-direction: column;
     align-items: center;
     flex-wrap: wrap;
+    border: solid;
+    margin: 0.5em;
 }
 
 .dailyMeal p{
