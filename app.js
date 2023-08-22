@@ -11,6 +11,8 @@ var passport = require('passport');
 const queries = require('./queries');
 const helper = require('./helper');
 const flash = require('connect-flash');
+// const helmet = require('helmet');
+// app.use(helmet());
 
 
 app.use(passport.initialize());

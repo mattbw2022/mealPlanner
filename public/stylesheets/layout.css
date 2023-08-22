@@ -17,9 +17,6 @@ header {
     font-family: 'Open Sans', sans-serif;
   }
 
-  button {
-    font-family: 'Open Sans', sans-serif;
-  }
   
   header h1 {
     margin: 1em;
@@ -96,6 +93,7 @@ header {
     border-color: rgb(255, 232, 164);
     color: black;
     background-color: white;
+    font-family: 'Open Sans', sans-serif;
 
 }
   button:hover{

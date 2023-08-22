@@ -101,9 +101,92 @@ function getDate(timestamp){
     return date;
 }
 
+function calculateWeeks(year, month) {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
+    
+    const completeWeeks = Math.floor((daysInMonth + firstDayOfWeek - 1) / 7);
+    const remainingDays = (daysInMonth + firstDayOfWeek - 1) % 7;
+    
+    // Add an extra week if there are remaining days or if the month starts on a Sunday
+    const totalWeeks = completeWeeks + (remainingDays > 0 || firstDayOfWeek === 0 ? 1 : 0);
+    
+    return totalWeeks;
+}
+
+// Function to generate the calendar data
+function generateCalendarData(year, month) {
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    
+    // Adjust February days for leap years
+    if (isLeapYear(year)) {
+        daysInMonth[1] = 29;
+    }
+
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
+    const days = [];
+
+    let day = 1;
+    // Fill the cells before the first day of the month
+    for (let i = 0; i < firstDayOfWeek; i++) {
+        days.push('x');
+    }
+
+    // Fill the rest of the calendar
+    while (day <= daysInMonth[month]) {
+        days.push(day.toString());
+
+        if ((firstDayOfWeek + day) % 7 === 0) {
+            days.push(null);
+        }
+
+        day++;
+    }
+
+    // Complete any remaining empty cells in the last row
+    while ((firstDayOfWeek + day - 1) % 7 !== 0) {
+        days.push('x');
+        day++;
+    }
+    let weeksArray = [];
+    const weekCount = calculateWeeks(year, month)
+    for (let i = 0; i < weekCount; i++){
+        weeksArray.push([]);
+    }
+    let weekNumber = 0;
+    for (let i = 0; i < days.length; i++){
+        if (days[i] !== null){
+            weeksArray[weekNumber].push({day:days[i]});
+        }   
+        else{
+            weekNumber++;
+        }
+    }
+    let plannedMeals = [];
+    let plannedMealsImgs = [];
+    for(weeks in weeksArray){
+
+    }
+    console.log(daysInMonth[month].toString());
+    const firstDay = (element) => element === '1';
+    const lastDay = (element) => element === daysInMonth[month].toString();
+    const firstDayIndex = days.findIndex(firstDay);
+    const lastDayIndex = weeksArray.findIndex(lastDay);
+    return {
+        year,
+        monthName: new Date(year, month).toLocaleString('default', { month: 'long' }),
+        weekCount,
+        weeksArray,
+        days,
+        firstDayIndex: firstDayIndex,
+        lastDayIndex: lastDayIndex
+    };
+}
+
 
 
 module.exports = {
+    generateCalendarData: generateCalendarData,
     isLeapYear: isLeapYear,
     getDayOfWeek: getDayOfWeek,
     getFormatedDate: getFormatedDate,

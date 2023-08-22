@@ -8,24 +8,19 @@ block content
     div#welcome
         h1=welcome
         img.profile-img(src=profileImg, alt="profile picture")
-    div#my-week-container
+    div.card
         h2 myWeek
         div#week-container
             each day, i in days
                 - var isDayActive = (dayOfWeek === day)
                 div.day(class=isDayActive ? 'active' : '')
                     h3=days[i]
-                    if weekOfMeals[i] === 0
-                        a(href='/meals') add a meal
-                    if weekOfMeals[i].length === 0
-                        a(href='/meals') add a meal
-                    else
-                        for meal in weekOfMeals[i]
-                            form.dailyMeal(action="profile/removeMeal/" + meal.id + "/" + userWeek[i].day_id, method="post")
-                                a(href="/meals/individualMeal/" + meal.id)=meal.title
-                                img(src=meal.image)
-                                button(type="submit", value=meal.id) Remove
-                            a(href='/meals') add a meal
+                    for meal in weekOfMeals[i]
+                        form.dailyMeal(action="profile/removeMeal/" + meal.id + "/" + userWeek[i].day_id, method="post")
+                            a(href="/meals/individualMeal/" + meal.id)=meal.title
+                            img(src=meal.image)
+                            button(type="submit", value=meal.id) Remove
+                    a(href='/meals') add a meal
 
                            
     div#card-container 
