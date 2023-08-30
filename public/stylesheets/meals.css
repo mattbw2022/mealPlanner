@@ -69,6 +69,8 @@
 
 .filter-option{
     display: flex;
+    align-items: baseline;
+    
 }
 
 #search-container{

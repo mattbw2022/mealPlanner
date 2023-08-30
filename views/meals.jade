@@ -6,8 +6,7 @@ block scripts
 block content 
     - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Decemeber'];
     - var days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-    - var years = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033'];
-    
+
     a#create-meal(href="/meals/createMeal") createMeal
     div#adjustment-container
         div#search-filter-container
@@ -93,7 +92,7 @@ block content
                         div.date-item-container
                             label(for="day") Day
                             select.date(type="dropdown" name="year")
-                                each year in years
+                                each year in options.yearsArray
                                     option(value=year)=year
                     button(type="submit") Add to calendar
                      

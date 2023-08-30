@@ -2,12 +2,24 @@ extends layout
 block styles
     link(rel="stylesheet", href="/stylesheets/calendar.css")
 block scripts
-    script(src="/javascripts/calendar.js") 
+    script(src="/javascripts/calendar.js")
 block content
+    - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Decemeber'];
+    - var days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
     - var daysOfWeek = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa']
     #month-nav
-        a(href="/calendar") Last Month 
-        a(href="/calendar") Next Month 
+        a(href="/calendar/lastMonth") Last Month 
+        form#pick-month-form(action="/calendar/selectMonth" method="post") 
+            div.select-container-nav
+                    select(type="dropdown" name="month" placeholder="Month")
+                        each month, i in months   
+                            option(value=i)=month
+                    select(type="dropdown" name="year")
+                        each year in options.yearsArray
+                            option(value=year)=year
+            button Find Month
+
+        a(href="/calendar/nextMonth") Next Month 
     h2 #{options.calendar.monthName} #{options.calendar.year}
     if options.selectedMeal
         h2=options.selectedMeal.name
@@ -21,7 +33,7 @@ block content
                     if object.day === 'x'
                         div(class="day blank-day")
                     else 
-                        div.day
+                        div.day(name="day" value="object.day")
                             h4=object.day
                             if object.meals.length === 0
                                 .meal-container
@@ -33,13 +45,31 @@ block content
                                         a(href='meals/individualMeal/' + item.id)
                                             p=item.title 
                                             img(src=item.image, alt=item.title)
+                                        button.move-meal-btn(type="button") Move Meal
+                                        form.move-meal-form(action="/calendar/moveMeal/" + item.id + "/" + object.day_id method="post")
+                                            div.select-container
+                                                div.date-item-container
+                                                    label(for='month') Month
+                                                    select.date(type="dropdown" name="month" placeholder="Month")
+                                                        each month, i in months   
+                                                            option(value=i)=month
+                                                div.date-item-container
+                                                    label(for="day") Day
+                                                    select.date(type="dropdown" name="day")
+                                                        each day in days 
+                                                            option(value=day)=day
+                                                div.date-item-container
+                                                    label(for="day") Year
+                                                    select.date(type="dropdown" name="year")
+                                                        each year in options.yearsArray
+                                                            option(value=year)=year
+                                            button(type="submit") Update Calendar
                                         form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
                                             button(type='submit') Remove
                             if object.meals.length > 1
                                 .meal-container
-                                    p.multi-meal=object.meals.length
-                                        span
-                                        p.multi-meal Meals
+                                    - var multiMealStatement = `${object.meals.length} Meals`
+                                    p.multi-meal=multiMealStatement
                                     button(class="expand-btn" data-meal-list="meal-list-" + object.day)  
                                         img(src="/images/expand-btn-img.PNG", alt="expand button")
                                     div(id="meal-list-" + object.day class="meal-list")
@@ -47,6 +77,25 @@ block content
                                             a(href='meals/individualMeal/' + item.id)
                                                 p=item.title 
                                                 img(src=item.image, alt=item.title)
+                                            button.move-meal-btn(type="button") Move Meal
+                                            form.move-meal-form(action="/calendar/moveMeal/" + item.id + "/" + object.day_id method="post")
+                                                div.select-container
+                                                    div.date-item-container
+                                                        label(for='month') Month
+                                                        select.date(type="dropdown" name="month" placeholder="Month")
+                                                            each month, i in months   
+                                                                option(value=i)=month
+                                                    div.date-item-container
+                                                        label(for="day") Day
+                                                        select.date(type="dropdown" name="day")
+                                                            each day in days 
+                                                                option(value=day)=day
+                                                    div.date-item-container
+                                                        label(for="day") Year
+                                                        select.date(type="dropdown" name="year")
+                                                            each year in options.yearsArray
+                                                                option(value=year)=year
+                                                button(type="submit") Update Calendar
                                             form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
                                                     button(type='submit') Remove
                                     

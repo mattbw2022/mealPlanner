@@ -1,26 +1,12 @@
 var express = require('express');
 const AWS = require('aws-sdk');
-const sharp = require('sharp');
-const bodyParser = require('body-parser');
 var router = express.Router();
 var helper = require('../helper');
-const fileType = require('file-type-ext');
-const fs = require('fs');
-const multer = require('multer');
 const query = require('../queries');
-const path = require('path');
 const { all, options } = require('./login');
 const calendar = require('../calendar');
+const multer = require('multer');
 
-
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESSKEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-east-2',
-});
-
-const s3 = new AWS.S3();
-const bucketName = 'mealplanner-meal-images';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -33,7 +19,10 @@ const storage = multer.diskStorage({
   }
 });
 
+
+
 const upload = multer({ storage: storage });
+const bucketName = 'mealplanner-meal-images';
 
 router.get('/', async function(req, res, next) {
     let options = {};
@@ -43,6 +32,13 @@ router.get('/', async function(req, res, next) {
     options.allMeals.forEach(async (meal) => {
     options.mealImages.push(await helper.getSignedUrl(meal.image, bucketName));
     });
+    options.yearsArray = [];
+    const yearsAvailable = await query.getYearsAvailable();
+    for(yearsAvailable[0].min; yearsAvailable[0].min < yearsAvailable[0].max; yearsAvailable[0].min++){
+      options.yearsArray.push(yearsAvailable[0].min);
+    }
+    options.yearsArray.push(yearsAvailable[0].max);
+    console.log(options.yearsArray);
     setTimeout(() =>{
       res.render('meals', {options});
 
@@ -56,6 +52,12 @@ router.post('/search', async function(req, res, next){
   options.allMeals = searchResults;
   options.allTags = await query.getAllTags();
   options.search = search;
+  options.yearsArray = [];
+  const yearsAvailable = await query.getYearsAvailable();
+  for(yearsAvailable[0].min; yearsAvailable[0].min < yearsAvailable[0].max; yearsAvailable[0].min++){
+    options.yearsArray.push(yearsAvailable[0].min);
+  }
+  options.yearsArray.push(yearsAvailable[0].max);
   helper.renderAllMeals(res, options);
 
 });
@@ -87,7 +89,35 @@ router.post('/filter', async function(req, res, next) {
     filterName = await query.getTagsById(filters[i]);
     options.activeFilters.push(filterName[0].name);
   }
-  console.log(options.activeFilters);
+  options.yearsArray = [];
+  const yearsAvailable = await query.getYearsAvailable();
+  for(yearsAvailable[0].min; yearsAvailable[0].min < yearsAvailable[0].max; yearsAvailable[0].min++){
+    options.yearsArray.push(yearsAvailable[0].min);
+  }
+  options.yearsArray.push(yearsAvailable[0].max);
+  helper.renderAllMeals(res, options);
+});
+
+router.get('/filter/:id', async function(req, res, next) {
+  let options = {};
+  let filters = [req.params.id];
+  console.log(filters);
+  const filteredMeals = await query.getMealsByTag(filters);
+  options.allMeals = filteredMeals;
+  options.allTags = await query.getAllTags();
+  options.activeFilters = [];
+
+  let filterName;
+  for (let i = 0; i < filters.length; i++){
+    filterName = await query.getTagsById(filters[i]);
+    options.activeFilters.push(filterName[0].name);
+  }
+  options.yearsArray = [];
+  const yearsAvailable = await query.getYearsAvailable();
+  for(yearsAvailable[0].min; yearsAvailable[0].min < yearsAvailable[0].max; yearsAvailable[0].min++){
+    options.yearsArray.push(yearsAvailable[0].min);
+  }
+  options.yearsArray.push(yearsAvailable[0].max);
   helper.renderAllMeals(res, options);
 });
 
@@ -129,63 +159,9 @@ router.post('/createMeal',upload.fields([{ name: 'image', maxCount: 1 }, { name:
     options.noDirections = true;
     return res.render('createMeal', options);
   }
+    
+    filename = await helper.addimage(req, bucketName);
 
-      // Check if the uploaded image exists and read it
-      if (req.files && req.files.image && req.files.image.length > 0) {
-        const imageFile = req.files.image[0];
-        const buffer = fs.readFileSync(imageFile.path);
-        const fileInfo = fileType(buffer);
-
-        if (!fileInfo || (fileInfo.mime !== 'image/jpeg' && fileInfo.mime !== 'image/png')) {
-            // Invalid file type, reject the upload.
-            fs.unlinkSync(imageFile.path);
-            return res.status(400).json({ error: 'Invalid file type. Only JPEG and PNG images are allowed.' });
-        }
-
-        const maxFileSizeBytes = 10 * 1024 * 1024; // 10MB
-
-        if (imageFile.size > maxFileSizeBytes) {
-          // File size too large, reject the upload.
-            fs.unlinkSync(imageFile.path); 
-            return res.status(400).json({ error: 'File size exceeds the allowed limit.' });
-        }
-
-          // Resize the image while maintaining aspect ratio
-        const targetAspectRatio = 4 / 3; // For example, a 16:9 aspect ratio
-        const targetWidth = 800; // Your desired width
-
-        const targetHeight = Math.round(targetWidth / targetAspectRatio);
-        const resizedImageBuffer = await sharp(buffer)
-        .resize({
-          width: targetWidth, // Replace with your desired width
-          height: targetHeight, // Replace with your desired height
-          fit: sharp.fit.cover,
-          withoutEnlargement: true,
-        })
-        .toBuffer();
-
-        filename = `meal-image-${Date.now()}.${fileInfo.ext}`;
-        const params = {
-          Bucket: bucketName,
-          Key: filename,
-          Body: resizedImageBuffer,
-          ContentType: imageFile.mimetype,
-        };
-        
-        s3.upload(params, (err, data) => {
-          if (err) {
-            console.error('Error uploading image:', err);
-            return res.status(500).json({ error: 'Failed to upload image to S3.' });
-          }
-          // Clean up temp file
-          fs.unlinkSync(imageFile.path);
-        });
-        
-    }
-
-    else{
-      filename = 'yum-default.png'
-    }
     const time = Date.now();
     const newMeal = await query.addMeal(meal, req.session.user.id, filename, time);
 
@@ -214,8 +190,8 @@ router.get('/individualMeal/:meal_id', async function (req, res, next) {
   options.userImage = await helper.getSignedUrl(creatorInfo.profile_img, userBucket);
 
   options.title = mealDetails.title;
-  options.ingredients = mealDetails.ingredients;
-  options.directions = mealDetails.directions;
+  mealDetails.ingredients;
+  mealDetails.directions;
   options.mealImage = await helper.getSignedUrl(mealDetails.image, mealBucket);
   let timestamp = helper.createTimestamp(parseInt(mealDetails.time));
   const date = calendar.getDate(timestamp);
@@ -226,9 +202,11 @@ router.get('/individualMeal/:meal_id', async function (req, res, next) {
   if (mealDetails.tag_ids) {
     for (let i = 0; i < mealDetails.tag_ids.length; i++){
       tagObj = await query.getTagsById(mealDetails.tag_ids[i]);
-      tagArray.push(tagObj[0].name);
+      tagArray.push(tagObj[0]);
     }
   }
+  options.ingredients = helper.formatRecipe(mealDetails.ingredients);
+  options.directions = helper.formatRecipe(mealDetails.directions);
   options.tags = tagArray;
   res.render('individualMeal', options);
 });

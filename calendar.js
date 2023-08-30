@@ -1,7 +1,3 @@
-const helper = require('./helper');
-const firstDay = new Date(2023, 0, 1);
-const fdMilliseconds = firstDay.getTime();
-const timestamp = helper.createTimestamp(Date.now());
 
 function isLeapYear(year) {
     if ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) {
@@ -105,12 +101,11 @@ function calculateWeeks(year, month) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDayOfWeek = new Date(year, month, 1).getDay();
     
-    const completeWeeks = Math.floor((daysInMonth + firstDayOfWeek - 1) / 7);
-    const remainingDays = (daysInMonth + firstDayOfWeek - 1) % 7;
+    const completeWeeks = Math.ceil((daysInMonth + firstDayOfWeek) / 7); // Use Math.ceil instead of Math.floor
+    const remainingDays = (daysInMonth + firstDayOfWeek) % 7;
     
     // Add an extra week if there are remaining days or if the month starts on a Sunday
     const totalWeeks = completeWeeks + (remainingDays > 0 || firstDayOfWeek === 0 ? 1 : 0);
-    
     return totalWeeks;
 }
 
@@ -167,7 +162,6 @@ function generateCalendarData(year, month) {
     for(weeks in weeksArray){
 
     }
-    console.log(daysInMonth[month].toString());
     const firstDay = (element) => element === '1';
     const lastDay = (element) => element === daysInMonth[month].toString();
     const firstDayIndex = days.findIndex(firstDay);

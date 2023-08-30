@@ -6,10 +6,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 
-// get random index for meals
-function randomIndex(max) {
-  return Math.floor(Math.random() * max);
-}
+
 
 const userBucket = 'mealplanner-profile-images';
 const mealBucket = 'mealplanner-meal-images';
@@ -18,14 +15,10 @@ const mealBucket = 'mealplanner-meal-images';
 router.get('/', async function(req, res, next) {
   let options = {};
 
-    // Fetch HTML content of the website
     const response = await axios.get('https://www.simplyrecipes.com/most-recent-5121175'); // Replace with the actual website URL
     const htmlContent = response.data;
-    // Use Cheerio to parse HTML content
     const $ = cheerio.load(htmlContent);
-
     options.articles = [];
-    // Extract article data
     $('a[id*="mntl-card-list-items"]').each((index, element) => {
       const title = $(element).find('span.card__title').text();
       const url = $(element).attr('href');
@@ -34,17 +27,26 @@ router.get('/', async function(req, res, next) {
     });    
 
   const allMeals = await query.getAllMeals();
-  options.mealImages = [];
-    allMeals.forEach(async (meal) => {
-    options.mealImages.push(await helper.getSignedUrl(meal.image, mealBucket));
-  });
-  const index = randomIndex(allMeals.length);
+    for(let i = 0; i < allMeals.length; i++){
+      allMeals[i].image = await helper.getSignedUrl(allMeals[i].image, mealBucket);
+    }
+ 
+
+  if(allMeals.length > 100){
+    while (allMeals.length > 100){
+      allMeals.slice(Math.random(Math.floor() * allMeals.length));
+    }
+  }
+  options.newestMeals = await query.getNewestMeals();
+  for(let i = 0; i < options.newestMeals.length; i++){
+    options.newestMeals[i].image = await helper.getSignedUrl(options.newestMeals[i].image, mealBucket);
+  }
+  console.log(options.newestMeals)
+  options.meals = allMeals;
+  
   setTimeout(()=>{
-    options.randomMealImg = options.mealImages[index];
-    options.randomMealName = allMeals[index].title;
-    options.randomMealId = allMeals[index].id;
     res.render('index', {options});
-  }, 250);
+  }, 100);
 });
 
 module.exports = router;

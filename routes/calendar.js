@@ -7,69 +7,107 @@ const c = require('../calendar');
 router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     const userId = req.session.user.id;
     let options = {};
-    const date = c.getDate(helper.createTimestamp(Date.now()));
-    dateIndex = date.month - 1;
+    let dateIndex;
+    let date;
+    if (req.session.activeDate){
+      dateIndex = req.session.activeDate.month - 1;
+      date = req.session.activeDate;
+    }
+    else{
+      date = c.getDate(helper.createTimestamp(Date.now()));
+      dateIndex = date.month - 1;
+    }
     options.calendar = c.generateCalendarData(date.year, dateIndex);
-
     const mealIds = await query.getMealIdsByMonth(date.year, date.month, userId);
-    let uniqueMealIdArrary = [];
-    let isDuplicate;
-    for (let i = 0; i < mealIds.length; i++){
-      if (mealIds[i].meal_ids !== null && mealIds[i].meal_ids.length !== 0){
-          for(let j = 0; j < (mealIds[i].meal_ids.length); j++){
-            isDuplicate = uniqueMealIdArrary.includes(mealIds[i].meal_ids[j]);
-            if (isDuplicate === false){
-              uniqueMealIdArrary.push(mealIds[i].meal_ids[j]);
-            }
-          }
-      }
-    }
-    const uniqueMeals = await query.getMultipleMealsById(uniqueMealIdArrary);
-    const bucketName = 'mealplanner-meal-images';
-    for (let i = 0; i < uniqueMeals.length; i++){
-      uniqueMeals[i].image = await  helper.getSignedUrl(uniqueMeals[i].image, bucketName);
-    }
-
-    for(let i = 0; i < mealIds.length; i++){
-      mealIds[i].meals = [];
-      if (mealIds[i].meal_ids === null){
-        delete mealIds[i].meal_ids;
-        continue;
-      }
-      for(let j = 0; j < mealIds[i].meal_ids.length; j++){
-        for (let k = 0; k < uniqueMeals.length; k++){
-          if (mealIds[i].meal_ids[j] === uniqueMeals[k].id){
-            mealIds[i].meals.push(uniqueMeals[k]);
-          }
-        }
-
-      }
-      delete mealIds[i].meal_ids;
-    }
-    console.log(mealIds);
-    let k = 0;
-    let tempDate = {
+    options = await helper.arrangeCalendarInfo(mealIds, options, date);
+    req.session.activeDate = {
       year: date.year,
       month: date.month,
-      day:''
+      day: date.day
     };
-    for (let i = 0; i < options.calendar.weeksArray.length; i++){
-      for (let j = 0; j < options.calendar.weeksArray[i].length; j++){
-        if (options.calendar.weeksArray[i][j].day === 'x'){
-          continue;
-        }
-        tempDate.day = parseInt(options.calendar.weeksArray[i][j].day);
-        options.calendar.weeksArray[i][j].day_id = await query.getDayId(tempDate);
-        options.calendar.weeksArray[i][j].meals = mealIds[k].meals
-        k++;
-      }
-    }
-    console.log(options.calendar.weeksArray);
     res.render('calendar', {options});
   });
 
-router.post('/addMeal/:id', helper.ensureAuthentication, async function(req, res, next) {
+router.post('/moveMeal/:mealId/:dayId', helper.ensureAuthentication, async function(req, res, nex){
+  const userId = req.session.user.id;
+  const mealId = req.params.mealId;
+  const originalDateId = req.params.dayId;
+  const day = parseInt(req.body.day);
+  const month = (parseInt(req.body.month) + 1);
+  const year = parseInt(req.body.year);
+  console.log(originalDateId);
+  console.log(req.body);
+  //remove meal from current date
+  query.removeMealFromCalendar(userId, mealId, originalDateId);
+  //add meal to selected date
+  query.addToCalendar(day, month, year, userId, mealId);
+  setTimeout(() => {
+    res.redirect("/calendar");
+  }, 100);
+})
+
+router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, next){
+  const userId = req.session.user.id;
   let options = {};
+  if (req.session.activeDate.month === 12){
+    req.session.activeDate.year++;
+    req.session.activeDate.month = 1;
+  }
+  else{
+    req.session.activeDate.month++;
+  }
+  let dateIndex = req.session.activeDate.month - 1;
+  let date = req.session.activeDate;
+  options.calendar = c.generateCalendarData(date.year, dateIndex);
+
+  const mealIds = await query.getMealIdsByMonth(date.year, date.month, userId);
+  options = await helper.arrangeCalendarInfo(mealIds, options, date);
+  res.render('calendar', {options});  
+});
+
+router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, next){
+  const userId = req.session.user.id;
+  let options = {};
+  if (req.session.activeDate.month === 1){
+    req.session.activeDate.year--;
+    req.session.activeDate.month = 12;
+  }
+  else{
+    req.session.activeDate.month--;
+  }
+  let dateIndex = req.session.activeDate.month - 1;
+  let date = req.session.activeDate;
+  options.calendar = c.generateCalendarData(date.year, dateIndex);
+
+  const mealIds = await query.getMealIdsByMonth(date.year, date.month, userId);
+  if (mealIds.length === 0){
+    const yearsAvailable = await query.getYearsAvailable();
+    console.log(yearsAvailable);
+    req.flash('error', `Calendar data is only available from ${yearsAvailable[0].min} to ${yearsAvailable[0].max}`);
+    return res.redirect('/calendar');
+  }
+  options = await helper.arrangeCalendarInfo(mealIds, options, date);
+  res.render('calendar', {options});
+})
+
+router.post('/selectMonth', helper.ensureAuthentication, async function (req, res, next) {
+  let options = {};
+  const userId = req.session.user.id;
+  let month = (parseInt(req.body.month) + 1);
+  let monthIndex = parseInt(req.body.month);
+  let year = parseInt(req.body.year);
+  const date = {
+    year: year,
+    month: month
+  };
+  console.log(date);
+  options.calendar = c.generateCalendarData(year, monthIndex);
+  const mealIds = await query.getMealIdsByMonth(year, month, userId);
+  options = await helper.arrangeCalendarInfo(mealIds, options, date);
+  res.render('calendar', {options});
+});
+
+router.post('/addMeal/:id', helper.ensureAuthentication, async function(req, res, next) {
   const mealId = parseInt(req.params.id);
   if (!mealId){
     res.status(404).send('No Meal was found!');

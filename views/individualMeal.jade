@@ -2,15 +2,27 @@ extends layout
 block styles 
     link(rel="stylesheet", href="/stylesheets/individualMeal.css")
 block content
-    - var credit = `Added by ${firstName} ${lastName}`
-    h1=title
-    img(src=mealImage alt='picture of meal or default image')
-    h2=credit
-        span 
-        img(src=userImage alt='user profile picture')
-    p=date 
-    p=ingredients 
-    p=directions 
-    ul 
-    for tag in tags 
-        li=tag
+    - var credit = `Added by ${firstName} ${lastName} on ${date}`
+    section
+        #title-container
+            h1=title
+            img(src=mealImage alt='picture of meal or default image')#meal-img
+            #creator-info
+                p=credit
+                a(href="/profile") 
+                    img(src=userImage alt='user profile picture')#credit-img
+        #steps-container
+            #ingredient-list
+                h3 Ingredients
+                for ingredient in ingredients
+                    .ingredient
+                        input(type="checkbox")
+                        label=ingredient
+            #direction-list
+                h3 Directions
+                ol
+                    for direction in directions
+                        li=direction
+            #tag-container
+                for tag in tags 
+                    a(href="/meals/filter/" + tag.id)=tag.name

@@ -1,20 +1,27 @@
 extends layout
 block styles 
     link(rel="stylesheet", href="/stylesheets/profile.css")
+block scripts
+    script(src="/javascripts/profile.js") 
 block content
-    - var welcome = "Welcome " + firstName
     - var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
+    - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     div#welcome
-        h1=welcome
-        img.profile-img(src=profileImg, alt="profile picture")
+        img(src=profileImg, alt="profile picture")
+        button#edit-img-btn(type="button") Edit
+        form#edit-img-form(action="/profile/updatePicture" method="post", enctype="multipart/form-data") 
+            <input class="custom-file-input"  type = "file" name = "image" accept = "image/*" />
+            button(type="submit") Update Picture
     div.card
-        h2 myWeek
+        - var weekHeading = `${months[userWeek[0].month - 1]} ${userWeek[0].day}, ${userWeek[0].year} - ${months[userWeek[6].month - 1]} ${userWeek[6].day}, ${userWeek[6].year}`
+        h2=weekHeading
         div#week-container
             each day, i in days
                 - var isDayActive = (dayOfWeek === day)
                 div.day(class=isDayActive ? 'active' : '')
+                    - var shortDate = `${userWeek[i].month}/${userWeek[i].day}/${(userWeek[i].year - 2000)}`
                     h3=days[i]
+                    h4=shortDate
                     for meal in weekOfMeals[i]
                         form.dailyMeal(action="profile/removeMeal/" + meal.id + "/" + userWeek[i].day_id, method="post")
                             a(href="/meals/individualMeal/" + meal.id)=meal.title
@@ -26,9 +33,16 @@ block content
     div#card-container 
         div.profile-card
             h2 myMeals
-            div.meal
-                h3 title 
-                img(src="/images/steak.jpg", alt="meal image")
+            if userMeals.length >= 1
+                for userMeal in userMeals        
+                    form(name=`meal${userMeal.id}` action="/profile/editMeal", method="get").user-meal
+                        h3=userMeal.title
+                        img(src=userMeal.image, alt=userMeal.title)
+                    button.edit-meal-btn(type="submit" form=`meal${userMeal.id}`) Edit
+            else
+                h2 No meals created! 
+                button Create Meal 
+                    a(href="/meals/createMeal") 
         div.profile-card
             h2 myGroups
         div.profile-card

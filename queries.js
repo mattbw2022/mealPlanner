@@ -101,7 +101,6 @@ async function getTagsByType(input){
 async function getTagsById(tag_id){
    let query = `SELECT * FROM tags WHERE id = $1`;
    const results = await pool.query(query, [tag_id]);
-   console.log(results.rows);
    return results.rows;
 }
 
@@ -212,6 +211,12 @@ async function populateCalendarForNewUser(userId) {
       }
  }
 
+ async function getNewestMeals(){
+   let query = 'SELECT * FROM meals ORDER BY time DESC LIMIT 10';
+   const results = await pool.query(query);
+   return results.rows;
+ }
+
  async function getUserWeek(day_id, user_id, dayOfWeek){
    let starting_id;
    let ending_id;
@@ -256,12 +261,30 @@ async function populateCalendarForNewUser(userId) {
 
 
  async function removeMealFromCalendar(user_id, meal_id, day_id){
-   query = `UPDATE calendars
+   let query = `UPDATE calendars
             SET meal_ids = array_remove(meal_ids, $1)
             WHERE user_id = $2
             AND day_id = $3`;
-   values = [meal_id, user_id, day_id];
+   const values = [meal_id, user_id, day_id];
    await pool.query(query, values);
+ }
+
+ async function updateUserImage(user_id, image){
+   let query = `UPDATE users SET profile_img = $2 WHERE id = $1`;
+   const values = [user_id, image];
+   await pool.query(query, values);
+ }
+
+ async function getUserCreatedMeals(user_id){
+   let query = `SELECT * FROM meals WHERE user_id = $1`;
+   const results = await pool.query(query, [user_id]);
+   return results.rows;
+ }
+
+ async function getYearsAvailable(){
+   let query = `SELECT MIN(year), MAX(year) FROM calendars`;
+   const results =  await pool.query(query);
+   return results.rows;
  }
 
 const queries = {
@@ -283,7 +306,11 @@ const queries = {
    getDayId:getDayId,
    getUserWeek:getUserWeek,
    removeMealFromCalendar:removeMealFromCalendar,
-   getMealIdsByMonth:getMealIdsByMonth
+   getMealIdsByMonth:getMealIdsByMonth,
+   updateUserImage: updateUserImage,
+   getUserCreatedMeals: getUserCreatedMeals,
+   getYearsAvailable: getYearsAvailable,
+   getNewestMeals: getNewestMeals
 }
 
 module.exports = queries;

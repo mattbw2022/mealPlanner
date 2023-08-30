@@ -1,12 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
 
+section{
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+}
+
+#random-meal-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+}
+
 .meal-card{
+  display: none;
   justify-self: center;
   max-height: 100%;  
   max-width: 50%;
   color: white;
   background-color: black;
-  margin: 5em 0 0 0;
   padding: 2em;
   text-align: center;
 }
@@ -27,6 +40,36 @@
   font-size: large;
   font-weight: bold;
   margin: 1em 0;
+}
+
+.fresh-meals-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+  border: solid;
+}
+
+.fresh-meal{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5em;
+}
+
+.fresh-meal img{
+  min-width: 25%;
+  max-width: 25%;
+  border: solid;
+  border-radius: 2em;
+}
+
+.fresh-meal a{
+  color: black;
+}
+
+.fresh-meal a:visited{
+  color: black;
 }
 
 .newsfeed-container{
