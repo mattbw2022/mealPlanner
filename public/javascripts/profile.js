@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editButton.addEventListener('click', showInput);
     
     function showInput() {
-      const form = document.getElementById('meal-card');
+      const form = document.getElementById('edit-img-form');
       // Toggle the display property of the filter container
       if (form.style.display === 'none' || form.style.display === '') {
         form.style.display = 'block';

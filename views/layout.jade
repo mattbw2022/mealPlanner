@@ -28,5 +28,8 @@ html
 
   if messages.error
     .error-box
-      p.error-message= messages.error
+      p.error-message=messages.error
+  if messages.success 
+    .success-box 
+      p.success-message=messages.success
   block content

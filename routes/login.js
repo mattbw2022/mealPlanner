@@ -2,7 +2,7 @@ var express = require('express');
 var queries = require('../queries');
 var router = express.Router();
 const bcrypt = require('bcrypt');
-
+const { check } = require('express-validator');
 let noUser = false;
 let wrongPassword = false;
 
@@ -13,11 +13,18 @@ router.get('/', function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
   const { email, password } = req.body;
-  let user = await queries.findUserByEmail(email);
+  if (email && password){
+    user = await queries.findUserByEmail(email);
     if (!user) {
       noUser = true;
       return res.render("login", {noUser: noUser});
     }
+  }
+  else {
+    req.flash('error', 'Email and password are required to login.');
+    return res.redirect('login');
+  }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
         req.session.authenticated = true;

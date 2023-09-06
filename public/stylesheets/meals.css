@@ -169,3 +169,22 @@ label{
     width: 50%;
     justify-self: center;
 }
+
+/* mealsByUser */
+#user-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+    background-color: rgb(255, 232, 164);
+    border: solid;
+    margin: 1em;
+    padding: 0 2em 2em 2em;
+}
+
+#user-container img {
+    border: solid;
+    border-color: white;
+}
+
+/* mealsByUser */

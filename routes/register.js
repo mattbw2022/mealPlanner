@@ -4,49 +4,59 @@ var queries = require('../queries');
 const helper = require('../helper');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const {check, validationResult} = require('express-validator');
 
-let noInput;
-let insecurePassword = false;
-let emailInUse = false;
+let options = {
+  noInput: '',
+  emailInUse: false,
+  insecurePassword: false,
+  usernameInUse: false
+}
 
 router.get('/', function(req, res, next) {
-     res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
+     res.render('register', {options});
   });
 
-router.post("/", async (req, res) => {
+router.post("/", [check('firstname').escape(), check('lastname').escape(), check('username').escape(),], async (req, res) => {
+  const result = validationResult(req);
   if (!req.body.firstname){
-    noInput = 'firstname'
-    return res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
+    options.noInput = 'firstname'
+    return res.render('register', {options});
   }
   if (!req.body.lastname){
-    noInput = 'lastname'
-    return res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
+    options.noInput = 'lastname'
+    return res.render('register', {options});
+  }
+  if (!req.body.username){
+    options.noInput = 'username'
+    return res.render('register', {options})
+  }
+  const duplicateUsername = await queries.findUserByUsername(req.body.username)
+  if (duplicateUsername){
+    options.usernameInUse = true;
+    return res.render('register', {options})
   }
   if (!req.body.email){
-    noInput = 'email'
-    return res.render('register', {noInput: noInput , insecurePassword: insecurePassword});
+    options.noInput = 'email'
+    return res.render('register', {options});
   }
-  const queryResult = await queries.allEmails();
-  queryResult.rows.forEach(element => {
-    if (element.email === req.body.email){
-      emailInUse = true;
-    }
-  });
+  const duplicateEmail = await queries.findUserByEmail(req.body.email);
+  if (duplicateEmail){
+    options.emailInUse = true;
+    return res.render('register', {options});  
 
-  if(emailInUse){
-    return res.render('register', {noInput: noInput , insecurePassword: insecurePassword, emailInUse:emailInUse});  
   }
 
   if (!req.body.password){
-    noInput = 'password'
-    return res.render('register', );
+    options.noInput = 'password'
+    return res.render('register', {options});
   }
   else{
     const password = req.body.password;
     const strongPassword = helper.checkPasswordStrength(password);
     if(!strongPassword){
-      insecurePassword = true;
-      return res.render('register', {noInput: noInput , insecurePassword: insecurePassword})
+      options.insecurePassword = true;
+      return res.render('register', {options})
     }
     }
   
@@ -56,14 +66,12 @@ router.post("/", async (req, res) => {
   user.password = hash;
   const newUser = await queries.createUser(user);
   if (newUser) {
-    
     req.session.authenticated = true;
     req.session.user= {
       id: newUser.id,
       sessionID: req.sessionID
     }
-
-    queries.populateCalendarForNewUser(req.session.user.id);
+    await queries.populateCalendarForNewUser(req.session.user.id);
     res.redirect('/profile');
   } else {
     res.status(500).json({ msg: "Unable to create user" });

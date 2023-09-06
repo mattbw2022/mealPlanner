@@ -2,14 +2,16 @@ extends layout
 block styles 
     link(rel="stylesheet", href="/stylesheets/index.css")
 block scripts
-    script(src="/javascripts/index.js");  
+    script(src="/javascripts/index.js")  
 block content
   body
   section
     #random-meal-container
       #random-btn-container
         h2 Need an Idea?
-        button#random-meal-btn(type="button") Get a Random Meal 
+        button#random-meal-btn(type="button") Get a Random Meal
+      #placeholder
+        img(src="/images/question-mark.png", alt="Question Mark") 
       each meal, i in options.meals
         div(class="meal-card-" + i +" meal-card")
           a#random-meal-link(href="/meals/individualMeal/" + meal.id)=meal.title
@@ -17,13 +19,18 @@ block content
     .fresh-meals-container 
       h2 Fresh Meals 
       each newMeal in options.newestMeals
-        .fresh-meal
-          a(href="/meals/individualMeal/" + newMeal.id)=newMeal.title 
-          img(src=newMeal.image, alt=newMeal.title)
-  .newsfeed-container 
-    h2 Newsfeed
-    for article in options.articles
-      div.news-article
-        a(href=article.url)=article.title
-        img(src=article.img)
+        a(href="/meals/individualMeal/" + newMeal.id).fresh-meal
+          .fresh-meal-info
+            p(class="fresh-bold")=newMeal.title
+            p Created by 
+              span(class="fresh-bold")=newMeal.userInfo.username
+            p=newMeal.userInfo.date
+            img.credit-img(src=newMeal.userInfo.image, alt="User Picture")
+          img.fresh-meal-img(src=newMeal.image, alt=newMeal.title)
+  //- .newsfeed-container 
+  //-   h2 Newsfeed
+  //-   for article in options.articles
+  //-     div.news-article
+  //-       a(href=article.url)=article.title
+  //-       img(src=article.img)
       

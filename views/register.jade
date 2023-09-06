@@ -5,21 +5,25 @@ block content
     form.register-form(action="/register", method="post") 
         h1 Register
         input.register-input(type="text", name="firstname", placeholder="First Name")
-        if noInput === "firstname"
+        if options.noInput === "firstname"
             p.err-msg First name is required
         input.register-input(type="text", name="lastname", placeholder="Last Name")
-        if noInput === "lastname"
+        if options.noInput === "lastname"
             p.err-msg Last name is required
+        input.register-input(type="text", name="username", placeholder="Username")
+        if options.noInput === "username"
+            p.err-msg Username is required
+        if options.usernameInUser === true
+            p.err-msg Username is already associated with an account.
         input.register-input(type="email", name="email", placeholder="Email")
-        if noInput === "email"
+        if options.noInput === "email"
             p.err-msg Email is required
-        if emailInUse === true 
+        if options.emailInUse === true 
             p.err-msg Email is already associated with an accout.  
-            a(href="http://localhost:3000/login/recoverPassword", target="_blank", rel="noopener noreferrer")  Forgot Password?
         input.register-input(type="password", name="password" placeholder="Password")
-        if noInput === "password"
+        if options.noInput === "password"
             p.err-msg Password is required 
-        if insecurePassword
+        if options.insecurePassword
             p.err-msg Password Requirements: 
             ul.err-msg 
                 li 12 characters long

@@ -7,6 +7,7 @@ block content
     - var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     div#welcome
+        h3=username
         img(src=profileImg, alt="profile picture")
         button#edit-img-btn(type="button") Edit
         form#edit-img-form(action="/profile/updatePicture" method="post", enctype="multipart/form-data") 
@@ -28,17 +29,17 @@ block content
                             img(src=meal.image)
                             button(type="submit", value=meal.id) Remove
                     a(href='/meals') add a meal
-
-                           
     div#card-container 
         div.profile-card
             h2 myMeals
             if userMeals.length >= 1
                 for userMeal in userMeals        
-                    form(name=`meal${userMeal.id}` action="/profile/editMeal", method="get").user-meal
-                        h3=userMeal.title
+                    form(name=`meal${userMeal.id}` action="/meals/editMeal/" + userMeal.id, method="get").user-meal
+                        a(href="/meals/individualMeal/" + userMeal.id) 
+                            h3=userMeal.title
                         img(src=userMeal.image, alt=userMeal.title)
-                    button.edit-meal-btn(type="submit" form=`meal${userMeal.id}`) Edit
+                    a(href="/meals/editMeal/" + userMeal.id) 
+                        button.edit-meal-btn(type="button") Edit
             else
                 h2 No meals created! 
                 button Create Meal 

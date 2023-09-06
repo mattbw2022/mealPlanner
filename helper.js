@@ -52,7 +52,7 @@ function isLoggedIn(req, res, next) {
   
 function checkPasswordStrength(password){
   if (password.length < 12){
-
+    return false;
   }
   let caps = 0;
   let nums = 0;
@@ -220,11 +220,13 @@ async function deleteImage(filename,bucketName){
 function formatRecipe(mealDetails){
   let chars = [];
   let details = [];
+  let lineCount = 0;
   for (let i = 0; i < mealDetails.length; i++){
     if (mealDetails[i] !== "\r" || mealDetails[i] !== "\n"){
       chars.push(mealDetails[i]);
     }
     if (mealDetails[i] === "\n"){
+      lineCount++;
       let line = chars.join('');
       if(line === '\r\n'){
         continue;
@@ -232,6 +234,10 @@ function formatRecipe(mealDetails){
       details.push(line);
       chars = [];
     }
+  }
+  if (lineCount === 0){
+    details = mealDetails;
+    console.log(details);
   }
 
   return details;

@@ -32,7 +32,7 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     }
     const userId = req.session.user.id;
     const activeUser = await query.findUserById(userId);
-    options.firstName = activeUser.firstname;
+    options.username = activeUser.username;
     options.profileImg = await helper.getSignedUrl(activeUser.profile_img, profileBucket);
     const userMeals = await query.getUserCreatedMeals(userId);
     if (userMeals){

@@ -1,0 +1,39 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/meals.css")
+block scripts
+    script(src="/javascripts/meals.js") 
+block content
+    #user-container
+        h2=options.user.username
+        img(src=options.user.image, alt="user profile picture")
+    - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Decemeber'];
+    - var days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+    div.meal-container
+        if options.meals.length === 0
+            h3 This user has not created any meals.
+        each meal, i in options.meals
+            div.meal
+                img.meal-img(src=meal.image, alt=meal.title)
+                a(href='meals/individualMeal/' + meal.id)=meal.title
+                button.addMeal-btn(type="button") Add Meal
+                form.addMeal(action="calendar/addMeal/" + meal.id method="post")
+                    div.select-container
+                        div.date-item-container
+                            label(for='month') Month
+                            select.date(type="dropdown" name="month" placeholder="Month")
+                                each month, i in months   
+                                    option(value=i)=month
+                        div.date-item-container
+                            label(for="day") Day
+                            select.date(type="dropdown" name="day")
+                                each day in days 
+                                    option(value=day)=day
+                        div.date-item-container
+                            label(for="day") Day
+                            select.date(type="dropdown" name="year")
+                                each year in options.yearsArray
+                                    option(value=year)=year
+                    button(type="submit") Add to calendar
+                     
+

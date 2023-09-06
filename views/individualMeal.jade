@@ -9,20 +9,28 @@ block content
             img(src=mealImage alt='picture of meal or default image')#meal-img
             #creator-info
                 p=credit
-                a(href="/profile") 
+                a(href="/meals/user/" + username) 
                     img(src=userImage alt='user profile picture')#credit-img
         #steps-container
             #ingredient-list
                 h3 Ingredients
-                for ingredient in ingredients
-                    .ingredient
+                if typeof ingredients === 'string'
+                    .ingredient 
                         input(type="checkbox")
-                        label=ingredient
+                        label=ingredients
+                else
+                    for ingredient in ingredients
+                        .ingredient
+                            input(type="checkbox")
+                            label=ingredient
             #direction-list
                 h3 Directions
                 ol
-                    for direction in directions
-                        li=direction
+                    if typeof directions === 'string'
+                        li=directions 
+                    else
+                        for direction in directions
+                            li=direction
             #tag-container
                 for tag in tags 
                     a(href="/meals/filter/" + tag.id)=tag.name

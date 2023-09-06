@@ -1,15 +1,15 @@
 extends layout
 block styles 
-    link(rel="stylesheet", href="/stylesheets/addMeal.css")
+    link(rel="stylesheet", href="/stylesheets/createMeal.css")
 block scripts
     script(src="/javascripts/frontEnd.js") 
 block content 
-    - var ingredientsHelper = 'Example:\n1 large egg\n½ teaspoon salt\n½ teaspoon ground black pepper\n1 pound ground beef\n½ cup fine dry bread crumbs'
-    - var instructionsHelper = 'Example:\n1)Make patties\n2)cook\n3)eat'
-    h1 createMeal
+    - var titleHelper = 'Example: Grilled Cheese Sandwiches'
+    - var ingredientsHelper = 'Example:\n2 slices of bread\n1 slice of cheese\n1 tbsp butter'
+    - var instructionsHelper = 'Example:\nHeat non-stick pan over medium low heat.\nSpread half of the butter on one piece of bread.\nOnce pan is hot put bread on the pan butter side down.\nPut cheese on top of bread in the skillet.\nButter the other piece of bread and put on top of cheese, unbuttered side down.\nWhen the bottom of the sandwich is golden brown, flip and cook until the other side is golden brown\nEnjoy!'
     form#newMeal(action="/meals/createMeal", method="post", enctype="multipart/form-data")
         h2 Meal Title 
-        input(type="text", name="title")
+        input(type="text", name="title" placeholder='Grilled Cheese Sandwich')
         if noTitle === true 
             p.err-msg A meal title is required.
         if isDuplicate === true
@@ -51,6 +51,6 @@ block content
                 
 
         h2 Add a picture 
-        <input type = "file" name = "image" accept = "image/*" />
+        <input class="custom-file-input" type = "file" name = "image" accept = "image/*" />
         button(type="submit") Add Meal
        

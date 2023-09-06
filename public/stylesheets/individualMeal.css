@@ -8,6 +8,8 @@ section{
 
 #meal-img{
     width: 60%;
+    max-height: 18em;
+    min-height: 18em;
 }
 
 #title-container{
@@ -18,7 +20,7 @@ section{
     background-color: rgb(255, 232, 164);
     width: 40%;
     justify-content: center;
-    max-height: 28em;
+    max-height: 40em;
 }
 
 section h1{

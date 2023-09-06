@@ -4,12 +4,12 @@ const {isLeapYear} = require('./calendar');
 
 async function createUser(user){
    try{
-      let query = 'INSERT INTO public.users (firstname, lastname, email, password) VALUES ($1, $2, $3, $4)';
-      const values = [user.firstname, user.lastname, user.email, user.password];
+      const query1 = 'INSERT INTO public.users (firstname, lastname, email, password, username) VALUES ($1, $2, $3, $4, $5)';
+      const values = [user.firstname, user.lastname, user.email, user.password, user.username];
 
-      await pool.query(query, values);
-      query = 'SELECT * FROM public.users WHERE email = $1::varchar';
-      const newUser = await pool.query(query, [user.email]);
+      await pool.query(query1, values);
+      const query2 = 'SELECT * FROM public.users WHERE email = $1::varchar';
+      const newUser = await pool.query(query2, [user.email]);
       return newUser.rows[0];
 
    }catch(err){
@@ -18,23 +18,26 @@ async function createUser(user){
 }
 
 async function findUserByEmail(email){
-   query = 'SELECT * FROM public.users WHERE email = $1::varchar';
+   const query = 'SELECT * FROM public.users WHERE email = $1::varchar';
    const results = await pool.query(query, [email]);
-   if (results.rows.length > 1){
-      console.log('duplicate emails!');
-   }
    const user = results.rows[0];
    return user;
 }
 
+async function findUserByUsername(username){
+   const query = 'SELECT * FROM users WHERE username = $1';
+   const results = await pool.query(query, [username]);
+   return results.rows[0];
+}
+
 async function allEmails(){
-   query = 'SELECT email FROM users';
+   const query = 'SELECT email FROM users';
    const results = await pool.query(query);
    return results;
 }
 
 async function findUserById(id){
-   query = 'SELECT * FROM public.users WHERE id = $1::integer';
+   const query = 'SELECT * FROM public.users WHERE id = $1::integer';
    const results = await pool.query(query, [id]);
    if (results.rows.length > 1){
       console.log('duplicate id!');
@@ -45,7 +48,7 @@ async function findUserById(id){
 
 async function addToCalendar(day, month, year, user_id, meal_id){
    try{
-         let query = `UPDATE calendars
+         const query = `UPDATE calendars
          SET meal_ids = array_append(meal_ids, $1)
          WHERE user_id = $2
          AND day = $3
@@ -72,13 +75,13 @@ async function addMeal(meal, user_id, image, time){
          }
       }
 
-      query = 'INSERT INTO public.meals (user_id, title, ingredients, directions, tag_ids, image, time) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+      const query1 = 'INSERT INTO public.meals (user_id, title, ingredients, directions, tag_ids, image, time) VALUES ($1, $2, $3, $4, $5, $6, $7)';
       const values = [user_id, meal.title, meal.ingredients, meal.directions, tagIds, image, time];
 
-      await pool.query(query, values);
+      await pool.query(query1, values);
 
-      query = 'SELECT * FROM public.meals WHERE user_id = $1::integer ORDER BY time DESC';
-      const newMeal = await pool.query(query, [user_id]);
+      const query2 = 'SELECT * FROM public.meals WHERE user_id = $1::integer ORDER BY time DESC';
+      const newMeal = await pool.query(query2, [user_id]);
       return newMeal.rows[0];
 
    }catch(err){
@@ -87,19 +90,19 @@ async function addMeal(meal, user_id, image, time){
 }
 
 async function getAllMeals(){
-   let query = `SELECT * FROM meals`;
+   const query = `SELECT * FROM meals`;
    const results = await pool.query(query);
    return results.rows;
 }
 
 async function getTagsByType(input){
-   let query = `SELECT * from tags WHERE type = $1`;
+   const  query = `SELECT * from tags WHERE type = $1`;
    const results = await pool.query(query, [input]);
    return results.rows;
 }
 
 async function getTagsById(tag_id){
-   let query = `SELECT * FROM tags WHERE id = $1`;
+   const query = `SELECT * FROM tags WHERE id = $1`;
    const results = await pool.query(query, [tag_id]);
    return results.rows;
 }
@@ -153,34 +156,40 @@ async function populateCalendarForNewUser(userId) {
  }
 
  async function getDayId(date){
-   let query = `SELECT day_id FROM calendars WHERE year = $1 AND month = $2 AND day = $3 LIMIT 1`;
+   const query = `SELECT day_id FROM calendars WHERE year = $1 AND month = $2 AND day = $3 LIMIT 1`;
    const values = [date.year, date.month, date.day]
    const results = await pool.query(query, values);
    return results.rows[0].day_id;
  }
 
  async function getMealIdsByMonth(year, month, user_id){
-   let query = `SELECT meal_ids FROM calendars WHERE year = $1 AND month = $2 AND user_id = $3 ORDER BY day`;
-   let values = [year, month, user_id];
+   const query = `SELECT meal_ids FROM calendars WHERE year = $1 AND month = $2 AND user_id = $3 ORDER BY day`;
+   const values = [year, month, user_id];
 
    const results = await pool.query(query, values);
    return results.rows;
  }
 
  async function getMealById(meal_id){
-   let query = `SELECT * FROM meals WHERE id = $1`;
+   const query = `SELECT * FROM meals WHERE id = $1`;
    const results = await pool.query(query, [meal_id]);
    return results.rows[0];
  }
 
  async function getMultipleMealsById(meal_id_array){
-   let query = `SELECT * FROM meals WHERE id = ANY($1)`
+   const query = `SELECT * FROM meals WHERE id = ANY($1)`
    const results = await pool.query(query, [meal_id_array]);
    return results.rows;
  }
 
+ async function getMealsByUserId(user_id){
+   const query = `SELECT * FROM meals WHERE user_id = $1`;
+   const results = await pool.query(query, [user_id]);
+   return results.rows;
+ }
+
  async function getMealsContaining(search){
-   let query = `SELECT * FROM meals
+   const query = `SELECT * FROM meals
                   WHERE title LIKE $1
                   OR ingredients LIKE $1
                   OR directions LIKE $1`;
@@ -201,7 +210,7 @@ async function populateCalendarForNewUser(userId) {
             }
          }
          console.log(tagIds);
-         let query = `SELECT * FROM meals WHERE tag_ids && $1`
+         const query = `SELECT * FROM meals WHERE tag_ids && $1`
          const results = await pool.query(query, [tagIds]);
          return results.rows;
          
@@ -212,7 +221,7 @@ async function populateCalendarForNewUser(userId) {
  }
 
  async function getNewestMeals(){
-   let query = 'SELECT * FROM meals ORDER BY time DESC LIMIT 10';
+   const query = 'SELECT * FROM meals ORDER BY time DESC LIMIT 10';
    const results = await pool.query(query);
    return results.rows;
  }
@@ -249,11 +258,11 @@ async function populateCalendarForNewUser(userId) {
          starting_id = day_id - 6
          ending_id = day_id;
          break;
-      defualt:
+      default:
         return console.log('ERROR');
     }
 
-    let query = `SELECT * FROM calendars WHERE day_id BETWEEN $1 AND $2 AND user_id = $3 ORDER BY day_id ASC`;
+    const query = `SELECT * FROM calendars WHERE day_id BETWEEN $1 AND $2 AND user_id = $3 ORDER BY day_id ASC`;
     const values = [starting_id, ending_id, user_id]
     const results = await pool.query(query, values);
     return results.rows;
@@ -261,7 +270,7 @@ async function populateCalendarForNewUser(userId) {
 
 
  async function removeMealFromCalendar(user_id, meal_id, day_id){
-   let query = `UPDATE calendars
+   const query = `UPDATE calendars
             SET meal_ids = array_remove(meal_ids, $1)
             WHERE user_id = $2
             AND day_id = $3`;
@@ -270,24 +279,71 @@ async function populateCalendarForNewUser(userId) {
  }
 
  async function updateUserImage(user_id, image){
-   let query = `UPDATE users SET profile_img = $2 WHERE id = $1`;
+   const query = `UPDATE users SET profile_img = $2 WHERE id = $1`;
    const values = [user_id, image];
    await pool.query(query, values);
  }
 
  async function getUserCreatedMeals(user_id){
-   let query = `SELECT * FROM meals WHERE user_id = $1`;
+   const query = `SELECT * FROM meals WHERE user_id = $1`;
    const results = await pool.query(query, [user_id]);
    return results.rows;
  }
 
  async function getYearsAvailable(){
-   let query = `SELECT MIN(year), MAX(year) FROM calendars`;
+   const query = `SELECT MIN(year), MAX(year) FROM calendars`;
    const results =  await pool.query(query);
    return results.rows;
  }
 
+ async function updateMeal(id, updates){
+   console.log(updates);
+   let paramList = [];
+   let paramValues = [];
+   let query = `UPDATE meals SET `
+   if(updates.title){
+      paramList.push('title');
+      paramValues.push(updates.title);
+   }
+   if(updates.ingredients){
+      paramList.push('ingredients');
+      paramValues.push(updates.ingredients);
+   }
+   if(updates.directions){
+      paramList.push('directions');
+      paramValues.push(updates.directions);
+   }
+   if(updates.tags){
+      paramList.push('tag_ids');
+      paramValues.push(updates.tags);
+   }
+   if(updates.image){
+      paramList.push('image')
+      paramValues.push(updates.image);
+   }
+   if (paramList.length === 0 || paramValues.length === 0){
+      return;
+   }
+
+   else {
+      let i;
+      for (i = 0; i < paramList.length; i++){
+         if (i === 0){
+            query = `${query}${paramList[i]} = $${i + 1}`;
+            continue;
+         }
+        query = `${query}, ${paramList[i]} = $${i + 1}`;
+      }
+      query = `${query} WHERE id = $${i + 1}`;
+   }
+   paramValues.push(id);
+   console.log(query);
+   console.log(paramValues.length);
+   await pool.query(query, paramValues);
+ }
+
 const queries = {
+   findUserByUsername: findUserByUsername,
    createUser: createUser,
    findUserByEmail: findUserByEmail,
    findUserById: findUserById,
@@ -310,7 +366,9 @@ const queries = {
    updateUserImage: updateUserImage,
    getUserCreatedMeals: getUserCreatedMeals,
    getYearsAvailable: getYearsAvailable,
-   getNewestMeals: getNewestMeals
+   getNewestMeals: getNewestMeals,
+   updateMeal: updateMeal,
+   getMealsByUserId: getMealsByUserId
 }
 
 module.exports = queries;

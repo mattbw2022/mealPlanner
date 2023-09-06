@@ -9,7 +9,8 @@ block content
                     p.err-msg No user found. Please try again or sign up.
                 input#password(type="password", name="password", placeholder="Password")
                 if wrongPassword
-                    p.err-msg Incorrect password!
+                    p.err-msg Incorrect password
+                    a(href="http://localhost:3000/login/recoverPassword", target="_blank", rel="noopener noreferrer")  Forgot Password?
                 button(type="submit") Login
                 p.login-text new user?
                     span 

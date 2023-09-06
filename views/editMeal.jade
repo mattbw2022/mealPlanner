@@ -1,0 +1,78 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/createMeal.css")
+block scripts
+    script(src="/javascripts/frontEnd.js") 
+block content 
+    h1 editMeal
+    form#newMeal(action="/meals/editMeal/" + options.meal.id, method="post", enctype="multipart/form-data")
+        h2 Meal Title 
+        input(type="text", name="title", value=options.meal.title)
+        if noTitle === true 
+            p.err-msg A meal title is required.
+        if isDuplicate === true
+            p.err-msg The meal title entered already exists, please choose another name.
+        h2 Ingredients
+        textarea#ingredients(name="ingredients", cols="30", rows="10")=options.meal.ingredients
+        if noIngredients === true
+            p.err-msg Ingredients are required.
+        h2 Cooking Instructions 
+        textarea#cookingInstruction(name="directions", cols="30", rows="10")=options.meal.directions
+        if noDirections === true 
+            p.err-msg Instructions are required.
+        h2 Tags (Optional)
+        div#tag-container
+            div.tag-type-container
+                h3 Cuisine
+                for cuisine in options.tags.cuisineTags
+                    div.checklist
+                        if options.meal.tag_ids
+                            if options.meal.tag_ids.includes(cuisine.id) 
+                                input(type="checkbox", value=cuisine.id, name="tags", checked="true")
+                            else 
+                                input(type="checkbox", value=cuisine.id, name="tags") 
+                        else 
+                            input(type="checkbox", value=cuisine.id, name="tags")
+                        label=cuisine.name 
+            div.tag-type-container 
+                h3 Time
+                for time in options.tags.timeTags
+                    div.checklist
+                        if options.meal.tag_ids
+                            if options.meal.tag_ids.includes(time.id) 
+                                input(type="checkbox", value=time.id, name="tags", checked="true")
+                            else 
+                                input(type="checkbox", value=time.id, name="tags") 
+                        else 
+                            input(type="checkbox", value=time.id, name="tags")
+                        label=time.name 
+            div.tag-type-container
+                h3 Difficulty
+                for difficulty in options.tags.difficultyTags
+                    div.checklist
+                        if options.meal.tag_ids
+                            if options.meal.tag_ids.includes(difficulty.id) 
+                                input(type="checkbox", value=difficulty.id, name="tags", checked="true")
+                            else 
+                                input(type="checkbox", value=difficulty.id, name="tags") 
+                        else 
+                            input(type="checkbox", value=difficulty.id, name="tags")
+                        label=difficulty.name 
+            div.tag-type-container 
+                h3 Category
+                for category in options.tags.categoryTags
+                    div.checklist
+                        if options.meal.tag_ids
+                            if options.meal.tag_ids.includes(category.id) 
+                                input(type="checkbox", value=category.id, name="tags", checked="true")
+                            else 
+                                input(type="checkbox", value=category.id, name="tags") 
+                        else 
+                            input(type="checkbox", value=category.id, name="tags")
+                        label=category.name            
+                
+
+        h2 Update picture 
+        <input type = "file" name = "image" accept = "image/*"/>
+        button(type="submit") Update Meal
+       

@@ -69,6 +69,19 @@ header {
     font-weight: bold;
   }
 
+  .success-box {
+    background-color: #d3ffcc;
+    border: 1px solid #00ff37;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .success-message {
+    color: #00ff37;
+    font-weight: bold;
+  }
+
   a {
     text-decoration: none;
     color: white;
