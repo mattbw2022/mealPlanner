@@ -4,10 +4,11 @@ section{
   display: flex;
   justify-content: space-between;
   margin: 1em;
-  max-height: 30em;
+  max-height: 27em;
+  min-height: 27em;
 }
 
-#random-meal-container{
+#random-recipe-container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +28,7 @@ section{
   width: 100%;
 }
 
-.meal-card{
+.recipe-card{
   display: none;
   color: white;
   background-color: black;
@@ -38,11 +39,11 @@ section{
   align-items: center;
 }
 
-.meal-card h2{
+.recipe-card h2{
   margin-top: 0;
 }
 
-.meal-img{
+.recipe-img{
   height: 12em;
   max-width: 15em;
   min-width: 15em;
@@ -50,13 +51,13 @@ section{
   border-color: white;
 }
 
-#random-meal-link{
+#random-recipe-link{
   font-size: large;
   font-weight: bold;
   margin: 1em 0;
 }
 
-.fresh-meals-container{
+.fresh-recipes-container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,7 +67,7 @@ section{
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
-.fresh-meal{
+.fresh-recipe{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -81,19 +82,20 @@ section{
   font-weight: bold;
 }
 
-.fresh-meal:visited{
+.fresh-recipe:visited{
   color: black;
 }
 
-.fresh-meal:hover{
+.fresh-recipe:hover{
   background-color: rgb(255, 232, 164);
+  color: black;
 }
 
-.fresh-meal p{
+.fresh-recipe p{
   margin: 0.5em;
 }
 
-.fresh-meal-img{
+.fresh-recipe-img{
   min-width: 10em;
   max-width: 10em;
   min-height: 8em;
@@ -102,15 +104,15 @@ section{
   border-radius: 2em;
 }
 
-.fresh-meal a{
+.fresh-recipe a{
   color: black;
 }
 
-.fresh-meal a:visited{
+.fresh-recipe a:visited{
   color: black;
 }
 
-.fresh-meal-info{
+.fresh-recipe-info{
   display: flex;
   flex-direction: column;  
 }

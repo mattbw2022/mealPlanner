@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
     res.render('login', undefined);
 
   });
-
+// add security check for inputs
 router.post('/', async function(req, res, next) {
   const { email, password } = req.body;
   if (email && password){

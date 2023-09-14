@@ -1,27 +1,43 @@
 extends layout
 block styles 
-    link(rel="stylesheet", href="/stylesheets/createMeal.css")
+    link(rel="stylesheet", href="/stylesheets/createRecipe.css")
 block scripts
-    script(src="/javascripts/frontEnd.js") 
+    script(src="/javascripts/createRecipe.js") 
 block content 
     - var titleHelper = 'Example: Grilled Cheese Sandwiches'
-    - var ingredientsHelper = 'Example:\n2 slices of bread\n1 slice of cheese\n1 tbsp butter'
     - var instructionsHelper = 'Example:\nHeat non-stick pan over medium low heat.\nSpread half of the butter on one piece of bread.\nOnce pan is hot put bread on the pan butter side down.\nPut cheese on top of bread in the skillet.\nButter the other piece of bread and put on top of cheese, unbuttered side down.\nWhen the bottom of the sandwich is golden brown, flip and cook until the other side is golden brown\nEnjoy!'
-    form#newMeal(action="/meals/createMeal", method="post", enctype="multipart/form-data")
-        h2 Meal Title 
-        input(type="text", name="title" placeholder='Grilled Cheese Sandwich')
+    form#newRecipe(action="/recipes/createRecipe", method="post", enctype="multipart/form-data")
+        h2 Recipe Title 
+        input#title(type="text", name="title" placeholder='Hamburger')
         if noTitle === true 
             p.err-msg A meal title is required.
         if isDuplicate === true
             p.err-msg The meal title entered already exists, please choose another name.
+        h2 Servings 
+        input#servings(type="text", name="servings", placeholder="8")
         h2 Ingredients
-        textarea#ingredients(name="ingredients", cols="30", rows="10", placeholder=ingredientsHelper)
-        if noIngredients === true
-            p.err-msg Ingredients are required.
-        h2 Cooking Instructions 
-        textarea#cookingInstruction(name="directions", cols="30", rows="10", placeholder=instructionsHelper)
-        if noDirections === true 
-            p.err-msg Instructions are required.
+        #ingredients
+            #ingredient-container
+                .input-container
+                    label(for="quantity") Qty  
+                    input.quantity(type="text" name="quantity" placeholder="1")
+                .input-container
+                    label(for="unit") Unit 
+                    input.unit(type="text" name="unit" placeholder="lb")
+                .input-container 
+                    label(for="ingredients") Ingredients
+                    input.ingredient(type="text" name="ingredients" placeholder= "Ground beef")
+        p#nan-msg Quantity must be a number
+        button#add-ingredient(type="button") Add Ingredient
+            if noIngredients === true
+                p.err-msg Ingredients are required.
+        h2 Cooking Directions
+        #directions
+            #direction-container 
+                input.step(type="text" name="directions" placeholder="Make hamburger patties") 
+        button#add-step(type="button") Add Step
+            if noDirections === true 
+                p.err-msg Instructions are required.
         h2 Tags (Optional)
         div#tag-container
             div.tag-type-container

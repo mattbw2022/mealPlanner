@@ -7,23 +7,23 @@
     
     function expandInformation(event) {
         const clickedButton = event.currentTarget;
-        const mealListId = clickedButton.dataset.mealList; // Get the associated meal list ID from data attribute
-        const mealList = document.getElementById(mealListId);
+        const reccipeListId = clickedButton.dataset.reccipeList; // Get the associated reccipe list ID from data attribute
+        const reccipeList = document.getElementById(reccipeListId);
         
-        if (mealList) {
-            if (mealList.style.display === 'none' || mealList.style.display === '') {
-                mealList.style.display = 'flex';
+        if (reccipeList) {
+            if (reccipeList.style.display === 'none' || reccipeList.style.display === '') {
+                reccipeList.style.display = 'flex';
             } else {
-                mealList.style.display = 'none';
+                reccipeList.style.display = 'none';
             }
         }
     }
 
-    const changeMealButtons = document.querySelectorAll('.move-meal-btn');
-    for (const button of changeMealButtons) {
-        button.addEventListener('click', prepMoveMeal);
+    const changeRecipeButtons = document.querySelectorAll('.move-recipe-btn');
+    for (const button of changeRecipeButtons) {
+        button.addEventListener('click', prepMoveRecipe);
     }
-    function prepMoveMeal(event) {
+    function prepMoveRecipe(event) {
         const button = event.target;
         const form = button.nextElementSibling;
         form.style.display = 'flex';

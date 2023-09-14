@@ -15,7 +15,7 @@ AWS.config.update({
   region: 'us-east-2',
 });
 
-const bucketName = 'mealplanner-meal-images';
+const bucketName = 'mealplanner-recipe-images';
 
 
 
@@ -40,7 +40,7 @@ function isLoggedIn(req, res, next) {
 
   function ensureAuthentication(req, res, next) {
     if (!req.session.authenticated || !req.session.user || !req.session.user.id) {
-      req.flash('error', 'You must be logged in to add meals to a calendar or create meals.');
+      req.flash('error', 'You must be logged in to add recipes to a calendar or create recipes.');
       return res.redirect('/login');
     }
     next();
@@ -111,17 +111,17 @@ function createTimestamp(milliseconds) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+const recipeBucket = 'mealplanner-recipe-images';
+const userBucket = 'mealplanner-user-images'
 
+async function renderallRecipes(res, options){
 
-async function renderAllMeals(res, options){
-  const bucketName = 'mealplanner-meal-images';
-
-  options.mealImages = [];
-  options.allMeals.forEach(async (meal) => {
-    options.mealImages.push(await getSignedUrl(meal.image, bucketName));
+  options.recipeImages = [];
+  options.allRecipes.forEach(async (recipe) => {
+    options.recipeImages.push(await getSignedUrl(recipe.image, recipeBucket));
   });
   setTimeout(()=>{
-    res.render('meals', {options});
+    res.render('recipes', {options});
   }, 250);
 }
 
@@ -160,11 +160,11 @@ async function addImage(req, bucketName){
           })
           .toBuffer();
           let imgName = '';
-          if (bucketName === 'mealplanner-profile-images'){
-            imgName = 'profile';
+          if (bucketName === 'mealplanner-user-images'){
+            imgName = 'user';
           }
-          else if (bucketName === 'mealplanner-meal-images'){
-            imgName = 'meal';
+          else if (bucketName === 'mealplanner-recipe-images'){
+            imgName = 'recipe';
           }
           
           filename = `${imgName}-image-${Date.now()}.${fileInfo.ext}`;
@@ -187,7 +187,7 @@ async function addImage(req, bucketName){
         } 
   
     else{
-      if (bucketName === 'mealplanner-meal-images'){
+      if (bucketName === 'mealplanner-recipe-images'){
         filename = 'yum-default.png';
       }
       else{
@@ -217,15 +217,15 @@ async function deleteImage(filename,bucketName){
 
 }
 
-function formatRecipe(mealDetails){
+function formatRecipe(recipeDetails){
   let chars = [];
   let details = [];
   let lineCount = 0;
-  for (let i = 0; i < mealDetails.length; i++){
-    if (mealDetails[i] !== "\r" || mealDetails[i] !== "\n"){
-      chars.push(mealDetails[i]);
+  for (let i = 0; i < recipeDetails.length; i++){
+    if (recipeDetails[i] !== "\r" || recipeDetails[i] !== "\n"){
+      chars.push(recipeDetails[i]);
     }
-    if (mealDetails[i] === "\n"){
+    if (recipeDetails[i] === "\n"){
       lineCount++;
       let line = chars.join('');
       if(line === '\r\n'){
@@ -236,47 +236,46 @@ function formatRecipe(mealDetails){
     }
   }
   if (lineCount === 0){
-    details = mealDetails;
-    console.log(details);
+    details = recipeDetails;
   }
 
   return details;
 }
 
-async function arrangeCalendarInfo(mealIds, options, date){
-  let uniqueMealIdArrary = [];
+async function arrangeCalendarInfo(recipeIds, options, date){
+  let uniqueRecipeIdArray = [];
     let isDuplicate;
-    for (let i = 0; i < mealIds.length; i++){
-      if (mealIds[i].meal_ids !== null && mealIds[i].meal_ids.length !== 0){
-          for(let j = 0; j < (mealIds[i].meal_ids.length); j++){
-            isDuplicate = uniqueMealIdArrary.includes(mealIds[i].meal_ids[j]);
+    for (let i = 0; i < recipeIds.length; i++){
+      if (recipeIds[i].recipe_ids !== null && recipeIds[i].recipe_ids.length !== 0){
+          for(let j = 0; j < (recipeIds[i].recipe_ids.length); j++){
+            isDuplicate = uniqueRecipeIdArray.includes(recipeIds[i].recipe_ids[j]);
             if (isDuplicate === false){
-              uniqueMealIdArrary.push(mealIds[i].meal_ids[j]);
+              uniqueRecipeIdArray.push(recipeIds[i].recipe_ids[j]);
             }
           }
       }
     }
-    const uniqueMeals = await query.getMultipleMealsById(uniqueMealIdArrary);
-    const bucketName = 'mealplanner-meal-images';
-    for (let i = 0; i < uniqueMeals.length; i++){
-      uniqueMeals[i].image = await getSignedUrl(uniqueMeals[i].image, bucketName);
+    const uniqueRecipes = await query.getMultipleRecipesById(uniqueRecipeIdArray);
+    const bucketName = 'mealplanner-recipe-images';
+    for (let i = 0; i < uniqueRecipes.length; i++){
+      uniqueRecipes[i].image = await getSignedUrl(uniqueRecipes[i].image, bucketName);
     }
 
-    for(let i = 0; i < mealIds.length; i++){
-      mealIds[i].meals = [];
-      if (mealIds[i].meal_ids === null){
-        delete mealIds[i].meal_ids;
+    for(let i = 0; i < recipeIds.length; i++){
+      recipeIds[i].recipes = [];
+      if (recipeIds[i].recipe_ids === null){
+        delete recipeIds[i].recipe_ids;
         continue;
       }
-      for(let j = 0; j < mealIds[i].meal_ids.length; j++){
-        for (let k = 0; k < uniqueMeals.length; k++){
-          if (mealIds[i].meal_ids[j] === uniqueMeals[k].id){
-            mealIds[i].meals.push(uniqueMeals[k]);
+      for(let j = 0; j < recipeIds[i].recipe_ids.length; j++){
+        for (let k = 0; k < uniqueRecipes.length; k++){
+          if (recipeIds[i].recipe_ids[j] === uniqueRecipes[k].id){
+            recipeIds[i].recipes.push(uniqueRecipes[k]);
           }
         }
 
       }
-      delete mealIds[i].meal_ids;
+      delete recipeIds[i].recipe_ids;
     }
     let k = 0;
     let tempDate = {
@@ -291,7 +290,7 @@ async function arrangeCalendarInfo(mealIds, options, date){
         }
         tempDate.day = parseInt(options.calendar.weeksArray[i][j].day);
         options.calendar.weeksArray[i][j].day_id = await query.getDayId(tempDate);
-        options.calendar.weeksArray[i][j].meals = mealIds[k].meals
+        options.calendar.weeksArray[i][j].recipes = recipeIds[k].recipes
         k++;
       }
     }
@@ -310,7 +309,7 @@ async function arrangeCalendarInfo(mealIds, options, date){
     isLoggedIn: isLoggedIn,
     checkPasswordStrength: checkPasswordStrength,
     ensureAuthentication: ensureAuthentication,
-    renderAllMeals: renderAllMeals,
+    renderallRecipes: renderallRecipes,
     getSignedUrl: getSignedUrl,
     createTimestamp:createTimestamp,
     addimage:addImage,

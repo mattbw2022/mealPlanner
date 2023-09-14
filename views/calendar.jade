@@ -21,8 +21,6 @@ block content
 
         a(href="/calendar/nextMonth") Next Month 
     h2 #{options.calendar.monthName} #{options.calendar.year}
-    if options.selectedMeal
-        h2=options.selectedMeal.name
     div#calendar-container
         .days-of-week
             for day, i in daysOfWeek
@@ -35,18 +33,18 @@ block content
                     else 
                         div.day(name="day" value="object.day")
                             h4=object.day
-                            if object.meals.length === 0
-                                .meal-container
-                                    p No meals selected 
-                                    a(href="/meals") Add Meal 
-                            if object.meals.length === 1
-                                for item in object.meals
-                                    .meal-container
-                                        a(href='meals/individualMeal/' + item.id)
+                            if object.recipes.length === 0
+                                .recipe-container
+                                    p No recipes selected 
+                                    a(href="/recipes") Add Recipes 
+                            if object.recipes.length === 1
+                                for item in object.recipes
+                                    .recipe-container
+                                        a(href='recipes/individualRecipes/' + item.id)
                                             p=item.title 
                                             img(src=item.image, alt=item.title)
-                                        button.move-meal-btn(type="button") Move Meal
-                                        form.move-meal-form(action="/calendar/moveMeal/" + item.id + "/" + object.day_id method="post")
+                                        button.move-recipe-btn(type="button") Move Recipe
+                                        form.move-recipe-form(action="/calendar/moveRecipe/" + item.id + "/" + object.day_id method="post")
                                             div.select-container
                                                 div.date-item-container
                                                     label(for='month') Month
@@ -64,21 +62,21 @@ block content
                                                         each year in options.yearsArray
                                                             option(value=year)=year
                                             button(type="submit") Update Calendar
-                                        form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
+                                        form(action="profile/removeRecipe/" + item.id + "/" + object.day_id method='post')
                                             button(type='submit') Remove
-                            if object.meals.length > 1
-                                .meal-container
-                                    - var multiMealStatement = `${object.meals.length} Meals`
-                                    p.multi-meal=multiMealStatement
-                                    button(class="expand-btn" data-meal-list="meal-list-" + object.day)  
+                            if object.recipes.length > 1
+                                .recipe-container
+                                    - var multiRecipeStatement = `${object.recipes.length} Recipes`
+                                    p.multi-recipe=multiRecipeStatement
+                                    button(class="expand-btn" data-recipe-list="recipe-list-" + object.day)  
                                         img(src="/images/expand-btn-img.PNG", alt="expand button")
-                                    div(id="meal-list-" + object.day class="meal-list")
-                                        for item in object.meals
-                                            a(href='meals/individualMeal/' + item.id)
+                                    div(id="recipe-list-" + object.day class="recipe-list")
+                                        for item in object.recipes
+                                            a(href='recipes/individualRecipe/' + item.id)
                                                 p=item.title 
                                                 img(src=item.image, alt=item.title)
-                                            button.move-meal-btn(type="button") Move Meal
-                                            form.move-meal-form(action="/calendar/moveMeal/" + item.id + "/" + object.day_id method="post")
+                                            button.move-recipe-btn(type="button") Move Recipe
+                                            form.move-recipe-form(action="/calendar/moveRecipe/" + item.id + "/" + object.day_id method="post")
                                                 div.select-container
                                                     div.date-item-container
                                                         label(for='month') Month
@@ -96,7 +94,7 @@ block content
                                                             each year in options.yearsArray
                                                                 option(value=year)=year
                                                 button(type="submit") Update Calendar
-                                            form(action="profile/removeMeal/" + item.id + "/" + object.day_id method='post')
+                                            form(action="profile/removeRecipe/" + item.id + "/" + object.day_id method='post')
                                                     button(type='submit') Remove
                                     
 

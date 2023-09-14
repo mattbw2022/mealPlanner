@@ -8,8 +8,8 @@ const calendar = require('../calendar');
 
 
 
-const userBucket = 'mealplanner-profile-images';
-const mealBucket = 'mealplanner-meal-images';
+const userBucket = 'mealplanner-user-images';
+const recipeBucket = 'mealplanner-recipe-images';
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -28,34 +28,35 @@ router.get('/', async function(req, res, next) {
     // options.articles = options.articles.slice(0, 10);
 
 
-  const allMeals = await query.getAllMeals();
-    for(let i = 0; i < allMeals.length; i++){
-      allMeals[i].image = await helper.getSignedUrl(allMeals[i].image, mealBucket);
+  const allRecipes = await query.getAllRecipes();
+  console.log(allRecipes);
+    for(let i = 0; i < allRecipes.length; i++){
+      allRecipes[i].image = await helper.getSignedUrl(allRecipes[i].image, recipeBucket);
     }
  
 
-  if(allMeals.length > 100){
-    while (allMeals.length > 100){
-      allMeals.slice(Math.random(Math.floor() * allMeals.length));
+  if(allRecipes.length > 100){
+    while (allRecipes.length > 100){
+      allRecipes.slice(Math.random(Math.floor() * allRecipes.length));
     }
   }
-  options.newestMeals = await query.getNewestMeals();
-  for(let i = 0; i < options.newestMeals.length; i++){
-    options.newestMeals[i].image = await helper.getSignedUrl(options.newestMeals[i].image, mealBucket);
+  options.newRecipes = await query.getnewRecipes();
+  for(let i = 0; i < options.newRecipes.length; i++){
+    options.newRecipes[i].image = await helper.getSignedUrl(options.newRecipes[i].image, recipeBucket);
   }
   let userInfo;
   let dateCreated;
-  for (let i = 0; i < options.newestMeals.length; i++){
-    userInfo = await query.findUserById(options.newestMeals[i].user_id);
+  for (let i = 0; i < options.newRecipes.length; i++){
+    userInfo = await query.findUserById(options.newRecipes[i].user_id);
     userImage = await helper.getSignedUrl(userInfo.profile_img, userBucket);
-    dateCreated = calendar.getFormatedDate(calendar.getDate(helper.createTimestamp(parseInt(options.newestMeals[i].time))));
-    options.newestMeals[i].userInfo = {
+    dateCreated = calendar.getFormatedDate(calendar.getDate(helper.createTimestamp(parseInt(options.newRecipes[i].time))));
+    options.newRecipes[i].userInfo = {
       username: userInfo.username, 
       image: userImage, 
       date: dateCreated
     };
   }
-  options.meals = allMeals;
+  options.recipes = allRecipes;
   
   setTimeout(()=>{
     res.render('index', {options});

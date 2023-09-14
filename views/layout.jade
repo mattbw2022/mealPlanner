@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= mealPlanner
+    title=myRecipePlanner
     link(rel='stylesheet', href='/stylesheets/layout.css')
     block styles
     block scripts
@@ -9,10 +9,10 @@ html
     body
   header 
     h1 
-      a(href='/') mealPlanner
+      a(href='/') myRecipePlanner
     nav 
       li 
-        a(href='/meals') meals 
+        a(href='/recipes') recipes 
       if authenticated
         li
           a(href='/profile') profile
