@@ -20,11 +20,11 @@ function activeFiltersCheck(tagId) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const addMealButtons = document.querySelectorAll('.addMeal-btn');
-    for (const button of addMealButtons) {
-        button.addEventListener('click', prepAddMeal);
+    const addRecipeButtons = document.querySelectorAll('.addRecipe-btn');
+    for (const button of addRecipeButtons) {
+        button.addEventListener('click', prepAddRecipe);
     }
-    function prepAddMeal(event) {
+    function prepAddRecipe(event) {
         const button = event.target;
         const form = button.nextElementSibling;
         form.style.display = 'grid';

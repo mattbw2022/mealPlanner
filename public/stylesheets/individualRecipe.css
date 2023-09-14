@@ -6,7 +6,7 @@ section{
     flex-wrap: wrap;
 }
 
-#meal-img{
+#recipe-img{
     width: 60%;
     max-height: 18em;
     min-height: 18em;

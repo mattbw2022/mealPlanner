@@ -1,33 +1,47 @@
 extends layout
 block styles 
-    link(rel="stylesheet", href="/stylesheets/createMeal.css")
+    link(rel="stylesheet", href="/stylesheets/createRecipe.css")
 block scripts
-    script(src="/javascripts/frontEnd.js") 
+    script(src="/javascripts/createRecipe.js") 
 block content 
-    h1 editMeal
-    form#newMeal(action="/meals/editMeal/" + options.meal.id, method="post", enctype="multipart/form-data")
-        h2 Meal Title 
-        input(type="text", name="title", value=options.meal.title)
+    h1 editRecipe
+    form#newRecipe(action="/Recipes/editRecipe/" + options.recipe.id, method="post", enctype="multipart/form-data")
+        h2 Recipe Title 
+        input(type="text", name="title", value=options.recipe.title)
         if noTitle === true 
-            p.err-msg A meal title is required.
-        if isDuplicate === true
-            p.err-msg The meal title entered already exists, please choose another name.
+            p.err-msg A recipe title is required.
         h2 Ingredients
-        textarea#ingredients(name="ingredients", cols="30", rows="10")=options.meal.ingredients
-        if noIngredients === true
-            p.err-msg Ingredients are required.
-        h2 Cooking Instructions 
-        textarea#cookingInstruction(name="directions", cols="30", rows="10")=options.meal.directions
-        if noDirections === true 
-            p.err-msg Instructions are required.
+        #ingredients
+            for ingredient in options.recipe.ingredients
+                #ingredient-container
+                    .input-container
+                        label(for="quantity") Qty  
+                        input.quantity(type="text" name="quantity" value=ingredient.quantity)
+                    .input-container
+                        label(for="unit") Unit 
+                        input.unit(type="text" name="unit" value=ingredient.unit)
+                    .input-container 
+                        label(for="ingredients") Ingredients
+                        input.ingredient(type="text" name="ingredients" value=ingredient.ingredient)
+            p#nan-msg Quantity must be a number
+            button#add-ingredient(type="button") Add Ingredient
+                if noIngredients === true
+                    p.err-msg Ingredients are required.
+        h2 Cooking Directions
+        #directions
+            #direction-container 
+                input.step(type="text" name="directions" placeholder="Make hamburger patties") 
+        button#add-step(type="button") Add Step
+            if noDirections === true 
+                p.err-msg Instructions are required.
         h2 Tags (Optional)
         div#tag-container
             div.tag-type-container
                 h3 Cuisine
                 for cuisine in options.tags.cuisineTags
                     div.checklist
-                        if options.meal.tag_ids
-                            if options.meal.tag_ids.includes(cuisine.id) 
+                        if options.recipe.tag_ids
+                            if options.recipe.tag_ids.includes(cuisine.id) 
                                 input(type="checkbox", value=cuisine.id, name="tags", checked="true")
                             else 
                                 input(type="checkbox", value=cuisine.id, name="tags") 
@@ -38,8 +52,8 @@ block content
                 h3 Time
                 for time in options.tags.timeTags
                     div.checklist
-                        if options.meal.tag_ids
-                            if options.meal.tag_ids.includes(time.id) 
+                        if options.recipe.tag_ids
+                            if options.recipe.tag_ids.includes(time.id) 
                                 input(type="checkbox", value=time.id, name="tags", checked="true")
                             else 
                                 input(type="checkbox", value=time.id, name="tags") 
@@ -50,8 +64,8 @@ block content
                 h3 Difficulty
                 for difficulty in options.tags.difficultyTags
                     div.checklist
-                        if options.meal.tag_ids
-                            if options.meal.tag_ids.includes(difficulty.id) 
+                        if options.recipe.tag_ids
+                            if options.recipe.tag_ids.includes(difficulty.id) 
                                 input(type="checkbox", value=difficulty.id, name="tags", checked="true")
                             else 
                                 input(type="checkbox", value=difficulty.id, name="tags") 
@@ -62,8 +76,8 @@ block content
                 h3 Category
                 for category in options.tags.categoryTags
                     div.checklist
-                        if options.meal.tag_ids
-                            if options.meal.tag_ids.includes(category.id) 
+                        if options.recipe.tag_ids
+                            if options.recipe.tag_ids.includes(category.id) 
                                 input(type="checkbox", value=category.id, name="tags", checked="true")
                             else 
                                 input(type="checkbox", value=category.id, name="tags") 
@@ -74,5 +88,5 @@ block content
 
         h2 Update picture 
         <input type = "file" name = "image" accept = "image/*"/>
-        button(type="submit") Update Meal
+        button(type="submit") Update Recipe
        

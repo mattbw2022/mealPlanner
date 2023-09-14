@@ -157,11 +157,11 @@ function generateCalendarData(year, month) {
             weekNumber++;
         }
     }
-    let plannedMeals = [];
-    let plannedMealsImgs = [];
-    for(weeks in weeksArray){
+    // let plannedMeals = [];
+    // let plannedMealsImgs = [];
+    // for(weeks in weeksArray){
 
-    }
+    // }
     const firstDay = (element) => element === '1';
     const lastDay = (element) => element === daysInMonth[month].toString();
     const firstDayIndex = days.findIndex(firstDay);

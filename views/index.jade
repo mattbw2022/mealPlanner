@@ -6,27 +6,27 @@ block scripts
 block content
   body
   section
-    #random-meal-container
+    #random-recipe-container
       #random-btn-container
         h2 Need an Idea?
-        button#random-meal-btn(type="button") Get a Random Meal
+        button#random-recipe-btn(type="button") Get a Random recipe
       #placeholder
         img(src="/images/question-mark.png", alt="Question Mark") 
-      each meal, i in options.meals
-        div(class="meal-card-" + i +" meal-card")
-          a#random-meal-link(href="/meals/individualMeal/" + meal.id)=meal.title
-          img.meal-img( src=meal.image, alt=meal.title)
-    .fresh-meals-container 
-      h2 Fresh Meals 
-      each newMeal in options.newestMeals
-        a(href="/meals/individualMeal/" + newMeal.id).fresh-meal
-          .fresh-meal-info
-            p(class="fresh-bold")=newMeal.title
+      each recipe, i in options.recipes
+        div(class="recipe-card-" + i +" recipe-card")
+          a#random-recipe-link(href="/recipes/individualrecipe/" + recipe.id)=recipe.title
+          img.recipe-img( src=recipe.image, alt=recipe.title)
+    .fresh-recipes-container 
+      h2 Fresh Recipes 
+      each newRecipe in options.newRecipes
+        a(href="/recipes/individualrecipe/" + newRecipe.id).fresh-recipe
+          .fresh-recipe-info
+            p(class="fresh-bold")=newRecipe.title
             p Created by 
-              span(class="fresh-bold")=newMeal.userInfo.username
-            p=newMeal.userInfo.date
-            img.credit-img(src=newMeal.userInfo.image, alt="User Picture")
-          img.fresh-meal-img(src=newMeal.image, alt=newMeal.title)
+              span(class="fresh-bold")=newRecipe.userInfo.username
+            p=newRecipe.userInfo.date
+            img.credit-img(src=newRecipe.userInfo.image, alt="User Picture")
+          img.fresh-recipe-img(src=newRecipe.image, alt=newRecipe.title)
   //- .newsfeed-container 
   //-   h2 Newsfeed
   //-   for article in options.articles

@@ -1,35 +1,66 @@
-#newMeal{
+#newRecipe{
     justify-self: center;
     display: grid;
     width: 80%;
 }
 
-#newMeal input{
-    width: 30%;
+#newRecipe input{    
     border-radius: 1em;
     padding: 0.5em;
 }
 
-#newMeal textarea{
+#title{
+    width: 30%;
+}
+
+#newRecipe textarea{
     border-radius: 1em;
     padding: 0.5em;
 }
 
 #ingredient-container{
     display: flex;
+    align-items: center;
 }
 
-.ingredients{
+
+.input-container{
+    display: flex;
+    align-items: center;
+}
+
+.quantity{
+    width: 2em;
+    margin: 1em;
+}
+
+.unit{
+    width: 2em;
+    margin: 1em;
+}
+
+.ingredient{
+    width: 20em;
+    margin: 1em;
+}
+
+#nan-message{
+    color: red;
+    display: none;
+}
+
+#add-ingredient{
+    justify-self: center;
+}
+
+#add-step{
+    justify-self: center;
+}
+
+
+.step{
     width: 100%;
-}
-
-.amounts{
-    width: 10%;
-}
-
-#addRow{
-    width: min-content;
-    justify-self: right;
+    margin-top: 0.5em;
 }
 
 #tag-container{

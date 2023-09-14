@@ -6,8 +6,8 @@ const calendar = require('../calendar');
 const multer = require('multer');
 
 
-const profileBucket = 'mealplanner-profile-images';
-const mealBucket = 'mealplanner-meal-images';
+const userBucket = 'mealplanner-user-images';
+const recipeBucket = 'mealplanner-recipe-images';
 
 
 const storage = multer.diskStorage({
@@ -26,22 +26,22 @@ const upload = multer({ storage: storage });
 
 router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     let options = {};
-    let mealIds = [];
+    let recipeIds = [];
     if (!req.session.user.id){
       res.redirect('/login');
     }
     const userId = req.session.user.id;
     const activeUser = await query.findUserById(userId);
     options.username = activeUser.username;
-    options.profileImg = await helper.getSignedUrl(activeUser.profile_img, profileBucket);
-    const userMeals = await query.getUserCreatedMeals(userId);
-    if (userMeals){
-      let userMealImg;
-      for(let i = 0; i < userMeals.length; i++){
-        userMealImg = await helper.getSignedUrl(userMeals[i].image, mealBucket);
-        userMeals[i].image = userMealImg; 
+    options.profileImg = await helper.getSignedUrl(activeUser.profile_img, userBucket);
+    const userRecipes = await query.getUserCreatedrecipes(userId);
+    if (userRecipes){
+      let userRecipeImg;
+      for(let i = 0; i < userRecipes.length; i++){
+        userRecipeImg = await helper.getSignedUrl(userRecipes[i].image, recipeBucket);
+        userRecipes[i].image = userRecipeImg; 
     }
-    options.userMeals = userMeals;
+    options.userRecipes = userRecipes;
     }
   
 
@@ -50,37 +50,39 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     options.dayOfWeek = calendar.getDayOfWeek(date.year, date.month, date.day);
     const dayId = await query.getDayId(date);
     options.userWeek = await query.getUserWeek(dayId, userId, options.dayOfWeek);
+    console.log(options.userWeek);
     options.userWeek.forEach((day) => {
-      if (day.meal_ids){
-        mealIds.push(day.meal_ids);
+      if (day.recipe_ids){
+        recipeIds.push(day.recipe_ids);
       }
       else{
-        mealIds.push(0);
+        recipeIds.push(0);
       }
     })
-    options.weekOfMeals = [];
-    let dailyMeals = [];
-    for (const day of mealIds) {
+    options.weekOfRecipes = [];
+    let dailyRecipes = [];
+    for (const day of recipeIds) {
       if (day === 0) {
-        options.weekOfMeals.push(0);
+        options.weekOfRecipes.push(0);
       } else {
         for (let i = 0; i < day.length; i++) {
-          const meal = await query.getMealById(day[i]);
-          dailyMeals.push(meal);
+          const recipe = await query.getRecipeById(day[i]);
+          dailyRecipes.push(recipe);
         }
-        options.weekOfMeals.push([...dailyMeals]);
-        dailyMeals = [];
+        options.weekOfRecipes.push([...dailyRecipes]);
+        dailyRecipes = [];
       }
     }
 
-    for (const day of options.weekOfMeals) {
+    for (const day of options.weekOfRecipes) {
       if (day !== 0){
         for (let i = 0; i < day.length; i++){
-          const signedUrl = await helper.getSignedUrl(day[i].image, mealBucket);
+          const signedUrl = await helper.getSignedUrl(day[i].image, recipeBucket);
           day[i].image = signedUrl;
         }
       }
     }
+    console.log(options.weekOfRecipes);
     options.year = date.year;
     setTimeout(() => {
       res.render('profile', options);
@@ -88,13 +90,13 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
   });
 
 
-  router.post('/removeMeal/:meal_id/:day_id', helper.ensureAuthentication, async function(req, res, next) {
+  router.post('/removerecipe/:recipe_id/:day_id', helper.ensureAuthentication, async function(req, res, next) {
 
-  const mealId = req.params.meal_id;
+  const recipeId = req.params.recipe_id;
   const userId = req.session.user.id;
   const dayId = req.params.day_id;
 
-  query.removeMealFromCalendar(userId, mealId, dayId);
+  query.removeRecipeFromCalendar(userId, recipeId, dayId);
   res.redirect('/profile');
 });
 
@@ -103,9 +105,9 @@ router.post('/updatePicture', upload.fields([{ name: 'image', maxCount: 1 }, { n
 
   const userInfo = await query.findUserById(userId);
   if(userInfo.profile_img !== 'default_profile.png'){
-    await helper.deleteImage(userInfo.profile_img, profileBucket);
+    await helper.deleteImage(userInfo.profile_img, userBucket);
   }
-  const newImage = await helper.addimage(req, profileBucket);
+  const newImage = await helper.addimage(req, userBucket);
   await query.updateUserImage(userId, newImage);
   res.redirect('/profile');
 

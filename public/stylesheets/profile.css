@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     margin: 1em;
+    padding: 1em;
     flex-direction: column;
     border: solid;
     background-color: rgb(255, 232, 164);
@@ -18,7 +19,7 @@
 }
 
 #welcome img{
-    width: 75%;
+    width: 15em;
     border-radius: 1em;
     border: solid;
     border-color: white;
@@ -135,7 +136,7 @@
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
-.user-meal{
+.user-recipe{
     justify-content: space-between;
     width: 100%;
     display: flex;
@@ -145,15 +146,15 @@
     padding: 0.5em 0;
 }
 
-.user-meal h3{
+.user-recipe h3{
     padding: 0.5em;
     color: black;
 }
-.user-meal h3:hover{
+.user-recipe h3:hover{
     color: rgb(255, 232, 164);
 }
 
-.user-meal img{
+.user-recipe img{
     min-width: 50%;
     max-width: 50%;
     margin: 0 0.5em;
@@ -163,16 +164,16 @@
     max-height: 10em;
 }
 
-.edit-meal-btn{
+.edit-recipe-btn{
     background-color: black;
     color: white;
 }
 
-.edit-meal-btn:hover{
+.edit-recipe-btn:hover{
     border-color: black;
 }
 
-.dailyMeal{
+.dailyrecipe{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -181,12 +182,12 @@
     margin: 0.5em;
 }
 
-.dailyMeal p{
+.dailyrecipe p{
     font-weight: bold;
     margin-bottom: 0.25em;
 }
 
-.dailyMeal img{
+.dailyrecipe img{
     border: solid;
     border-radius: 2em;
     color: white;

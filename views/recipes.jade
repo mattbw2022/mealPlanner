@@ -1,25 +1,25 @@
 extends layout
 block styles 
-    link(rel="stylesheet", href="/stylesheets/meals.css")
+    link(rel="stylesheet", href="/stylesheets/recipes.css")
 block scripts
-    script(src="/javascripts/meals.js") 
+    script(src="/javascripts/recipes.js") 
 block content 
     - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Decemeber'];
     - var days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
-    a#create-meal(href="/meals/createMeal") createMeal
+    a#create-recipe(href="/recipes/createrecipe") createRecipe
     div#adjustment-container
         div#search-filter-container
             button#filter-btn Filters
             button#apply-filters-btn(type='submit' form="filter-container") Apply Filters
-            form(action="/meals/search" method="post")#search-container
+            form(action="/recipes/search" method="post")#search-container
                 input#search-bar(type="text" name="search" placeholder="Search by title, ingredients or directions" )
                 button(type="submit")#search-btn Search
         if options.activeFilters
             ul#active-filters-list Active Filters:  
                 for filter in options.activeFilters 
                     li=filter      
-        form(action="/meals/filter", method="post")#filter-container
+        form(action="/recipes/filter", method="post")#filter-container
             div#filters
                 ul.filter-category Cuisine
                     each tag, i in options.allTags.cuisineTags
@@ -69,15 +69,15 @@ block content
         - var searchTerm = `"${options.search}"`
         p(style="text-align: center;") Showing search results for 
             span#search-term=searchTerm
-    div.meal-container
-        if options.allMeals.length === 0
-            h3 Whoops! No meals in those categories....Try again.
-        each meal, i in options.allMeals
-            div.meal
-                img.meal-img(src=options.mealImages[i], alt=meal.title)
-                a(href='meals/individualMeal/' + meal.id)=meal.title
-                button.addMeal-btn(type="button") Add Meal
-                form.addMeal(action="calendar/addMeal/" + meal.id method="post")
+    div.recipe-container
+        if options.allRecipes.length === 0
+            h3 Whoops! No recipes in those categories....Try again.
+        each recipe, i in options.allRecipes
+            div.recipe
+                img.recipe-img(src=options.recipeImages[i], alt=recipe.title)
+                a(href='recipes/individualrecipe/' + recipe.id)=recipe.title
+                button.addRecipe-btn(type="button") Add recipe
+                form.addrecipe(action="calendar/addRecipe/" + recipe.id method="post")
                     div.select-container
                         div.date-item-container
                             label(for='month') Month

@@ -94,7 +94,7 @@ h2{
     width:  100%;
 }
 
-.meal-container{
+.recipe-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -108,7 +108,7 @@ h2{
 
 }
 
-.multi-meal{
+.multi-recipe{
     font-size: larger;
     font-weight: bold;
     color: rgb(255, 232, 164);
@@ -120,7 +120,7 @@ h2{
     1px 1px 0 #000;
 }
 
-.meal-list{
+.recipe-list{
     display: none;
     flex-direction: column;
     align-items: center;
@@ -132,12 +132,13 @@ h2{
 .select-container-nav{
     display: flex;
 }
+
 .date-item-container{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.move-meal-form{
+.move-recipe-form{
     display: none;
     flex-direction: column;
     align-items: center;
