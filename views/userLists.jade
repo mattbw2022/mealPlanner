@@ -1,0 +1,21 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/userLists.css")
+block content
+    h2 myLists 
+    if options.lists[0]
+        for list in options.lists 
+            .list
+                a(href=`/lists/list/${list.id}`).list-card
+                    - var itemCount = `${list.items.length} items`  
+                    h3=list.title 
+                    h4=itemCount
+                a(href=`/lists/deleteList/${list.id}`)
+                    button.delete-btn Delete
+        a(href="/lists/newList")#create-list-btn
+            button Create List 
+    else
+        #no-lists-container
+            h3 No lists found!
+            a(href="/lists/newList")
+                button#create-list-btn Create List

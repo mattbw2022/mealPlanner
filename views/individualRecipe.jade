@@ -1,6 +1,8 @@
 extends layout
 block styles 
     link(rel="stylesheet", href="/stylesheets/individualRecipe.css")
+block scripts
+    script(src="/javascripts/individualRecipe.js") 
 block content
     - var credit = `Added by ${firstName} ${lastName} on ${date}`
     section
@@ -12,13 +14,24 @@ block content
                 a(href="/recipes/user/" + username) 
                     img(src=userImage alt='user profile picture')#credit-img
         #steps-container
+            h3 Servings: 
+                span=servings
             #ingredient-list
                 h3 Ingredients
+                button(type="button")#select-all-btn Select All
                 for ingredient in ingredients
                     .ingredient
                         - var ingredientContents = `${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}`
-                        input(type="checkbox")
+                        input(type="checkbox" value=ingredient)
                         label=ingredientContents
+                if lists    
+                    button#show-list-btn(type="button") Add to a List?
+                    #select-list-container
+                        select(name="lists" id="lists")
+                            option(value="") Choose a List 
+                            for list in lists
+                                option(value=list.id)=list.title
+                        button(type="button")#add-to-list-btn Add to List 
             #direction-list
                 h3 Directions
                 ol

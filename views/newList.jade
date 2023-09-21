@@ -1,0 +1,32 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/newList.css")
+block scripts
+    script(src="/javascripts/newList.js") 
+block content 
+    form(action="/lists/newList" method="post")#new-list-form 
+        h2 List Title
+        .input-container
+            input#title(type="text" name="title")
+        h2 List Items 
+        #items
+            #item-container
+                    .input-container
+                        label(for="quantity") Qty 
+                        input.quantity(type="number" name="quantities" min='0' placeholder="optional" class="small-input")
+                    .input-container
+                        label(for="unit") Unit
+                        input.unit(type="text" name="units" placeholder="optional" class="small-input")
+                    .input-container 
+                        label(for="ingredients") Item
+                        input.item(type="text" name="items")
+                    button.remove-item(type="button") Delete
+        button#add-item(type="button") Add Item
+    button#create-list(type="submit" form="new-list-form") Create List
+    
+
+
+
+
+
+        

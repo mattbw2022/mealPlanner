@@ -130,10 +130,21 @@
     flex-direction: column;
     align-items: center;
     width: 30%;
+    height: fit-content;
+    max-height: 30em;
+    overflow: scroll;
     text-align: center;
     border: solid;
     margin: 1em;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.profile-card h2{
+    color: black;
+}
+
+.profile-card h2:hover{
+    color: rgb(255, 232, 164);
 }
 
 .user-recipe{
@@ -160,8 +171,6 @@
     margin: 0 0.5em;
     border: solid;
     border-color: rgb(255, 232, 164);
-    min-height: 10em;
-    max-height: 10em;
 }
 
 .edit-recipe-btn{
@@ -194,3 +203,18 @@
     width: 75%;
 }
 
+.list-title{
+    border-top: solid;
+    width: 100%;
+    color: black;
+    padding: 1em 0;
+}
+
+.list-title:visited{
+    color: black;
+}
+
+.list-title:hover{
+    background-color: rgb(255, 232, 164);
+    color: black;
+}

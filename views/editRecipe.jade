@@ -16,7 +16,7 @@ block content
                 #ingredient-container
                     .input-container
                         label(for="quantity") Qty  
-                        input.quantity(type="text" name="quantity" value=ingredient.quantity)
+                        input.quantity(type="number" name="quantity" value=ingredient.quantity min='0')
                     .input-container
                         label(for="unit") Unit 
                         input.unit(type="text" name="unit" value=ingredient.unit)
@@ -24,13 +24,14 @@ block content
                         label(for="ingredients") Ingredients
                         input.ingredient(type="text" name="ingredients" value=ingredient.ingredient)
             p#nan-msg Quantity must be a number
-            button#add-ingredient(type="button") Add Ingredient
+        button#add-ingredient(type="button") Add Ingredient
                 if noIngredients === true
                     p.err-msg Ingredients are required.
         h2 Cooking Directions
         #directions
-            #direction-container 
-                input.step(type="text" name="directions" placeholder="Make hamburger patties") 
+            for direction in options.recipe.directions
+                #direction-container 
+                    input.step(type="text" name="directions" value=direction) 
         button#add-step(type="button") Add Step
             if noDirections === true 
                 p.err-msg Instructions are required.

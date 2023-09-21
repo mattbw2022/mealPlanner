@@ -10,6 +10,8 @@ section{
     width: 60%;
     max-height: 18em;
     min-height: 18em;
+    border: solid;
+    border-width: 1em;
 }
 
 #title-container{
@@ -50,6 +52,28 @@ section h1{
     padding-left: 1em;
     margin: 0 1em 1em 0;
     width: 54%;
+}
+
+#select-list-container{
+    display: none;
+}
+
+#select-list-container select{
+    font-family: inherit;
+    margin: 0 1em;
+}
+
+#show-list-btn{
+    justify-self: center;
+}
+
+#select-all-btn{
+    margin-bottom: 0.5em;
+    justify-self: left;
+}
+
+#ingredient-list{
+    display: grid;
 }
 
 .ingredient{

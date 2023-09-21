@@ -1,0 +1,50 @@
+#new-list-form{
+    margin-top: 2em;
+    padding: 1em;
+    justify-self: center;
+    width: 80%;
+    border: solid;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+input{
+    margin: 0 1em;
+    width: 60%;
+}
+
+#new-list-form{
+    display: grid;
+}
+
+#title{
+    width: 20em;
+    margin-left: 0;
+}
+
+#items{
+    display: grid;
+}
+
+#item-container{
+    display: flex;
+    justify-self: center;
+    border-bottom: solid;
+}
+
+#add-item{
+    justify-self: right;
+    margin: 1em;
+}
+
+.remove-item{
+    font-size: medium;
+}
+.small-input{
+    width: 15%;
+}
+
+#create-list{
+    margin-top: 2.5em;
+    width: 30%;
+    justify-self: center;
+}

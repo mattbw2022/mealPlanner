@@ -50,7 +50,6 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     options.dayOfWeek = calendar.getDayOfWeek(date.year, date.month, date.day);
     const dayId = await query.getDayId(date);
     options.userWeek = await query.getUserWeek(dayId, userId, options.dayOfWeek);
-    console.log(options.userWeek);
     options.userWeek.forEach((day) => {
       if (day.recipe_ids){
         recipeIds.push(day.recipe_ids);
@@ -82,7 +81,8 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
         }
       }
     }
-    console.log(options.weekOfRecipes);
+    options.lists = await query.getListsByUserId(userId);
+
     options.year = date.year;
     setTimeout(() => {
       res.render('profile', options);

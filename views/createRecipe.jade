@@ -17,16 +17,17 @@ block content
         input#servings(type="text", name="servings", placeholder="8")
         h2 Ingredients
         #ingredients
-            #ingredient-container
+            #ingredient-container(class="count-ingredient")
                 .input-container
                     label(for="quantity") Qty  
-                    input.quantity(type="text" name="quantity" placeholder="1")
+                    input.quantity(type="number" name="quantity" placeholder="1" min='0')
                 .input-container
                     label(for="unit") Unit 
                     input.unit(type="text" name="unit" placeholder="lb")
                 .input-container 
                     label(for="ingredients") Ingredients
                     input.ingredient(type="text" name="ingredients" placeholder= "Ground beef")
+                button.remove-ingredient(type="button") -
         p#nan-msg Quantity must be a number
         button#add-ingredient(type="button") Add Ingredient
             if noIngredients === true
@@ -68,5 +69,5 @@ block content
 
         h2 Add a picture 
         <input class="custom-file-input" type = "file" name = "image" accept = "image/*" />
-        button(type="submit") Add Meal
+        button(type="submit") Add Recipe
        

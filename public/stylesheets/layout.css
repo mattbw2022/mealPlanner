@@ -17,6 +17,10 @@ header {
     font-family: 'Open Sans', sans-serif;
   }
 
+  input{
+    border-radius: 1em;
+    padding: 0.5em;
+  }
   
   header h1 {
     margin: 1em;
@@ -55,6 +59,11 @@ header {
     border-color: black;
     border-radius: 2em;
   }
+
+  .input-container{
+    display: flex;
+    align-items: center;
+}
 
   .error-box {
     background-color: #ffcccc;

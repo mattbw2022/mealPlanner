@@ -1,0 +1,40 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/list.css")
+block scripts
+    script(src="/javascripts/list.js") 
+block content
+    #header-container
+        h2=options.list.title
+        a(href="/lists/list/" + options.list.id + "/removeAll") 
+            button#delete-all-btn Delete All
+    #list
+        if options.list.items.length > 0
+            each item, i in options.list.items
+                div(class="item-container")
+                    button.cross-off-btn(type="button" id=`item-${i}` class=item.isCrossed ? "crossed-off" : '' class="cross-off-listener")
+                        .item-components(id=`item-${i}`)
+                            p(id=`item-${i}`)=item.quantity
+                            p(id=`item-${i}`)=item.unit 
+                            p(id=`item-${i}`)=item.item
+                    button.remove-item-btn(type="button" id=`delete-${i}`) Delete
+        else 
+            div(class="item-container" style="display: none")
+                    button.cross-off-btn(type="button" id=`item-0` class='' class="cross-off-listener" )
+                        .item-components(id=`item-0`)
+                            p(id=`item-0`)
+                            p(id=`item-0`)
+                            p(id=`item-0`)
+                    button.remove-item-btn(type="button" id=`delete-0`) Delete
+    button(type="button")#new-item-btn Add New Item
+    #new-item-container
+        .input-container
+            label(for="quantity") Qty 
+            input.quantity(type="number" name="quantities" min='0' class="small-input")
+        .input-container
+            label(for="unit") Unit
+            input.unit(type="text" name="units" class="small-input")
+        .input-container 
+            label(for="ingredients") Item
+            input.item(type="text" name="items")
+    button#add-item-btn Add Item

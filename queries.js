@@ -343,6 +343,38 @@ async function populateCalendarForNewUser(userId) {
    await pool.query(query, paramValues);
  }
 
+async function createList(userId, title, listItems){
+   const query = `INSERT INTO lists (user_id, title, items) VALUES($1, $2, $3)`;
+   const values = [userId, title, listItems];
+   await pool.query(query, values);
+   const retrieveQuery = `SELECT id FROM lists WHERE user_id = $1 ORDER BY id DESC LIMIT 1`
+   const newList = await pool.query(retrieveQuery, [userId]);
+   return newList.rows[0]
+}
+
+async function getListsByUserId(userId){
+   const query = `SELECT * FROM lists WHERE user_id = $1`;
+   const newList = await pool.query(query, [userId]);
+   return newList.rows;
+}
+
+async function getListByListId(listId){
+   const query = `SELECT * FROM lists WHERE id = $1`;
+   const list = await pool.query(query, [listId]);
+   return list.rows[0]; 
+} 
+
+async function updateItems(listId, items){
+   const query = `UPDATE lists SET items = $2 WHERE id = $1`;
+   const values = [listId, items];
+   await pool.query(query, values);
+}
+
+async function deleteList(listId){
+   const query = 'DELETE FROM lists WHERE id = $1';
+   await pool.query(query, [listId]);
+}
+
 const queries = {
    findUserByUsername: findUserByUsername,
    createUser: createUser,
@@ -369,7 +401,12 @@ const queries = {
    getYearsAvailable: getYearsAvailable,
    getnewRecipes: getnewRecipes,
    updateRecipe: updateRecipe,
-   getRecipesByUserId: getRecipesByUserId
+   getRecipesByUserId: getRecipesByUserId,
+   createList: createList,
+   getListsByUserId: getListsByUserId,
+   getListByListId: getListByListId,
+   updateItems: updateItems,
+   deleteList: deleteList
 }
 
 module.exports = queries;

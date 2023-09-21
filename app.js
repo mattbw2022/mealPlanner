@@ -68,6 +68,7 @@ app.use((req, res, next) => {
 });
 var indexRouter = require('./routes/index');
 var recipesRouter = require('./routes/recipes');
+var listsRouter = require('./routes/lists');
 var profileRouter = require('./routes/profile');
 var calendarRouter = require('./routes/calendar');
 var loginRouter = require('./routes/login');
@@ -90,6 +91,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/profile', profileRouter);
 app.use('/recipes', recipesRouter);
+app.use('/lists', listsRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/calendar', calendarRouter);

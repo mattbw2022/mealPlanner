@@ -7,8 +7,6 @@ const multer = require('multer');
 const sharp = require('sharp');
 
 
-
-
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESSKEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -16,22 +14,15 @@ AWS.config.update({
 });
 
 const bucketName = 'mealplanner-recipe-images';
-
-
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Set the destination folder where the uploaded files will be saved
-    cb(null, 'uploads/'); // Create an "uploads" folder in your project root
+    cb(null, 'uploads/'); 
   },
   filename: function (req, file, cb) {
-    // Set the filename for the uploaded files
     cb(null, file.fieldname + '-' + Date.now());
   }
 });
-
 const upload = multer({ storage: storage });
-
 
 function isLoggedIn(req, res, next) {
     res.locals.authenticated = req.session.authenticated || false;
@@ -46,9 +37,6 @@ function isLoggedIn(req, res, next) {
     next();
 
   }
-  
-  
-
   
 function checkPasswordStrength(password){
   if (password.length < 12){
@@ -81,7 +69,6 @@ function checkPasswordStrength(password){
   else return false;
 }
 
-
 const s3 = new AWS.S3();
 async function getSignedUrl(key, bucketName) {
   try {
@@ -98,7 +85,6 @@ async function getSignedUrl(key, bucketName) {
     throw err;
   }
 }
-
 
 function createTimestamp(milliseconds) {
   const date = new Date(milliseconds);
@@ -126,35 +112,31 @@ async function renderallRecipes(res, options){
 }
 
 async function addImage(req, bucketName){
-        // Check if the uploaded image exists and read it
 
         if (req.files && req.files.image && req.files.image.length > 0) {
           const imageFile = req.files.image[0];
           const buffer = fs.readFileSync(imageFile.path);
           const fileInfo = fileType(buffer);
           if (!fileInfo || (fileInfo.mime !== 'image/jpeg' && fileInfo.mime !== 'image/png')) {
-              // Invalid file type, reject the upload.
               fs.unlinkSync(imageFile.path);
               return res.status(400).json({ error: 'Invalid file type. Only JPEG and PNG images are allowed.' });
           }
           
-          const maxFileSizeBytes = 10 * 1024 * 1024; // 10MB
+          const maxFileSizeBytes = 10 * 1024 * 1024;
   
           if (imageFile.size > maxFileSizeBytes) {
-            // File size too large, reject the upload.
               fs.unlinkSync(imageFile.path); 
               return res.status(400).json({ error: 'File size exceeds the allowed limit.' });
           }
   
-            // Resize the image while maintaining aspect ratio
-          const targetAspectRatio = 4 / 3; // For example, a 16:9 aspect ratio
-          const targetWidth = 800; // Your desired width
+          const targetAspectRatio = 3 / 2; 
+          const targetWidth = 400;
   
           const targetHeight = Math.round(targetWidth / targetAspectRatio);
           const resizedImageBuffer = await sharp(buffer)
           .resize({
-            width: targetWidth, // Replace with your desired width
-            height: targetHeight, // Replace with your desired height
+            width: targetWidth,
+            height: targetHeight,
             fit: sharp.fit.cover,
             withoutEnlargement: true,
           })
@@ -180,7 +162,6 @@ async function addImage(req, bucketName){
               console.error('Error uploading image:', err);
               return res.status(500).json({ error: 'Failed to upload image to S3.' });
             }
-            // Clean up temp file
             fs.unlinkSync(imageFile.path);
           });
           
@@ -199,12 +180,11 @@ async function addImage(req, bucketName){
 
 async function deleteImage(filename,bucketName){
 
-
   const s3 = new AWS.S3();
 
   const params = {
-    Bucket: bucketName,  // Replace with your S3 bucket name
-    Key: filename // Replace with the path of the image you want to delete
+    Bucket: bucketName, 
+    Key: filename 
   };
 
   s3.deleteObject(params, (err, data) => {
@@ -304,6 +284,16 @@ async function arrangeCalendarInfo(recipeIds, options, date){
     return options;
 }
 
+function checkForSingleInput(input){
+  if (!Array.isArray(input)){
+    const singleElementArray = [input];
+    return singleElementArray
+  }
+  else{
+    return input;
+  }
+}
+
 
   module.exports = {
     isLoggedIn: isLoggedIn,
@@ -315,5 +305,6 @@ async function arrangeCalendarInfo(recipeIds, options, date){
     addimage:addImage,
     deleteImage: deleteImage,
     formatRecipe: formatRecipe,
-    arrangeCalendarInfo: arrangeCalendarInfo
+    arrangeCalendarInfo: arrangeCalendarInfo,
+    checkForSingleInput: checkForSingleInput
   }

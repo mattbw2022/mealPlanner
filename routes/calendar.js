@@ -40,7 +40,7 @@ router.post('/moveRecipe/:recipeId/:dayId', helper.ensureAuthentication, async f
   query.addToCalendar(day, month, year, userId, recipeId);
   setTimeout(() => {
     res.redirect("/calendar");
-  }, 100);
+  }, 200);
 })
 
 router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, next){
@@ -57,8 +57,9 @@ router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, n
   let date = req.session.activeDate;
   options.calendar = c.generateCalendarData(date.year, dateIndex);
 
-  const recipeIds = await query.getrecipeIdsByMonth(date.year, date.month, userId);
+  const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
   options = await helper.arrangeCalendarInfo(recipeIds, options, date);
+
   res.render('calendar', {options});  
 });
 
@@ -88,6 +89,7 @@ router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, n
 })
 
 router.post('/selectMonth', helper.ensureAuthentication, async function (req, res, next) {
+  // Update active date property in session
   let options = {};
   const userId = req.session.user.id;
   let month = (parseInt(req.body.month) + 1);

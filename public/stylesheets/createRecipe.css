@@ -23,10 +23,8 @@
     align-items: center;
 }
 
-
-.input-container{
-    display: flex;
-    align-items: center;
+.remove-ingredient{
+    margin-right: 1em;
 }
 
 .quantity{

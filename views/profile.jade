@@ -32,6 +32,8 @@ block content
     div#card-container 
         div.profile-card
             h2 myRecipes
+            a(href="/recipes/createRecipe")
+                button.create-recipe Create recipe 
             if userRecipes.length >= 1
                 for userRecipe in userRecipes        
                     form(name=`recipe${userRecipe.id}` action="/recipes/editRecipe/" + userRecipe.id, method="get").user-recipe
@@ -39,13 +41,18 @@ block content
                             h3=userRecipe.title
                         img(src=userRecipe.image, alt=userRecipe.title)
                     a(href="/recipes/editRecipe/" + userRecipe.id) 
-                        button.edit-recipe-btn(type="button") Edit
+                        button.edit-recipe-btn(type="button") Edit              
             else
                 h2 No recipes created! 
-                button Create recipe 
-                    a(href="/recipes/createRecipe") 
         div.profile-card
-            h2 myLists
+            a(href="/lists") 
+                h2 myLists
+            a(href="/lists/newList")
+                button Create list 
+            for list in lists 
+                a.list-title(href="/lists/list/" + list.id)=list.title
+
         div.profile-card
             h2 myFavorites
+         
 
