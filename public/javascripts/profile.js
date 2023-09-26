@@ -1,17 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 
-    const editButton = document.getElementById('edit-img-btn');
-    editButton.addEventListener('click', showInput);
-    
-    function showInput() {
-      const form = document.getElementById('edit-img-form');
-      // Toggle the display property of the filter container
-      if (form.style.display === 'none' || form.style.display === '') {
-        form.style.display = 'block';
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    const hideDeleteAccountBtn = document.getElementById('nvm-btn');
+    deleteAccountBtn.addEventListener('click', handleDeleteConfirmation);
+    hideDeleteAccountBtn.addEventListener('click', handleDeleteConfirmation )
+    function handleDeleteConfirmation() {
+      const message = document.getElementById('delete-confirmation-container');
+      const background = document.getElementById('background');
+      if (message.style.display === 'none' || message.style.display === '') {
+        message.style.display = 'flex';
+        background.style.display = 'block';
       } else {
-        form.style.display = 'none';
-        button.style.display = 'none';
+        message.style.display = 'none';
+        background.style.display = 'none';
       }
     }
     

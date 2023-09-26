@@ -3,9 +3,16 @@ const {isLeapYear} = require('./calendar');
 
 
 async function createUser(user){
+   let securityQuestion;
+   if (user.securityQuestion){
+      securityQuestion = user.securityQuestion;
+   }
+   else{
+      securityQuestion = user.customQuestion;
+   }
    try{
-      const query1 = 'INSERT INTO public.users (firstname, lastname, email, password, username) VALUES ($1, $2, $3, $4, $5)';
-      const values = [user.firstname, user.lastname, user.email, user.password, user.username];
+      const query1 = 'INSERT INTO public.users (firstname, lastname, email, password, username, security_question, security_answer) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+      const values = [user.firstname, user.lastname, user.email, user.password, user.username, securityQuestion, user.securityAnswer];
 
       await pool.query(query1, values);
       const query2 = 'SELECT * FROM public.users WHERE email = $1::varchar';
@@ -16,6 +23,57 @@ async function createUser(user){
       console.log(err);
    }
 }
+
+async function updateUser(id, updates){
+   let paramList = [];
+   let paramValues = [];
+   let query = `UPDATE users SET `
+   if(updates.firstname){
+      paramList.push('firstname');
+      paramValues.push(updates.firstname);
+   }
+   if(updates.lastname){
+      paramList.push('lastname');
+      paramValues.push(updates.lastname);
+   }
+   if(updates.username){
+      paramList.push('username');
+      paramValues.push(updates.username);
+   }
+   if(updates.email){
+      paramList.push('email');
+      paramValues.push(updates.email);
+   }
+   if(updates.password){
+      paramList.push('password')
+      paramValues.push(updates.password);
+   }
+   if(updates.securityQuestion){
+      paramList.push('security_question');
+      paramValues.push(updates.securityQuestion);
+   }
+   if(updates.securityAnswer){
+      paramList.push('security_answer')
+      paramValues.push(updates.securityAnswer);
+   }
+   if(paramList.length === 0 || paramValues.length === 0){
+      return;
+   }
+
+   else {
+      let i;
+      for (i = 0; i < paramList.length; i++){
+         if (i === 0){
+            query = `${query}${paramList[i]} = $${i + 1}`;
+            continue;
+         }
+        query = `${query}, ${paramList[i]} = $${i + 1}`;
+      }
+      query = `${query} WHERE id = $${i + 1}`;
+   }
+   paramValues.push(id);
+   await pool.query(query, paramValues);
+ }
 
 async function findUserByEmail(email){
    const query = 'SELECT * FROM public.users WHERE email = $1::varchar';
@@ -298,7 +356,6 @@ async function populateCalendarForNewUser(userId) {
  }
 
  async function updateRecipe(id, updates){
-   console.log(updates);
    let paramList = [];
    let paramValues = [];
    let query = `UPDATE recipes SET `
@@ -322,7 +379,7 @@ async function populateCalendarForNewUser(userId) {
       paramList.push('image')
       paramValues.push(updates.image);
    }
-   if (paramList.length === 0 || paramValues.length === 0){
+   if(paramList.length === 0 || paramValues.length === 0){
       return;
    }
 
@@ -338,8 +395,6 @@ async function populateCalendarForNewUser(userId) {
       query = `${query} WHERE id = $${i + 1}`;
    }
    paramValues.push(id);
-   console.log(query);
-   console.log(paramValues.length);
    await pool.query(query, paramValues);
  }
 
@@ -368,11 +423,25 @@ async function updateItems(listId, items){
    const query = `UPDATE lists SET items = $2 WHERE id = $1`;
    const values = [listId, items];
    await pool.query(query, values);
+   return;
 }
 
 async function deleteList(listId){
    const query = 'DELETE FROM lists WHERE id = $1';
    await pool.query(query, [listId]);
+   return;
+}
+
+async function getAllByColumn(column, table){
+   const query = `SELECT ${column} FROM ${table}`;
+   const results = await pool.query(query);
+   return results.rows;
+}
+
+async function deleteUser(id){
+   const query = 'DELETE FROM users WHERE id = $1';
+   await pool.query(query, [id]);
+   return;
 }
 
 const queries = {
@@ -406,7 +475,10 @@ const queries = {
    getListsByUserId: getListsByUserId,
    getListByListId: getListByListId,
    updateItems: updateItems,
-   deleteList: deleteList
+   deleteList: deleteList,
+   getAllByColumn: getAllByColumn,
+   updateUser: updateUser,
+   deleteUser: deleteUser,
 }
 
 module.exports = queries;

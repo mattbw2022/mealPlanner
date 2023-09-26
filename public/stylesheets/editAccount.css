@@ -1,0 +1,53 @@
+#edit-account-form{
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+.category-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1em;
+    margin: 1.5em;
+    border: solid;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+    width: 100%;
+}
+
+.category-container img{
+    margin: 1em;
+    width: 50%;
+    border: solid;
+    border-color: rgb(255, 232, 164);
+}
+
+.input-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-file-input{
+    width: auto;
+    color: black;
+}
+
+#forgot-password{
+    color: black;
+    margin-top: 0.5em;
+
+}
+#forgot-password:visited{
+    color: black;
+}
+
+#forgot-password:hover{
+    color: rgb(255, 232, 164);
+}
+
+#security-question{
+    width: 100%;
+    text-align: center;
+}

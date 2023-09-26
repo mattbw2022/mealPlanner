@@ -12,19 +12,21 @@ html
       a(href='/') myRecipePlanner
     nav 
       li 
-        a(href='/recipes') recipes 
+        a(href='/recipes') Recipes 
       if authenticated
         li
-          a(href='/profile') profile
+          a(href='/profile') Profile
         li 
-          a(href='/calendar') calendar
+          a(href='/calendar') Calendar
         li 
-          a(href='/logout') logout
+          a(href="/lists") Lists 
+        li 
+          a(href='/logout') Logout
       else 
         li 
-          a(href='/login') login
+          a(href='/login') Login
           span    / 
-          a(href='/register') sign up
+          a(href='/register') Sign Up
 
   if messages.error
     .error-box

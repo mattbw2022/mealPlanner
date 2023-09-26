@@ -212,12 +212,15 @@ router.post('/createRecipe', helper.ensureAuthentication,
 
     const time = Date.now();
     const newRecipe = await query.addRecipe(recipe, req.session.user.id, filename, time);
-
+    const recipeImg = await helper.getSignedUrl(newRecipe.image, recipeBucket);
+    options = {
+      recipeImg: recipeImg,
+      recipeTitle: newRecipe.title,
+      id: newRecipe.id
+    }
     setTimeout(async () => {
-      const recipeImg = await helper.getSignedUrl(newRecipe.image, recipeBucket);
-      const recipeTitle = newRecipe.title;
-      res.render('recipeAdded', { recipeImg: recipeImg, recipeTitle: recipeTitle });
-    }, 1000);
+      res.render('recipeAdded', options);
+    }, 500);
   });
 
 router.get('/editRecipe/:id', helper.ensureAuthentication, async function (req, res, next) {
@@ -229,7 +232,6 @@ router.get('/editRecipe/:id', helper.ensureAuthentication, async function (req, 
     req.flash('error', 'You are not authorized to edit this recipe.');
     return res.redirect('/profile');
   }
-  console.log(options);
   return res.render('editRecipe', { options });
 });
 
@@ -290,8 +292,6 @@ router.post('/editRecipe/:id', helper.ensureAuthentication,
       updates.image = await helper.addimage(req, recipeBucket);
     }
 
-    console.log(updates);
-
     await query.updateRecipe(req.params.id, updates);
     req.flash('success', 'Recipe updated successfully!');
     return res.redirect(`/recipes/individualRecipe/${req.params.id}`);
@@ -309,9 +309,15 @@ router.get('/individualRecipe/:recipeId', async function (req, res, next) {
 
   const recipeId = parseInt(req.params.recipeId);
   const recipeDetails = await query.getRecipeById(recipeId);
-  const creatorInfo = await query.findUserById(recipeDetails.user_id);
-  options.firstName = creatorInfo.firstname;
-  options.lastName = creatorInfo.lastname;
+  let creatorInfo = await query.findUserById(recipeDetails.user_id);
+  if (!creatorInfo){
+    creatorInfo = {
+      id: recipeDetails.user_id,
+      username: 'Deleted User',
+      profile_img: 'default_profile.png'
+    }
+  }
+  options.id = creatorInfo.id;
   options.username = creatorInfo.username;
   options.userImage = await helper.getSignedUrl(creatorInfo.profile_img, userBucket);
 
@@ -336,17 +342,20 @@ router.get('/individualRecipe/:recipeId', async function (req, res, next) {
   options.directions = helper.formatRecipe(recipeDetails.directions);
   options.tags = tagArray;
 
-  console.log(options);
   setTimeout(() => {
     res.render('individualRecipe', options);
   }, 200);
 });
 
-router.get('/user/:username', async function (req, res, next) {
-  const username = req.params.username;
-  let user = await query.findUserByUsername(username);
+router.get('/user/:id', async function (req, res, next) {
+  const id = parseInt(req.params.id);
+  let user = await query.findUserById(id);
   if (!user) {
-    res.status(500).send('No user affiliated with the given username.');
+    user = {
+      id: id,
+      username: 'Deleted User',
+      profile_img: 'default_profile.png'
+    }
   }
   user.image = await helper.getSignedUrl(user.profile_img, userBucket)
   let recipes = await query.getRecipesByUserId(user.id);

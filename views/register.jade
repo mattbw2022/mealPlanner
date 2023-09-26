@@ -1,7 +1,10 @@
 extends layout
 block styles
     link(rel="stylesheet", href="/stylesheets/register.css")
+block scripts 
+    script(src="/javascripts/register.js")
 block content
+    - var questions = ['What is the name of your first pet?', 'In what city were you born?', 'What is the name of your favorite childhood friend?', 'What is the make and model of your first car?', 'What is the name of your favorite book or movie character?']
     form.register-form(action="/register", method="post") 
         h1 Register
         input.register-input(type="text", name="firstname", placeholder="First Name")
@@ -21,6 +24,14 @@ block content
         if options.emailInUse === true 
             p.err-msg Email is already associated with an accout.  
         input.register-input(type="password", name="password" placeholder="Password")
+        select#security-question(name="securityQuestion")
+            option(value="") Select a security question
+            for question in questions 
+                option(value=question)=question
+            option(value="create-question") Create your own question.
+        input#custom-question(type="text" name="customQuestion" placeholder="Custom Question")
+        button(type="button")#hide-custom-btn Select a Question
+        input(type="text" placeholder="Security Answer" name='securityAnswer')
         if options.noInput === "password"
             p.err-msg Password is required 
         if options.insecurePassword

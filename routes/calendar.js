@@ -89,12 +89,16 @@ router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, n
 })
 
 router.post('/selectMonth', helper.ensureAuthentication, async function (req, res, next) {
-  // Update active date property in session
+  console.log(req.session.activeDate);
+  const activeDate = req.session.activeDate;
   let options = {};
   const userId = req.session.user.id;
   let month = (parseInt(req.body.month) + 1);
   let monthIndex = parseInt(req.body.month);
   let year = parseInt(req.body.year);
+  activeDate.year = year;
+  activeDate.month = month;
+  req.session.activeDate = activeDate;
   const date = {
     year: year,
     month: month

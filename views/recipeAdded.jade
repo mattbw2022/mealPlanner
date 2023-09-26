@@ -1,6 +1,10 @@
 extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/recipeAdded.css")
 block content
-    - var img = mealImg
-    h1=mealTitle
-    p=mealImg
-    img(src=mealImg, alt="new meal")
+    #success-container
+        h2#success-msg Recipe added successfully!
+    
+    a(href="/recipes/individualRecipe/" + id)#meal-container
+        h3=recipeTitle
+        img(src=recipeImg, alt="new meal")

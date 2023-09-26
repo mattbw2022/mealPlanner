@@ -10,6 +10,10 @@ h1{
     color: white;
 }
 
+#security-question-container{
+  display: none;
+}
+
 .register-form{
     display: grid;
     width: 35%;
@@ -56,17 +60,23 @@ h1{
   }
   
   .register-form button{
-    font-size: 1.5em;
     margin-top: 0.5em;
-    height: 2em;
     width: 50%;
     justify-self: center;
-    background-color: white;
-    border: none;
+  }
+
+  .register-form select {
+    text-align: center;
+    font-size: 1.5em;
+    height: 2.5em;
+    margin: 0.5em 0 0.5em 0;
+    width: 84%;
+    justify-self: center;
+    border-radius: 1em;
   }
   
   .register-form button:hover{
-    background-color: gainsboro;
+    background-color: rgb(255, 232, 164);
   }
   
   .register-form button:hover{
@@ -92,5 +102,13 @@ h1{
   }
 
   .special-chars{
+    display: none;
+  }
+
+  #custom-question{
+    display: none;
+  }
+
+  #hide-custom-btn{
     display: none;
   }

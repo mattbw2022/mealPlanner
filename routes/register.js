@@ -47,6 +47,36 @@ router.post("/", [check('firstname').escape(), check('lastname').escape(), check
 
   }
 
+  
+  if (req.body.securityQuestion){
+    if(req.body.securityQuestion === 'create-question' && req.body.customQuestion){
+      req.body.securityQuestion = req.body.customQuestion;
+      delete req.body.customQuestion;
+    }
+    else if (req.body.securityQuestion !== 'create-question'){
+      securityQuestion = req.body.securityQuestion;
+      delete req.body.customQuestion;
+    }
+    else{
+      req.flash('error', 'A security question is required to sign up.');
+      return res.redirect('/register');
+    }
+  }
+  else{
+    req.flash('error', 'A security question is required to sign up.');
+    return res.redirect('/register');
+  }
+
+  let securityAnswer;
+  if (!req.body.securityAnswer){
+    req.flash('error', 'An answer to your security question is required.');
+    return res.redirect('/register');
+  }
+  else{
+    securityAnswer = req.body.securityAnswer;
+    console.log(securityAnswer);
+  }
+
   if (!req.body.password){
     options.noInput = 'password'
     return res.render('register', {options});

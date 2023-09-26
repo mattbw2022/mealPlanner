@@ -36,6 +36,7 @@ h2{
     color: black;
     width: 50%;
     overflow: hidden;
+    font-weight: bold;
 }
 
 .crossed-off{

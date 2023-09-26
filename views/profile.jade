@@ -4,15 +4,24 @@ block styles
 block scripts
     script(src="/javascripts/profile.js") 
 block content
+    #background 
     - var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     - var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     div#welcome
         h3=username
         img(src=profileImg, alt="profile picture")
-        button#edit-img-btn(type="button") Edit
-        form#edit-img-form(action="/profile/updatePicture" method="post", enctype="multipart/form-data") 
-            <input class="custom-file-input"  type = "file" name = "image" accept = "image/*" />
-            button(type="submit") Update Picture
+        a(href="/profile/editAccount") 
+            button(type="button") Edit Account
+
+        button#delete-account-btn(type="button") Delete Account 
+    #delete-confirmation-container
+        #delete-container
+            h3 Are you sure you want to delete your account?
+            img(src="images/sure-about-that.PNG", alt="You sure about that?")
+        #delete-container
+            a(href="/profile/deleteAccount") 
+                button#perm-delete-btn(type="button") Yes, permanently delete my account.
+            button#nvm-btn(type="button") No, don't delete my account.
     div.card
         - var weekHeading = `${months[userWeek[0].month - 1]} ${userWeek[0].day}, ${userWeek[0].year} - ${months[userWeek[6].month - 1]} ${userWeek[6].day}, ${userWeek[6].year}`
         h2=weekHeading
@@ -30,8 +39,9 @@ block content
                             button(type="submit", value=recipe.id) Remove
                     a(href='/recipes') add a recipe
     div#card-container 
-        div.profile-card
-            h2 myRecipes
+        div.profile-card(id="scrollbar1")
+            a(href="/recipes/user/"+ user_id) 
+                h2 myRecipes
             a(href="/recipes/createRecipe")
                 button.create-recipe Create recipe 
             if userRecipes.length >= 1
@@ -44,7 +54,7 @@ block content
                         button.edit-recipe-btn(type="button") Edit              
             else
                 h2 No recipes created! 
-        div.profile-card
+        div.profile-card(id="scrollbar1")
             a(href="/lists") 
                 h2 myLists
             a(href="/lists/newList")
@@ -52,7 +62,7 @@ block content
             for list in lists 
                 a.list-title(href="/lists/list/" + list.id)=list.title
 
-        div.profile-card
+        div.profile-card(id="scrollbar1")
             h2 myFavorites
          
 

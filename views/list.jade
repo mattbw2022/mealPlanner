@@ -17,7 +17,7 @@ block content
                             p(id=`item-${i}`)=item.quantity
                             p(id=`item-${i}`)=item.unit 
                             p(id=`item-${i}`)=item.item
-                    button.remove-item-btn(type="button" id=`delete-${i}`) Delete
+                    button.remove-item-btn(type="button" id=`delete-${i}`) delete
         else 
             div(class="item-container" style="display: none")
                     button.cross-off-btn(type="button" id=`item-0` class='' class="cross-off-listener" )

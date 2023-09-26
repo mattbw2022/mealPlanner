@@ -1,0 +1,39 @@
+extends layout
+block styles 
+    link(rel="stylesheet", href="/stylesheets/editAccount.css")
+block content
+    form#edit-account-form(action="/profile/editAccount" method="post", enctype="multipart/form-data")
+        .category-container 
+            .input-container
+                label(for="firstname") First Name 
+                input(type="text" name="firstname" value=firstname)
+            .input-container
+                label(for="lastname") Last Name 
+                input(type="text" name="lastname" value=lastname)
+        .category-container
+            .input-container
+                label(for="username") Username 
+                input(type="text" name="username" value=username)
+        .category-container
+            img(src=profile_img, alt="profile picture")
+            <input class="custom-file-input"  type = "file" name = "image" accept = "image/*" />
+        .category-container
+            .input-container(id="security-question")
+                label(for="newQuestion") New Security Question
+                input(type="text" name="newQuestion" value=security_question id='security-question')
+            .input-container
+                label(for="newAnswer") New Security Answer
+                input(type="text" name="newAnswer")
+        .category-container
+            .input-container
+                label(for="currentPassword") Current Password
+                input(type="password" name="currentPassword")
+            .input-container
+                label(for="newPassword") New Password
+                input(type="password" name="newPassword")
+            a#forgot-password(href="/login/forgotPassword") Forgot Password? 
+        .category-container
+            .input-container
+                label(for="email") Email
+                input(type="email" name="email" value=email) 
+        button(type="submit") Update Account 

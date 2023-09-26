@@ -14,7 +14,6 @@ const flash = require('connect-flash');
 // const helmet = require('helmet');
 // app.use(helmet());
 
-
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -60,12 +59,12 @@ app.use(session({
 }));
 
 app.use(flash());
-
 app.use(helper.isLoggedIn);
 app.use((req, res, next) => {
   res.locals.messages = req.flash();
   next();
 });
+
 var indexRouter = require('./routes/index');
 var recipesRouter = require('./routes/recipes');
 var listsRouter = require('./routes/lists');
@@ -75,8 +74,6 @@ var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -84,10 +81,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 app.use('/', indexRouter);
 app.use('/profile', profileRouter);
 app.use('/recipes', recipesRouter);
@@ -105,11 +99,9 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });

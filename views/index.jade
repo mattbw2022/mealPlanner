@@ -16,7 +16,7 @@ block content
         div(class="recipe-card-" + i +" recipe-card")
           a#random-recipe-link(href="/recipes/individualrecipe/" + recipe.id)=recipe.title
           img.recipe-img( src=recipe.image, alt=recipe.title)
-    .fresh-recipes-container 
+    .fresh-recipes-container(id='scrollbar1') 
       h2 Fresh Recipes 
       each newRecipe in options.newRecipes
         a(href="/recipes/individualrecipe/" + newRecipe.id).fresh-recipe
@@ -27,10 +27,3 @@ block content
             p=newRecipe.userInfo.date
             img.credit-img(src=newRecipe.userInfo.image, alt="User Picture")
           img.fresh-recipe-img(src=newRecipe.image, alt=newRecipe.title)
-  //- .newsfeed-container 
-  //-   h2 Newsfeed
-  //-   for article in options.articles
-  //-     div.news-article
-  //-       a(href=article.url)=article.title
-  //-       img(src=article.img)
-      

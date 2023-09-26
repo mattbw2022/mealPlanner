@@ -4,14 +4,14 @@ section{
   display: flex;
   justify-content: space-between;
   margin: 1em;
-  max-height: 27em;
-  min-height: 27em;
+  
 }
 
 #random-recipe-container{
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: fit-content;
   width: 45%;
   border: solid;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
@@ -21,7 +21,7 @@ section{
   display: flex;
   border: solid;
   width: 45%;
-  height: 15em;
+  margin-bottom: 2em;
 }
 
 #placeholder img {
@@ -31,12 +31,16 @@ section{
 .recipe-card{
   display: none;
   color: white;
+  border: solid;
+  border-color: rgb(255, 232, 164);
+  border-width: 0.5em;
   background-color: black;
   padding: 2em;
   text-align: center;
   flex-direction: column;
   width: 20em;
   align-items: center;
+  margin-bottom: 2em;
 }
 
 .recipe-card h2{
@@ -45,8 +49,7 @@ section{
 
 .recipe-img{
   height: 12em;
-  max-width: 15em;
-  min-width: 15em;
+  width: 15em;
   border: solid;
   border-color: white;
 }
@@ -57,10 +60,15 @@ section{
   margin: 1em 0;
 }
 
+#random-recipe-btn{
+  margin-bottom: 1em;
+}
+
 .fresh-recipes-container{
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: min-content;
   width: 45%;
   border: solid;
   overflow: scroll;

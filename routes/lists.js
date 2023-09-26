@@ -106,7 +106,7 @@ router.post('/addFromRecipe/:listId', helper.ensureAuthentication, async functio
 
     await query.updateItems(listId, list.items);
 
-    res.json({ success: true });
+    return res.json({ success: true });
 });
 
 router.get('/newList', helper.ensureAuthentication, async function (req, res, next) {

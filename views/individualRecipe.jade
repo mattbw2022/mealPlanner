@@ -4,14 +4,14 @@ block styles
 block scripts
     script(src="/javascripts/individualRecipe.js") 
 block content
-    - var credit = `Added by ${firstName} ${lastName} on ${date}`
+    - var credit = `Added by ${username} on ${date}`
     section
         #title-container
             h1=title
             img(src=recipeImage alt='picture of meal or default image')#recipe-img
             #creator-info
                 p=credit
-                a(href="/recipes/user/" + username) 
+                a(href="/recipes/user/" + id) 
                     img(src=userImage alt='user profile picture')#credit-img
         #steps-container
             h3 Servings: 

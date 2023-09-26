@@ -1,0 +1,35 @@
+#meal-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1em;
+    width: 75%;
+    background-color: rgb(255, 232, 164);
+    border: solid;
+    padding: 2em;
+    justify-self: center;
+    color: black;
+}
+
+#meal-container:hover{
+    border-color: white;
+    color: black;
+    padding: 2em;
+}
+
+#meal-container img{
+    border: solid;
+}
+
+#success-container {
+    background-color: #d3ffcc;
+    border: 1px solid #00ff37;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+#success-msg {
+    color: #00ff37;
+    font-weight: bold;
+  }

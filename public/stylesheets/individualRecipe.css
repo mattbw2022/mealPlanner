@@ -21,8 +21,9 @@ section{
     align-items: center;
     background-color: rgb(255, 232, 164);
     width: 40%;
-    justify-content: center;
-    max-height: 40em;
+    max-height: 34em;
+    border: solid;
+    padding: 1em;
 }
 
 section h1{
@@ -51,7 +52,7 @@ section h1{
     border: solid;
     padding-left: 1em;
     margin: 0 1em 1em 0;
-    width: 54%;
+    width: 50%;
 }
 
 #select-list-container{
