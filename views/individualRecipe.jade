@@ -22,8 +22,8 @@ block content
                 for ingredient in ingredients
                     .ingredient
                         - var ingredientContents = `${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}`
-                        input(type="checkbox" value=ingredient)
                         label=ingredientContents
+                            input(type="checkbox" value=ingredient)
                 if lists    
                     button#show-list-btn(type="button") Add to a List?
                     #select-list-container

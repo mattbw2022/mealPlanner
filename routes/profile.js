@@ -173,8 +173,9 @@ router.post('/editAccount', upload.fields([{ name: 'image', maxCount: 1 }, { nam
       }
     }
   }
-
+  console.log(newQuestion, userInfo.security_question);
   if (newQuestion && newQuestion !== userInfo.security_question){
+    console.log('not equal or no question')
     if(newAnswer && newAnswer !== userInfo.security_answer){
       updates.securityQuestion = newQuestion;
       updates.securityAnswer = newAnswer;
@@ -183,10 +184,6 @@ router.post('/editAccount', upload.fields([{ name: 'image', maxCount: 1 }, { nam
       req.flash('error', 'A question and answer are required to update security question.')
       return res.redirect('/profile/editAccount');
     }
-  }
-  else{
-    req.flash('error', 'A question and answer are required to update security question.')
-    return res.redirect('/profile/editAccount');    
   }
 
   if (req.files && req.files.image && req.files.image.length > 0){

@@ -1,14 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
 
+#features-section{
+  margin: 120px 1em 0 1em;
+}
+
 section{
   display: flex;
   justify-content: space-between;
   margin: 1em;
-  
+  max-height: 75%;
 }
 
 #random-recipe-container{
   display: flex;
+  text-align: center;
   flex-direction: column;
   align-items: center;
   height: fit-content;
@@ -38,12 +43,12 @@ section{
   padding: 2em;
   text-align: center;
   flex-direction: column;
-  width: 20em;
   align-items: center;
   margin-bottom: 2em;
+  max-width: -webkit-fill-available;
 }
 
-.recipe-card h2{
+.recipe-card h3{
   margin-top: 0;
 }
 
@@ -68,10 +73,10 @@ section{
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: min-content;
+  max-height: 50em;
   width: 45%;
   border: solid;
-  overflow: scroll;
+  overflow: auto;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
@@ -154,4 +159,27 @@ section{
 
 .news-article img{
   max-height: 80%;
+}
+
+@media only screen and (max-width: 1000px) {
+  section{
+    flex-direction: column;
+    justify-content: normal;
+    align-items: center;
+  }
+
+  #random-recipe-container{
+    width: 80%;
+    margin-bottom: 2em;
+  }
+  
+  .fresh-recipes-container{
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 850px){
+  #main-nav{
+    top: 75px;
+  }
 }

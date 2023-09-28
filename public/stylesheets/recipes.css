@@ -2,7 +2,7 @@
 
 
 #create-recipe{
-    margin: 1em 1em 0 1em;
+    margin: 150px 1em 0 1em;
     color: white;
     font-size: x-large;
     font-weight: bold;
@@ -24,6 +24,8 @@
     background-color: black;
     margin: 1.5em 2em 2em 2em;
 }
+
+
 
 #search-filter-container{
     display: flex;
@@ -47,12 +49,21 @@
     flex-direction: column;
 }
 
+#filter-container ul{
+    color: rgb(255, 232, 164);
+}
+
 #filters{
     display: flex;
     justify-content: space-evenly;
     justify-self: center;
 }
 
+#filter-btn-container{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
 
 .filter-label{
     color: white;
@@ -65,12 +76,15 @@
     padding: 0.5em;
     font-size: large;
     font-weight: bold;
+    text-align: left;
+    align-items: baseline;
 }
 
 .filter-option{
     display: flex;
     align-items: baseline;
-    
+    flex-direction: row-reverse;
+    text-align: left;
 }
 
 #search-container{
@@ -86,6 +100,7 @@
     border-radius: 2em;
     margin-left: 1em;
     width: 20em;
+    font-weight: bold
 }
 
 #search-bar::placeholder{
@@ -122,16 +137,41 @@
     border: solid;
     border-color: black;
     background-color: black;
-    padding-bottom: 1em;
+    padding: 1em;
     min-width: 20em;
     max-width: 20em;
 }
+.recipe-link{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.recipe-link p {
+    color: rgb(255, 232, 164);
+
+}
+
+.recipe-link p:hover{
+    color: white;
+}
+
+.recipe-link:hover{
+    color: white;
+}
+
+
+
 .recipe-img{
     width: 100%;
     max-height: 15em;
     min-height: 15em;
-    border-bottom: solid;
-    border-color: black;
+    border: solid;
+    border-color: rgb(255, 232, 164);
+}
+
+.recipe-img:hover{
+    border-color: white;
 }
 
 .select-container{
@@ -187,4 +227,62 @@ label{
     border-color: white;
 }
 
-/* recipesByUser */
+@media only screen and (max-width: 1200px) {
+    .recipe-container{
+        flex-direction: column;
+        align-items: center;
+    }
+    .recipe{
+        width: 55%;
+        max-width: none;
+        max-width: none;
+    }
+    .recipe-link img{
+        margin: 2em;
+        max-width: none;
+        max-height: none;
+    }
+
+    .recipe-link p{
+        margin: 0 0 0.5em 0;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    #search-filter-container{
+        flex-direction: column;
+    }
+
+    #search-bar{
+        width: 40em;
+    }
+    
+    #search-bar::placeholder{
+        font-size: 2em;
+    }
+
+    .select-container{
+        font-size: 1.5em;
+    }
+    
+    select{
+        font-size: 28px;
+        width: 7em;
+        text-align: center;
+    }
+    
+}
+
+@media only screen and (max-width: 900px){
+    body{
+        font-size: 2em;
+    }
+
+    #dropdown-btn{
+        margin: 0 2em 0 0;
+    }
+    
+    #main-nav{
+        top: 85px;
+    }
+}

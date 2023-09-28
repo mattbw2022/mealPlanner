@@ -1,16 +1,19 @@
 doctype html
 html
   head
+    meta(name='viewport', content='width=device-width')
     title=myRecipePlanner
     link(rel='stylesheet', href='/stylesheets/layout.css')
     block styles
+    script(src="/javascripts/layout.js")
     block scripts
   block body
     body
   header 
     h1 
       a(href='/') myRecipePlanner
-    nav 
+    img#dropdown-btn(src="/images/dropdown-nav.png", alt="")
+    nav#main-nav
       li 
         a(href='/recipes') Recipes 
       if authenticated
@@ -25,8 +28,9 @@ html
       else 
         li 
           a(href='/login') Login
-          span    / 
+        li
           a(href='/register') Sign Up
+
 
   if messages.error
     .error-box

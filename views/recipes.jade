@@ -10,11 +10,12 @@ block content
     a#create-recipe(href="/recipes/createrecipe") createRecipe
     div#adjustment-container
         div#search-filter-container
-            button#filter-btn Filters
-            button#apply-filters-btn(type='submit' form="filter-container") Apply Filters
             form(action="/recipes/search" method="post")#search-container
                 input#search-bar(type="text" name="search" placeholder="Search by title, ingredients or directions" )
                 button(type="submit")#search-btn Search
+            #filter-btn-container
+                button#filter-btn Filters
+                button#apply-filters-btn(type='submit' form="filter-container") Apply Filters
         if options.activeFilters
             ul#active-filters-list Active Filters:  
                 for filter in options.activeFilters 
@@ -23,7 +24,7 @@ block content
             div#filters
                 ul.filter-category Cuisine
                     each tag, i in options.allTags.cuisineTags
-                        div.filter-option
+                        label.filter-option=tag.name
                             if options.activeFilters
                                 if options.activeFilters.includes(tag.name) 
                                     input(type="checkbox", value=tag.id, name="tags", checked="true")
@@ -31,10 +32,9 @@ block content
                                     input(type="checkbox", value=tag.id, name="tags") 
                             else 
                                 input(type="checkbox", value=tag.id, name="tags") 
-                            label.filter-label=tag.name
-                ul.filter-category Type of Food 
+                ul.filter-category Category
                     each tag, i in options.allTags.categoryTags
-                        div.filter-option
+                        label.filter-option=tag.name
                             if options.activeFilters
                                 if options.activeFilters.includes(tag.name) 
                                     input(type="checkbox", value=tag.id, name="tags", checked="true")
@@ -42,10 +42,9 @@ block content
                                     input(type="checkbox", value=tag.id, name="tags") 
                             else 
                                 input(type="checkbox", value=tag.id, name="tags") 
-                            label.filter-label=tag.name
                 ul.filter-category Time 
                     each tag, i in options.allTags.timeTags
-                        div.filter-option
+                        label.filter-option=tag.name
                             if options.activeFilters
                                 if options.activeFilters.includes(tag.name) 
                                     input(type="checkbox", value=tag.id, name="tags", checked="true")
@@ -53,10 +52,9 @@ block content
                                     input(type="checkbox", value=tag.id, name="tags") 
                             else 
                                 input(type="checkbox", value=tag.id, name="tags") 
-                            label.filter-label=tag.name
                 ul.filter-category Difficulty
                     each tag, i in options.allTags.difficultyTags
-                        div.filter-option
+                        label.filter-option=tag.name
                             if options.activeFilters
                                 if options.activeFilters.includes(tag.name) 
                                     input(type="checkbox", value=tag.id, name="tags", checked="true")
@@ -64,7 +62,6 @@ block content
                                     input(type="checkbox", value=tag.id, name="tags") 
                             else 
                                 input(type="checkbox", value=tag.id, name="tags") 
-                            label.filter-label=tag.name   
     if options.search 
         - var searchTerm = `"${options.search}"`
         p(style="text-align: center;") Showing search results for 
@@ -74,8 +71,9 @@ block content
             h3 Whoops! No recipes in those categories....Try again.
         each recipe, i in options.allRecipes
             div.recipe
-                img.recipe-img(src=options.recipeImages[i], alt=recipe.title)
-                a(href='recipes/individualrecipe/' + recipe.id)=recipe.title
+                a.recipe-link(href='recipes/individualrecipe/' + recipe.id)
+                    img.recipe-img(src=options.recipeImages[i], alt=recipe.title)
+                    p=recipe.title
                 button.addRecipe-btn(type="button") Add recipe
                 form.addrecipe(action="calendar/addRecipe/" + recipe.id method="post")
                     div.select-container

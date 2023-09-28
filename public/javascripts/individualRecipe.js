@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 isChecked = false;
             }
             for (let i = 0; i < ingredients.length; i++){
-                ingredients[i].firstChild.checked = isChecked;
+                ingredients[i].firstChild.childNodes[1].checked = isChecked;
             }
             selectButton.textContent = text;
         }

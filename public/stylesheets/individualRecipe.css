@@ -4,6 +4,7 @@ section{
     text-align: center;
     margin-top: 1em;
     flex-wrap: wrap;
+    margin-top: 150px;
 }
 
 #recipe-img{
@@ -79,17 +80,21 @@ section h1{
 
 .ingredient{
     display: flex;
+    text-align: left;
     align-items: center;
 }
 
 .ingredient label{
-    margin-left: 0.5em;
+    margin: 1em;
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 ol{
     text-align: left;
     padding: 0 1em;
     line-height: 3em;
+
 }
 
 h3{
@@ -113,6 +118,28 @@ h3{
     border-color: rgb(255, 232, 164);
 }
 
+@media only screen and (max-width: 900px){
+    body{
+        font-size: 1.5em;
+    }
+    
+    #main-nav{
+        top: 85px;
+    }
+
+    select{
+        font-size: 1em;
+    }
+
+    #tag-container{
+        display: grid;
+    }
+
+    #tag-container a{
+        margin: 0.5em 0.5em 0 0.5em;
+    }
+}
+
 @media only screen and (max-width: 1200px) {
     section{
         flex-direction: column;
@@ -120,13 +147,24 @@ h3{
     }
 
     #title-container{
-        width: fit-content;
+        width: -webkit-fill-available;
         margin: 0 1em 1em 1em;
         max-height: none;
     }
 
     #steps-container{
         width: fit-content;
-        margin: 0 1em 1em 1em;
+        min-width: -webkit-fill-available;
+        margin: 1em 1em 1em 1em;
     }
+
+    #recipe-img{
+        min-height: auto;
+        width: auto;
+    }
+
+    ol{
+        margin-left: 0.5em;
+    }    
 }
+
