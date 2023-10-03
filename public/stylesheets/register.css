@@ -1,28 +1,23 @@
-body{
-    margin: 0;
-    display: grid;
-    background-image: url(../images/pizza.jpg);
-    background-position: center;
-    background-size: cover;
-}
-
 h1{
     color: white;
 }
 
 #security-question-container{
   display: none;
+  margin: 2em 0 2em 0;
 }
 
 .register-form{
     display: grid;
     width: 35%;
     justify-self: center;
-    margin-top: 5%;
+    margin-top: 160px;
     background-color: black;
     color: white;
     text-align: center;
     padding: 2%;
+    border: solid;
+    border-color: rgb(255, 232, 164);
   }
   
   .register-form h1{
@@ -111,4 +106,15 @@ h1{
 
   #hide-custom-btn{
     display: none;
+  }
+
+  @media only screen and (max-width: 850px) {
+      .register-form{
+        width: 90%;
+      }
+
+      #main-nav{
+        top: 68px;
+        margin: 0;
+      }
   }

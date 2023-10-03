@@ -1,21 +1,23 @@
 
-body {
+/* body {
     margin: 0;
     display: grid;
     background-image: url(../images/steak.jpg);
     background-position: center;
     background-size: cover;
-}
+} */
 
 .login-form{
   display: grid;
   width: 35%;
   justify-self: center;
-  margin-top: 7%;
+  margin-top: 168px;
   background-color: black;
   color: white;
   text-align: center;
   padding: 3%;
+  border: solid;
+  border-color: rgb(255, 232, 164);
 }
 
 .login-form h1{
@@ -64,4 +66,15 @@ body {
 
 .login-text a:hover{
   font-weight: bold;
+}
+
+@media only screen and (max-width: 850px) {
+  .login-form{
+    width: 80%;
+  }
+
+  #main-nav{
+    top: 68px;
+    margin: 0;
+  }
 }

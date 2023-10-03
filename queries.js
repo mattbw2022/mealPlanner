@@ -1,7 +1,6 @@
 const pool = require('./connection');
 const {isLeapYear} = require('./calendar');
 
-
 async function createUser(user){
    let securityQuestion;
    if (user.securityQuestion){
@@ -125,7 +124,7 @@ async function addRecipe(recipe, user_id, image, time){
    let tagIds;
    try{
       if (recipe.tags){
-         if (recipe.tags.length > 1){
+         if (Array.isArray(recipe.tags)){
             tagIds = recipe.tags.map(tag => parseInt(tag, 10)); 
          }
          else{
@@ -182,14 +181,14 @@ async function getAllTags(){
     return tags;
  }
 
-async function populateCalendarForNewUser(userId) {
-   const startYear = 2023;
-   const endYear = 2033;
+async function populateCalendarForNewUser(userId, date) {
+   const startYear = date.year;
+   const endYear = date.year + 2;
    let dayId = 1;
    
    for (let year = startYear; year <= endYear; year++) {
      for (let month = 1; month <= 12; month++) {
-       let daysInMonth = 31; // Default to 31 days
+       let daysInMonth = 31;
  
        if (month === 4 || month === 6 || month === 9 || month === 11) {
          daysInMonth = 30;
@@ -213,6 +212,41 @@ async function populateCalendarForNewUser(userId) {
        }
      }
    }
+ }
+
+ async function updateCalendars(year, userId){
+   const startYear = year;
+   const currentMaxDayId = await pool.query('SELECT day_id FROM calendars ORDER BY day_id DESC LIMIT 1');
+   let dayId = parseInt(currentMaxDayId);
+   dayId = dayId + 1;
+   
+   for (let year = startYear; year <= endYear; year++) {
+     for (let month = 1; month <= 12; month++) {
+       let daysInMonth = 31;
+ 
+       if (month === 4 || month === 6 || month === 9 || month === 11) {
+         daysInMonth = 30;
+       } else if (month === 2) {
+         daysInMonth = isLeapYear(year) ? 29 : 28;
+       }
+ 
+       for (let day = 1; day <= daysInMonth; day++) {
+         const query = `
+           INSERT INTO calendars (day_id, user_id, year, month, day)
+           VALUES ($1, $2, $3, $4, $5)
+         `;
+         const values = [dayId, userId, year, month, day];
+         
+         try {
+           await pool.query(query, values);
+           dayId++;
+         } catch (error) {
+           console.error('Error populating calendar:', error);
+         }
+       }
+     }
+   }
+   // query to delete the oldest year.
  }
 
  async function getDayId(date){
@@ -248,10 +282,18 @@ async function populateCalendarForNewUser(userId) {
  }
 
  async function getRecipesContaining(search){
-   const query = `SELECT * FROM recipes
-                  WHERE title LIKE $1
-                  OR ingredients LIKE $1
-                  OR directions LIKE $1`;
+   console.log(search);
+   const query = `
+   SELECT *
+   FROM recipes
+   WHERE title LIKE $1
+     OR EXISTS (
+       SELECT 1
+       FROM unnest(ingredients) AS json_str
+       WHERE json_str::json->>'ingredient' ILIKE $1
+     )
+ `;
+ 
    const results = await pool.query(query, [`%${search}%`]);
    return results.rows;
  }
@@ -444,6 +486,20 @@ async function deleteUser(id){
    return;
 }
 
+async function getMaxOrMinYear(user_id, needMax){
+   if(needMax){
+      const query = 'SELECT MAX(year) FROM calendars WHERE user_id = $1'
+      const maxAge = await pool.query(query, [user_id]);
+      return maxAge.rows[0].max;
+   }
+   else{
+      const query = 'SELECT MIN(year) FROM calendars WHERE user_id = $1'
+      const minAge = await pool.query(query, [user_id]);
+      return minAge.rows[0].min;
+   }
+   
+}
+
 const queries = {
    findUserByUsername: findUserByUsername,
    createUser: createUser,
@@ -479,6 +535,8 @@ const queries = {
    getAllByColumn: getAllByColumn,
    updateUser: updateUser,
    deleteUser: deleteUser,
+   updateCalendars: updateCalendars,
+   getMaxOrMinYear: getMaxOrMinYear,
 }
 
 module.exports = queries;

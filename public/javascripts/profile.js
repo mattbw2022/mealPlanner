@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-
+  
     const deleteAccountBtn = document.getElementById('delete-account-btn');
     const hideDeleteAccountBtn = document.getElementById('nvm-btn');
     deleteAccountBtn.addEventListener('click', handleDeleteConfirmation);

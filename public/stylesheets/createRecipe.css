@@ -2,6 +2,12 @@
     justify-self: center;
     display: grid;
     width: 80%;
+    margin: 100px 1em 2em 1em;
+}
+
+#add-recipe-btn{
+    width: fit-content;
+    justify-self: center;
 }
 
 #newRecipe input{    
@@ -87,4 +93,27 @@
 
 .help{
     margin-left: 1em;
+}
+
+@media only screen and (max-width: 850px){
+    #servings{
+        width: 90%;
+    }
+
+    .step{
+        width: 90%;
+    }
+
+    input::placeholder{
+        font-size: large;
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
+
+    #newRecipe{
+        width: auto;
+    }
 }

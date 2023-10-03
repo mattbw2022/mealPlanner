@@ -47,7 +47,9 @@ router.get('/', async function (req, res, next) {
 router.post('/search', async function (req, res, next) {
   let options = {};
   const search = req.body.search;
+  console.log(search);
   const searchResults = await query.getRecipesContaining(search);
+  console.log(searchResults);
   options.allRecipes = searchResults;
   options.allTags = await query.getAllTags();
   options.search = search;

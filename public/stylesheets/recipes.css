@@ -283,6 +283,7 @@ label{
     }
     
     #main-nav{
-        top: 85px;
+        top: 95px;
+        margin: 0;
     }
 }

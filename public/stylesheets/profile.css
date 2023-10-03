@@ -2,7 +2,7 @@
     justify-self: center;
     display: flex;
     align-items: center;
-    margin: 1em;
+    margin: 160px 0 0 0;
     padding: 1em;
     flex-direction: column;
     border: solid;
@@ -213,7 +213,7 @@
     border-color: black;
 }
 
-.dailyrecipe{
+.dailyRecipe{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -222,12 +222,12 @@
     margin: 0.5em;
 }
 
-.dailyrecipe p{
+.dailyRecipe p{
     font-weight: bold;
     margin-bottom: 0.25em;
 }
 
-.dailyrecipe img{
+.dailyRecipe img{
     border: solid;
     border-radius: 2em;
     color: white;
@@ -249,4 +249,54 @@
 .list-title:hover{
     background-color: rgb(255, 232, 164);
     color: black;
+}
+
+
+@media only screen and (max-width: 850px){
+
+    body{
+        font-size: 1.5em;
+    }
+
+    header h1{
+        font-size: 1em;
+    }
+
+    #welcome{
+        margin: 100px 1em 1em 1em;
+    }
+    
+    #week-container{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .day{
+        width: 90%;
+    }
+
+    .dailyRecipe{
+        width: 75%;
+    }
+
+    #card-container{
+        flex-direction: column;
+    }
+
+    .profile-card{
+        width: auto;
+    }
+
+    #dropdown-btn{
+        margin: 0 1em 0 0;
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
+
+    .user-recipe{
+        flex-direction: column;
+    }
 }

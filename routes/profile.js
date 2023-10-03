@@ -90,13 +90,17 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
 
 
   router.post('/removerecipe/:recipe_id/:day_id', helper.ensureAuthentication, async function(req, res, next) {
+  const url = require('url');
 
+  const urlString = req.headers.referer;
+  const parsedUrl = new URL(urlString);
+  const path = parsedUrl.pathname;
+  const referingPath = path.replace(/\//g, '');
   const recipeId = req.params.recipe_id;
   const userId = req.session.user.id;
   const dayId = req.params.day_id;
-
   query.removeRecipeFromCalendar(userId, recipeId, dayId);
-  res.redirect('/profile');
+  res.redirect(`/${referingPath}`);
 });
 
 router.get('/editAccount', helper.ensureAuthentication, async function(req, res, next){

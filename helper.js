@@ -294,7 +294,6 @@ function checkForSingleInput(input){
   }
 }
 
-
   module.exports = {
     isLoggedIn: isLoggedIn,
     checkPasswordStrength: checkPasswordStrength,

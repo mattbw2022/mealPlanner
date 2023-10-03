@@ -1,5 +1,5 @@
 #month-nav{
-    margin: 1em 0;
+    margin: 100px 1em 1em 1em;
     display: flex;
     justify-content: space-between;
     background-color: black;
@@ -24,6 +24,7 @@ h2{
 #calendar-container{
     display: grid;
     margin: 1em;
+    min-width: 950px;
 }
 
 .days-of-week{
@@ -43,6 +44,7 @@ h2{
     width: 14%;
     border-style: groove;
     min-height: 10em;
+    text-align: center;
 }
 
 .day h4{
@@ -50,7 +52,6 @@ h2{
     color: white;
     background-color: black;
     width: 2em;
-    padding-left: 1em;
 }
 
 .day a{
@@ -160,4 +161,25 @@ h2{
 
 #pick-month-form button{
     margin-left: 0.5em;
+}
+
+.error-box{
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 850px){
+    #month-nav{
+        justify-self: center;
+        justify-content: inherit;
+        width: fit-content;
+    }
+
+    h2{
+        text-align: center;
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
 }

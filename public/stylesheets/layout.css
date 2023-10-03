@@ -96,7 +96,7 @@ header {
     background-color: #ffcccc;
     border: 1px solid #ff0000;
     padding: 10px;
-    margin: 10px 0;
+    margin: 120px 0 -100px 0;
     text-align: center;
   }
   
@@ -105,11 +105,11 @@ header {
     font-weight: bold;
   }
 
-  .success-box {
+  .success-container {
     background-color: #d3ffcc;
     border: 1px solid #00ff37;
     padding: 10px;
-    margin: 10px 0;
+    margin: 120px 0 0 0;
     text-align: center;
   }
 
@@ -212,6 +212,12 @@ input[type=checkbox] {
 
 label:hover{
   cursor: pointer;
+}
+
+@media only screen and (max-width: 1011px) {
+  #dropdown-btn{
+    display: block;
+  }
 }
 
 @media only screen and (max-width: 850px) {

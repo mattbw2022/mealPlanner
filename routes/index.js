@@ -15,17 +15,30 @@ const recipeBucket = 'mealplanner-recipe-images';
 router.get('/', async function(req, res, next) {
   let options = {};
 
-  const allRecipes = await query.getAllRecipes();
+  let allRecipes = await query.getAllRecipes();
     for(let i = 0; i < allRecipes.length; i++){
       allRecipes[i].image = await helper.getSignedUrl(allRecipes[i].image, recipeBucket);
     }
  
-
-  if(allRecipes.length > 100){
-    while (allRecipes.length > 100){
-      allRecipes.slice(Math.random(Math.floor() * allRecipes.length));
+  if(allRecipes.length > 50){
+    while (allRecipes.length > 50){
+      let spliceStart = 1;
+      let spliceEnd = 1; 
+      while (spliceEnd - spliceStart !== 49){
+        spliceStart = Math.random(Math.floor() * allRecipes.length);
+        spliceEnd = Math.random(Math.floor() * allRecipes.length);
+      }
+      allRecipes.slice(spliceStart, spliceEnd);
     }
   }
+  
+  let unshuffled = allRecipes;
+  let shuffled = unshuffled
+      .map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
+  allRecipes = shuffled;
+  
   options.newRecipes = await query.getnewRecipes();
   for(let i = 0; i < options.newRecipes.length; i++){
     options.newRecipes[i].image = await helper.getSignedUrl(options.newRecipes[i].image, recipeBucket);

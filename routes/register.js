@@ -5,6 +5,8 @@ const helper = require('../helper');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {check, validationResult} = require('express-validator');
+const {createTimestamp} = require('../helper');
+const {getDate} = require('../calendar');
 
 let options = {
   noInput: '',
@@ -101,7 +103,8 @@ router.post("/", [check('firstname').escape(), check('lastname').escape(), check
       id: newUser.id,
       sessionID: req.sessionID
     }
-    await queries.populateCalendarForNewUser(req.session.user.id);
+    const date = getDate(createTimestamp(Date.now()));
+    await queries.populateCalendarForNewUser(req.session.user.id, date);
     res.redirect('/profile');
   } else {
     res.status(500).json({ msg: "Unable to create user" });

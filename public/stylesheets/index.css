@@ -8,7 +8,6 @@ section{
   display: flex;
   justify-content: space-between;
   margin: 1em;
-  max-height: 75%;
 }
 
 #random-recipe-container{

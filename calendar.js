@@ -18,7 +18,6 @@ function getDayOfWeek(year, month, day) {
     
     const dayOfWeek = (day + Math.floor(13 * (month + 1)) / 5 + k + Math.floor(k / 4) + Math.floor(j / 4) + 5 * j) % 7;
     
-    // The result of the formula: 0 (Saturday), 1 (Sunday), 2 (Monday), ..., 6 (Friday)
     const index = Math.floor(dayOfWeek);
     const daysOfWeek = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     return daysOfWeek[index];
@@ -101,19 +100,16 @@ function calculateWeeks(year, month) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDayOfWeek = new Date(year, month, 1).getDay();
     
-    const completeWeeks = Math.ceil((daysInMonth + firstDayOfWeek) / 7); // Use Math.ceil instead of Math.floor
+    const completeWeeks = Math.ceil((daysInMonth + firstDayOfWeek) / 7);
     const remainingDays = (daysInMonth + firstDayOfWeek) % 7;
     
-    // Add an extra week if there are remaining days or if the month starts on a Sunday
     const totalWeeks = completeWeeks + (remainingDays > 0 || firstDayOfWeek === 0 ? 1 : 0);
     return totalWeeks;
 }
 
-// Function to generate the calendar data
 function generateCalendarData(year, month) {
     const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     
-    // Adjust February days for leap years
     if (isLeapYear(year)) {
         daysInMonth[1] = 29;
     }
@@ -122,12 +118,10 @@ function generateCalendarData(year, month) {
     const days = [];
 
     let day = 1;
-    // Fill the cells before the first day of the month
     for (let i = 0; i < firstDayOfWeek; i++) {
         days.push('x');
     }
 
-    // Fill the rest of the calendar
     while (day <= daysInMonth[month]) {
         days.push(day.toString());
 
@@ -138,7 +132,6 @@ function generateCalendarData(year, month) {
         day++;
     }
 
-    // Complete any remaining empty cells in the last row
     while ((firstDayOfWeek + day - 1) % 7 !== 0) {
         days.push('x');
         day++;
@@ -157,11 +150,7 @@ function generateCalendarData(year, month) {
             weekNumber++;
         }
     }
-    // let plannedMeals = [];
-    // let plannedMealsImgs = [];
-    // for(weeks in weeksArray){
 
-    // }
     const firstDay = (element) => element === '1';
     const lastDay = (element) => element === daysInMonth[month].toString();
     const firstDayIndex = days.findIndex(firstDay);

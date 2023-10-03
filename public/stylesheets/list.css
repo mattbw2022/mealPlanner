@@ -2,7 +2,7 @@
     justify-self: center;
     display: flex;
     justify-content: space-between;
-    margin: 2em 0;
+    margin: 100px 0 2em 0;
     width: 50%;
 }
 
@@ -91,4 +91,19 @@ h2{
 
 label{
     margin: 0 1em 0 0;
+}
+
+
+@media only screen and (max-width: 850px) {
+    .cross-off-btn{
+        width: 83%;
+        max-height: 4em;
+        overflow: hidden;
+        text-align: left;
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
 }

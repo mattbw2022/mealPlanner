@@ -1,4 +1,5 @@
 #edit-account-form{
+    margin: 100px 0 0 0;
     justify-self: center;
     display: flex;
     flex-direction: column;
@@ -50,4 +51,16 @@
 #security-question{
     width: 100%;
     text-align: center;
+}
+
+@media only screen and (max-width: 850px) {
+    #edit-account-form{
+        width: 75%;
+        margin-bottom: 2em;
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
 }

@@ -20,12 +20,12 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     options.calendar = c.generateCalendarData(date.year, dateIndex);
     const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
     options = await helper.arrangeCalendarInfo(recipeIds, options, date);
+    const maxYear = options.yearsArray[(options.yearsArray.length - 1)];
     req.session.activeDate = {
       year: date.year,
       month: date.month,
       day: date.day
     };
-    console.log(options.calendar.weeksArray);
     res.render('calendar', {options});
   });
 
@@ -46,6 +46,7 @@ router.post('/moveRecipe/:recipeId/:dayId', helper.ensureAuthentication, async f
 router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, next){
   const userId = req.session.user.id;
   let options = {};
+  const currentMonth = req.session.activeDate.month;
   if (req.session.activeDate.month === 12){
     req.session.activeDate.year++;
     req.session.activeDate.month = 1;
@@ -55,6 +56,13 @@ router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, n
   }
   let dateIndex = req.session.activeDate.month - 1;
   let date = req.session.activeDate;
+  const maxYear = await query.getMaxOrMinYear(userId, true);
+  if (maxYear < date.year){
+    req.session.activeDate.year = maxYear;
+    req.session.activeDate.month = currentMonth;
+    req.flash('error','Calendars only extend to the end of the next year.');
+    return res.redirect('/calendar');
+  }
   options.calendar = c.generateCalendarData(date.year, dateIndex);
 
   const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
@@ -66,6 +74,7 @@ router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, n
 router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, next){
   const userId = req.session.user.id;
   let options = {};
+  const currentMonth = req.session.activeDate.month;
   if (req.session.activeDate.month === 1){
     req.session.activeDate.year--;
     req.session.activeDate.month = 12;
@@ -75,6 +84,13 @@ router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, n
   }
   let dateIndex = req.session.activeDate.month - 1;
   let date = req.session.activeDate;
+  const minYear = await query.getMaxOrMinYear(userId, false);
+  if (minYear > date.year){
+    req.session.activeDate.year = minYear;
+    req.session.activeDate.month = currentMonth;
+    req.flash('error','Calendars only extend to the end of the next year.');
+    return res.redirect('/calendar');
+  }
   options.calendar = c.generateCalendarData(date.year, dateIndex);
 
   const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);

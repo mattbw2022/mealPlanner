@@ -17,13 +17,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
         
     });
-    const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    if (screenWidth < 1011){
-        dropdownBtn.style.display = 'block';
-    }
+
     function trackScreenSize() {
         const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        const screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         const dropdownBtn = document.getElementById('dropdown-btn');
         const nav = document.getElementById('main-nav');
         if (screenWidth < 1011){
