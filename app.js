@@ -76,7 +76,6 @@ var calendarRouter = require('./routes/calendar');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
-const { check } = require('express-validator');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -118,6 +117,7 @@ setInterval(async () => {
     } catch (error) {
       console.error('Error executing query:', error);
     }
+    console.log('Calendar updates successful.');
   }
   else{
     console.log('No calendar additions needed.');
@@ -144,7 +144,7 @@ setInterval(async () => {
   else{
     console.log('No calendar deletetions needed.');
   }
-}, 86400000);
+}, 600000);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -3,6 +3,7 @@ const helper = require('../helper');
 var router = express.Router();
 const query = require('../queries');
 const c = require('../calendar');
+const calendar = require('../calendar');
 
 router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     const userId = req.session.user.id;
@@ -17,16 +18,29 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
       date = c.getDate(helper.createTimestamp(Date.now()));
       dateIndex = date.month - 1;
     }
-    options.calendar = c.generateCalendarData(date.year, dateIndex);
-    const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
-    options = await helper.arrangeCalendarInfo(recipeIds, options, date);
-    const maxYear = options.yearsArray[(options.yearsArray.length - 1)];
-    req.session.activeDate = {
-      year: date.year,
-      month: date.month,
-      day: date.day
-    };
-    res.render('calendar', {options});
+    try {
+      options.calendar = c.generateCalendarData(date.year, dateIndex);
+      const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
+      options = await helper.arrangeCalendarInfo(recipeIds, options, date);
+      const maxYear = options.yearsArray[(options.yearsArray.length - 1)];
+      req.session.activeDate = {
+        year: date.year,
+        month: date.month,
+        day: date.day
+      };
+      return res.render('calendar', {options});  
+    } catch (error) {
+      console.log(error);
+      req.flash('error', 'An unexpected error occured');
+      if (req.session.authenticaed){
+        return res.redirect('/profile');
+      }
+      else{
+        return res.redirect('/login');
+      }
+      
+    }
+    
   });
 
 router.post('/moveRecipe/:recipeId/:dayId', helper.ensureAuthentication, async function(req, res, nex){
@@ -56,11 +70,18 @@ router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, n
   }
   let dateIndex = req.session.activeDate.month - 1;
   let date = req.session.activeDate;
-  const maxYear = await query.getMaxOrMinYear(userId, true);
-  if (maxYear < date.year){
-    req.session.activeDate.year = maxYear;
-    req.session.activeDate.month = currentMonth;
-    req.flash('error','Calendars only extend to the end of the next year.');
+  try {
+    const maxYear = await query.getMaxOrMinYear(userId, true);
+    if (maxYear < date.year){
+      req.session.activeDate.year = maxYear;
+      req.session.activeDate.month = currentMonth;
+      req.flash('error','Calendars only extend to the end of the next year.');
+      return res.redirect('/calendar');
+    }
+  }
+  catch (error){
+    console.log('Error finding min/max year from database');
+    req.flash('error', 'An unexpected error occured.');
     return res.redirect('/calendar');
   }
   options.calendar = c.generateCalendarData(date.year, dateIndex);
@@ -128,17 +149,17 @@ router.post('/selectMonth', helper.ensureAuthentication, async function (req, re
 router.post('/addRecipe/:id', helper.ensureAuthentication, async function(req, res, next) {
   const recipeId = parseInt(req.params.id);
   if (!recipeId){
-    res.status(404).send('No Recipe was found!');
+    return res.status(404).send('No Recipe was found!');
   }
   const userId = parseInt(req.session.user.id);
   const month = parseInt(req.body.month) + 1;
   const day = parseInt(req.body.day);
   const year = parseInt(req.body.year);
 
-  const result = await query.addToCalendar(day, month, year, userId, recipeId);
-  if (result === 0){
-    res.redirect('/recipes');
-  }
+  await query.addToCalendar(day, month, year, userId, recipeId);
+  req.flash('success', `Recipe added to ${month}/${day}/${year} in your calendar!`)
+  return res.redirect('/recipes');
+
 });
 
 module.exports = router;

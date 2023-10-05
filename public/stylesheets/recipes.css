@@ -160,7 +160,34 @@
     color: white;
 }
 
+.clickables-container{
+    display: flex;
+    justify-content: space-around;
+    width: 90%;
+}
 
+.add-favorite{
+    width: 3em;
+}
+
+.add-favorite:hover{
+    cursor: pointer;
+}
+
+.remove-favorite{
+    width: 3em;
+}
+.remove-favorite:hover{
+    cursor: pointer;
+}
+
+.calendar-img{
+    width: 3em;
+}
+
+.calendar-img:hover{
+    cursor: pointer;
+}
 
 .recipe-img{
     width: 100%;
@@ -233,7 +260,7 @@ label{
         align-items: center;
     }
     .recipe{
-        width: 55%;
+        width: fit-content;
         max-width: none;
         max-width: none;
     }

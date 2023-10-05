@@ -44,29 +44,23 @@ block content
             div.tag-type-container
                 h3 Cuisine
                 for cuisine in cuisineTags
-                    div.checklist
+                    label.checklist=cuisine.name
                         input(type="checkbox", value=cuisine.id, name="tags") 
-                        label=cuisine.name
             div.tag-type-container 
                 h3 Time
                 for time in timeTags
-                    div.checklist
-                        input(type="checkbox", value=time.id, name="tags") 
-                        label=time.name
+                    label.checklist=time.name
+                        input(type="checkbox", value=time.id, name="tags")
             div.tag-type-container
                 h3 Difficulty
                 for difficulty in difficultyTags
-                    div.checklist
+                    label.checklist=difficulty.name
                         input(type="checkbox", value=difficulty.id, name="tags") 
-                        label=difficulty.name
             div.tag-type-container 
                 h3 Category
                 for category in categoryTags
-                    div.checklist
-                        input(type="checkbox", value=category.id, name="tags") 
-                        label=category.name            
-                
-
+                    label.checklist=category.name            
+                        input(type="checkbox", value=category.id, name="tags")             
         h2 Add a picture 
         <input class="custom-file-input" type = "file" name = "image" accept = "image/*" />
         button#add-recipe-btn(type="submit") Add Recipe

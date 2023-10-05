@@ -4,7 +4,7 @@ var queries = require('../queries');
 const helper = require('../helper');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const {check, validationResult} = require('express-validator');
+const {check} = require('express-validator');
 const {createTimestamp} = require('../helper');
 const {getDate} = require('../calendar');
 
@@ -19,8 +19,8 @@ router.get('/', function(req, res, next) {
      res.render('register', {options});
   });
 
-router.post("/", [check('firstname').escape(), check('lastname').escape(), check('username').escape(),], async (req, res) => {
-  const result = validationResult(req);
+router.post("/", [check('firstname').escape(), check('lastname').escape(), check('username').escape(),
+check('email').isEmail().normalizeEmail(), check('securityAnswer').escape()], async (req, res) => {
   if (!req.body.firstname){
     options.noInput = 'firstname'
     return res.render('register', {options});
@@ -75,7 +75,7 @@ router.post("/", [check('firstname').escape(), check('lastname').escape(), check
     return res.redirect('/register');
   }
   else{
-    securityAnswer = req.body.securityAnswer;
+    securityAnswer = req.body.securityAnswer.toLowerCase();
     console.log(securityAnswer);
   }
 
@@ -96,6 +96,7 @@ router.post("/", [check('firstname').escape(), check('lastname').escape(), check
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(user.password, salt);
   user.password = hash;
+
   const newUser = await queries.createUser(user);
   if (newUser) {
     req.session.authenticated = true;
@@ -104,10 +105,16 @@ router.post("/", [check('firstname').escape(), check('lastname').escape(), check
       sessionID: req.sessionID
     }
     const date = getDate(createTimestamp(Date.now()));
-    await queries.populateCalendarForNewUser(req.session.user.id, date);
-    res.redirect('/profile');
+    try {
+      await queries.populateCalendarForNewUser(req.session.user.id, date);
+
+    } catch (error) {
+      req.flash('error', 'Unable to populate calendar.')
+      return res.redirect('/register');
+    }
+    return res.redirect('/profile');
   } else {
-    res.status(500).json({ msg: "Unable to create user" });
+    return res.status(500).json({ msg: "Unable to create user" });
   }
 });
 

@@ -223,7 +223,8 @@ function formatRecipe(recipeDetails){
 }
 
 async function arrangeCalendarInfo(recipeIds, options, date){
-  let uniqueRecipeIdArray = [];
+  try {
+    let uniqueRecipeIdArray = [];
     let isDuplicate;
     for (let i = 0; i < recipeIds.length; i++){
       if (recipeIds[i].recipe_ids !== null && recipeIds[i].recipe_ids.length !== 0){
@@ -282,6 +283,10 @@ async function arrangeCalendarInfo(recipeIds, options, date){
     }
     options.yearsArray.push(yearsAvailable[0].max);
     return options;
+  } catch (error) {
+    throw new Error('Unable to arrange calendar data.')
+  }
+
 }
 
 function checkForSingleInput(input){
@@ -305,5 +310,5 @@ function checkForSingleInput(input){
     deleteImage: deleteImage,
     formatRecipe: formatRecipe,
     arrangeCalendarInfo: arrangeCalendarInfo,
-    checkForSingleInput: checkForSingleInput
+    checkForSingleInput: checkForSingleInput,
   }

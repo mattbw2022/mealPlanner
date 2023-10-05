@@ -68,14 +68,21 @@ block content
             span#search-term=searchTerm
     div.recipe-container
         if options.allRecipes.length === 0
-            h3 Whoops! No recipes in those categories....Try again.
+            h3 Unable to find any matching recipes, please try again.
         each recipe, i in options.allRecipes
             div.recipe
                 a.recipe-link(href='recipes/individualrecipe/' + recipe.id)
                     img.recipe-img(src=options.recipeImages[i], alt=recipe.title)
                     p=recipe.title
-                button.addRecipe-btn(type="button") Add recipe
-                form.addrecipe(action="calendar/addRecipe/" + recipe.id method="post")
+                if authenticated    
+                    .clickables-container(id=recipe.id)
+                        img.white-calendar(src="/images/white-calendar.png" id=`white-${i}` class="calendar-img")
+                        img.addRecipe-btn(src="/images/gold-calendar.png" id=`gold-${i}` class="calendar-img")
+                        if recipe.favorite
+                            img(src="/images/full-star.png", alt="full-star" class=`remove-favorite` id=`${i}-recipe-${recipe.id}`)
+                        else
+                            img(src="/images/empty-star.png", alt="empty star" class=`add-favorite` id=`${i}-recipe-${recipe.id}`)
+                form.addrecipe(action="calendar/addRecipe/" + recipe.id method="post" id=`form-${i}`)
                     div.select-container
                         div.date-item-container
                             label(for='month') Month

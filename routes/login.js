@@ -4,17 +4,22 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 const helper = require('../helper');
 const saltRounds = 10;
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 let noUser = false;
 let wrongPassword = false;
 
 router.get('/', function(req, res, next) {
     res.render('login', undefined);
-
   });
-// add security check for inputs
-router.post('/', async function(req, res, next) {
+
+router.post('/', [check('email').isEmail().normalizeEmail()] , async function(req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error', 'Invalid input(s). Please check your email and password.');
+    return res.redirect('/login');
+  }
   const { email, password } = req.body;
+
   if (email && password){
     user = await queries.findUserByEmail(email);
     if (!user) {
@@ -46,14 +51,26 @@ router.get('/forgotPassword', async function (req, res, next){
   return res.render('forgotPassword', undefined);
 });
 
-router.post('/forgotPassword', async function (req, res, next){
+router.post('/forgotPassword',check('email').isEmail(), async function (req, res, next){
   const {email, username} = req.body;
   let userInfo;
   if (email){
-    userInfo = await queries.findUserByEmail(email);
+    try {
+      userInfo = await queries.findUserByEmail(email);
+    } catch (error) {
+      console.log(error); 
+      req.flash('error', 'An unexpected error occurred');
+      return redirect('/forgotPassword');
+    }
   }
   else if (username && !email){
-    userInfo = await queries.findUserByUsername(username); 
+    try {
+      userInfo = await queries.findUserByUsername(username); 
+    } catch (error) {
+      console.log(error);
+      req.flash('error', 'An unexpected error occurred');
+      return redirect('/forgotPassword');
+    }
   }
   else{
     req.flash('error', 'An email or username must be entered to retrieve the security question.');
@@ -62,11 +79,12 @@ router.post('/forgotPassword', async function (req, res, next){
   return res.json({success:true, securityQuestion:userInfo.security_question, id:userInfo.id});
 });
 
-router.post('/resetPassword/:id', async function(req, res, next){
+router.post('/resetPassword/:id', check('answer').matches(/^[^<>]+$/).withMessage('Input cannot contain HTML tags'), async function(req, res, next){
   const userId = req.params.id;
   const answer = req.body.answer.toLowerCase();
   const userInfo = await queries.findUserById(userId);
   const userAnswer = userInfo.security_answer.toLowerCase();
+  
   if (answer !== userAnswer){
     req.flash('error', 'The answer entered and the answer on file do not match.');
     return res.redirect('/login/forgotPassword');
@@ -93,7 +111,6 @@ router.post('/updatePassword/:id', async function(req, res, next){
       return res.redirect(`/login/resetPassword/${userId}`);
     }
   }
-  
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(password, salt);
   password = {password:hash};

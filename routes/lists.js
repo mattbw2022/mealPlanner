@@ -3,6 +3,7 @@ const helper = require('../helper');
 const query = require('../queries');
 const express = require('express');
 const router = express.Router();
+const {check} = require('express-validator');
 
 router.get('/', helper.ensureAuthentication, async function (req, res, next){
     let options = {};
@@ -61,7 +62,7 @@ router.get('/list/:listId/removeAll', helper.ensureAuthentication, async functio
 
 });
 
-router.post('/list/:listId/addItem', helper.ensureAuthentication, async function(req, res, next){
+router.post('/list/:listId/addItem', [check('quantity').escape(), check('unit').escape(), check('item').escape()],  helper.ensureAuthentication, async function(req, res, next){
     //need to sanitize values
     const listId = req.params.listId;
     const newQty = req.body.quantity;
@@ -87,9 +88,6 @@ router.post('/addFromRecipe/:listId', helper.ensureAuthentication, async functio
     const listId = req.params.listId;
     const recipeId = req.body.recipeId;
     const ingredientIndexes = req.body.ingredientIndexes;
-    console.log(listId);
-    console.log(recipeId);
-    console.log(ingredientIndexes);
 
     const recipe = await query.getRecipeById(recipeId);
     const list = await query.getListByListId(listId);
@@ -103,7 +101,6 @@ router.post('/addFromRecipe/:listId', helper.ensureAuthentication, async functio
             });
         }
     }
-
     await query.updateItems(listId, list.items);
 
     return res.json({ success: true });
@@ -113,7 +110,9 @@ router.get('/newList', helper.ensureAuthentication, async function (req, res, ne
     res.render('newList', undefined);
 });
 
-router.post('/newList', helper.ensureAuthentication, async function (req, res, next) {
+router.post('/newList',[check('title').escape(), check('quantities').escape(), check('units').escape(), 
+    check('items').escape], helper.ensureAuthentication, async function (req, res, next) {
+    
     const userId = req.session.user.id;
     const listTitle = req.body.title;
     let quantities = helper.checkForSingleInput(req.body.quantities);
@@ -136,7 +135,6 @@ router.post('/newList', helper.ensureAuthentication, async function (req, res, n
         }
     }
     const newList = await query.createList(userId, listTitle, list);
-    console.log(newList);
     return res.redirect(`/lists/list/${newList.id}`);
 });
 

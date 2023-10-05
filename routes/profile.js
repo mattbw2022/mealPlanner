@@ -25,9 +25,7 @@ const upload = multer({ storage: storage });
 router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     let options = {};
     let recipeIds = [];
-    if (!req.session.user.id){
-      res.redirect('/login');
-    }
+
     const userId = req.session.user.id;
     const activeUser = await query.findUserById(userId);
     options.username = activeUser.username;
@@ -42,7 +40,15 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     }
     options.userRecipes = userRecipes;
     }
-  
+
+    options.favorites = [];
+    if (activeUser.favorites || activeUser.favorites >= 1){
+      for(let i = 0; i < activeUser.favorites.length; i++){
+        let favoriteRecipe = await query.getRecipeById(activeUser.favorites[i]);
+        favoriteRecipe.image = await helper.getSignedUrl(favoriteRecipe.image, recipeBucket);
+        options.favorites.push(favoriteRecipe);
+      }
+    }
 
     const timestamp = helper.createTimestamp(Date.now());
     const date = calendar.getDate(timestamp);

@@ -178,7 +178,7 @@
     color: rgb(255, 232, 164);
 }
 
-.user-recipe{
+.profile-recipe{
     justify-content: space-between;
     width: 100%;
     display: flex;
@@ -188,15 +188,15 @@
     padding: 0.5em 0;
 }
 
-.user-recipe h3{
+.profile-recipe h3{
     padding: 0.5em;
     color: black;
 }
-.user-recipe h3:hover{
+.profile-recipe h3:hover{
     color: rgb(255, 232, 164);
 }
 
-.user-recipe img{
+.profile-recipe img{
     min-width: 50%;
     max-width: 50%;
     margin: 0 0.5em;
@@ -251,6 +251,9 @@
     color: black;
 }
 
+#favorites-title:hover{
+    color: black;
+}
 
 @media only screen and (max-width: 850px){
 
@@ -296,7 +299,7 @@
         margin: 0;
     }
 
-    .user-recipe{
+    .profile-recipe{
         flex-direction: column;
     }
 }

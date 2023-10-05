@@ -45,15 +45,15 @@ block content
             a(href="/recipes/createRecipe")
                 button.create-recipe Create recipe 
             if userRecipes.length >= 1
-                for userRecipe in userRecipes        
-                    form(name=`recipe${userRecipe.id}` action="/recipes/editRecipe/" + userRecipe.id, method="get").user-recipe
-                        a(href="/recipes/individualRecipe/" + userRecipe.id) 
-                            h3=userRecipe.title
-                        img(src=userRecipe.image, alt=userRecipe.title)
-                    a(href="/recipes/editRecipe/" + userRecipe.id) 
+                for recipe in userRecipes        
+                    form(name=`recipe${recipe.id}` action="/recipes/editRecipe/" + recipe.id, method="get").profile-recipe
+                        a(href= "recipes/individualRecipe/" + recipe.id) 
+                            h3=recipe.title
+                        img(src=recipe.image, alt=recipe.title)
+                    a(href="/recipes/editRecipe/" + recipe.id) 
                         button.edit-recipe-btn(type="button") Edit              
             else
-                h2 No recipes created! 
+                h2 No recipes created
         div.profile-card(id="scrollbar1")
             a(href="/lists") 
                 h2 myLists
@@ -63,6 +63,16 @@ block content
                 a.list-title(href="/lists/list/" + list.id)=list.title
 
         div.profile-card(id="scrollbar1")
-            h2 myFavorites
-         
+            h2#favorites-title myFavorites
+            a(href="/recipes")
+                button Browse Recipes
+            if favorites.length >= 1
+                for favorite in favorites        
+                    .profile-recipe
+                        a(href="/recipes/individualRecipe/" + favorite.id) 
+                            h3=favorite.title
+                        img(src=favorite.image, alt=favorite.title)
+                    button.remove-favorite(type="button" id=`favorite-${favorite.id}`) Remove              
+            else
+                h2 No favorites added.          
 

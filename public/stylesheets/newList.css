@@ -1,5 +1,5 @@
 #new-list-form{
-    margin-top: 2em;
+    margin-top: 120px;
     padding: 1em;
     justify-self: center;
     width: 80%;
@@ -47,4 +47,35 @@ input{
     margin-top: 2.5em;
     width: 30%;
     justify-self: center;
+}
+
+@media only screen and (max-width: 850px) {
+    #item-container{
+        flex-direction: column;
+        align-items: self-end;
+    }
+
+    .small-input{
+        width: auto;
+    }
+
+    input{
+        width: auto;
+    }
+
+    .input-container{
+    }
+
+    #main-nav{
+        top: 68px;
+        margin: 0;
+    }
+
+    #add-item{
+        justify-self: center;
+    }
+
+    #items #item-container{
+        margin-top: 1em;
+    }
 }

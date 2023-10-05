@@ -3,10 +3,9 @@ const AWS = require('aws-sdk');
 var router = express.Router();
 var helper = require('../helper');
 const query = require('../queries');
-const { all, options } = require('./login');
 const calendar = require('../calendar');
 const multer = require('multer');
-const { render } = require('../app');
+const {check} = require('express-validator');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,10 +24,33 @@ const userBucket = 'mealplanner-user-images';
 
 router.get('/', async function (req, res, next) {
   let options = {};
+  let favorites = null;
+  if (req.session.authenticated){
+    const userId = req.session.user.id;
+    const userInfo = await query.findUserById(userId);
+    console.log(userInfo);
+    favorites = userInfo.favorites;
+    console.log(favorites);
+    if (favorites === null){
+      favorites = [];
+    }
+  }
   options.allTags = await query.getAllTags();
   options.allRecipes = await query.getAllRecipes();
   options.recipeImages = [];
   options.allRecipes.forEach(async (recipe) => {
+    if (favorites){
+      for(let i = 0; i < favorites.length; i++){
+        if (recipe.id === favorites[i]){
+          recipe.favorite = true;
+          break;
+        }
+        else{
+          recipe.favorite = false;
+        }
+      }
+    }
+    console.log(recipe.favorite)
     options.recipeImages.push(await helper.getSignedUrl(recipe.image, recipeBucket));
   });
   options.yearsArray = [];
@@ -44,12 +66,10 @@ router.get('/', async function (req, res, next) {
 });
 
 //add checks to input data
-router.post('/search', async function (req, res, next) {
+router.post('/search', check('search').escape(), async function (req, res, next) {
   let options = {};
   const search = req.body.search;
-  console.log(search);
   const searchResults = await query.getRecipesContaining(search);
-  console.log(searchResults);
   options.allRecipes = searchResults;
   options.allTags = await query.getAllTags();
   options.search = search;
@@ -130,7 +150,9 @@ router.get('/createRecipe', helper.ensureAuthentication, async function (req, re
   res.render('createRecipe', options);
 });
 //add checks to input data
-router.post('/createRecipe', helper.ensureAuthentication,
+router.post('/createRecipe', helper.ensureAuthentication, [check('title').escape(), check('servings').escape(), 
+  check('ingredients').escape(), check('quantity').escape(), check('unit').escape(), check('ingredients').escape(),
+  check('directions').escape(), check('tags').escape()],
   upload.fields([{ name: 'image', maxCount: 1 }, { name: 'upload', maxCount: 1 }]), async function (req, res, next) {
     let filename;
     const recipe = req.body;
@@ -238,7 +260,9 @@ router.get('/editRecipe/:id', helper.ensureAuthentication, async function (req, 
 });
 
 //add checks to input data
-router.post('/editRecipe/:id', helper.ensureAuthentication,
+router.post('/editRecipe/:id', helper.ensureAuthentication, [check('title').escape(), check('servings').escape(), 
+  check('ingredients').escape(), check('quantity').escape(), check('unit').escape(), check('ingredients').escape(),
+  check('directions').escape(), check('tags').escape()],
   upload.fields([{ name: 'image', maxCount: 1 }, { name: 'upload', maxCount: 1 }]), async function (req, res, next) {
     let options = {};
     const user_id = req.session.user.id;
@@ -377,6 +401,26 @@ router.get('/user/:id', async function (req, res, next) {
   }
 
   return res.render('recipesByUser', { options });
+});
+
+router.post('/handleFavorite/:id/:action', helper.ensureAuthentication, async function(req, res, next){
+  const userId = req.session.user.id;
+  const recipeId = parseInt(req.params.id);
+  const action = req.params.action;
+  let userInfo = await query.findUserById(userId);
+  if (!userInfo.favorites){
+    userInfo.favorites = [];
+  }
+  if (action === 'add-favorite'){
+    userInfo.favorites.push(recipeId);
+    await query.handleFavorites(userId, userInfo.favorites);
+  }
+  else{
+    const newFavorites = userInfo.favorites.filter((favorite)=> favorite !== recipeId);
+    console.log(newFavorites);
+    await query.handleFavorites(userId, newFavorites);
+  }
+  res.json({success: true});
 });
 
 module.exports = router;
