@@ -76,7 +76,6 @@ check('email').isEmail().normalizeEmail(), check('securityAnswer').escape()], as
   }
   else{
     securityAnswer = req.body.securityAnswer.toLowerCase();
-    console.log(securityAnswer);
   }
 
   if (!req.body.password){

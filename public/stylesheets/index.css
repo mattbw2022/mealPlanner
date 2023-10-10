@@ -1,7 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,400;1,800&display=swap');
 
-#features-section{
+#intro{
+  display: flex;
   margin: 120px 1em 0 1em;
+  justify-content: center;
+}
+
+#sign-up-btn{
+  justify-self: center;
+}
+
+#features-section{
+  justify-self: center;
+  width: 75%;
+  margin: 2em 1em 0 1em;
+  display: flex;
+  border: solid;
+  border-color: rgb(255, 232, 164);
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+#features-section img{
+  width: 95%;
+  height: 96%;
+  border: solid;
 }
 
 section{
@@ -45,6 +69,10 @@ section{
   align-items: center;
   margin-bottom: 2em;
   max-width: -webkit-fill-available;
+}
+
+.recipe-card:hover{
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
 .recipe-card h3{
@@ -180,5 +208,6 @@ section{
 @media only screen and (max-width: 850px){
   #main-nav{
     top: 75px;
+    margin: 0;
   }
 }

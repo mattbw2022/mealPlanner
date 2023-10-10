@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
     function verifyUser(){
         const email = document.getElementById('email').value;
         const username = document.getElementById('username').value;
-        console.log(email, username);
 
         fetch('/login/forgotPassword', {
             method: 'POST',

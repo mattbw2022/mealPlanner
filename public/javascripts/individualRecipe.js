@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     ingredientIndexArr.push(i);
                 }
             };
-            console.log(ingredientIndexArr);
             fetch(`/lists/addFromRecipe/${listId}`, {
                 method: 'POST',
                 headers: {
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const ingredients = document.getElementsByClassName('ingredient');
             let text;
             let isChecked;
-            console.log(selectButton.textContent);
             if (selectButton.textContent === 'Select All'){
                 text = 'Unselect All';
                 isChecked = true;

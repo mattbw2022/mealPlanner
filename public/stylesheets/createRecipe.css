@@ -34,12 +34,12 @@
 }
 
 .quantity{
-    width: 2em;
+    width: fit-content;
     margin: 1em;
 }
 
 .unit{
-    width: 2em;
+    width: fit-content;
     margin: 1em;
 }
 
@@ -48,7 +48,7 @@
     margin: 1em;
 }
 
-#nan-message{
+.error-msg{
     color: red;
     display: none;
 }
@@ -94,6 +94,11 @@
 
 .help{
     margin-left: 1em;
+}
+
+.custom-file-input{
+    color: black;
+    width: auto;
 }
 
 @media only screen and (max-width: 850px){

@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (clickedElement.className === 'remove-item-btn') {
             const targetElement = document.getElementById(clickedElement.id);
-            console.log(targetElement);
             const itemId = clickedElement.id.split('-')[1];
             const parent = targetElement.parentNode;
             const itemCount = document.getElementsByClassName(parent.className);

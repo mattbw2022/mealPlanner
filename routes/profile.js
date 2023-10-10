@@ -183,9 +183,7 @@ router.post('/editAccount', upload.fields([{ name: 'image', maxCount: 1 }, { nam
       }
     }
   }
-  console.log(newQuestion, userInfo.security_question);
   if (newQuestion && newQuestion !== userInfo.security_question){
-    console.log('not equal or no question')
     if(newAnswer && newAnswer !== userInfo.security_answer){
       updates.securityQuestion = newQuestion;
       updates.securityAnswer = newAnswer;

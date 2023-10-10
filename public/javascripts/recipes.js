@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response=>{
         if (response.ok){
           const clickable = document.getElementById(clicked.id);
-          console.log(clickable.className);
           if (action === 'add-favorite'){
             clickable.className = 'remove-favorite';
             clickable.src = '/images/full-star.png';
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function prepAddRecipe(event) {
         const button = event.target;
-        console.log(button);
         const formId = button.id.split('-')
         const otherButton = document.getElementById(`white-${formId[1]}`);
         const form = document.getElementById(`form-${formId[1]}`);

@@ -1,10 +1,12 @@
 #month-nav{
-    margin: 100px 1em 1em 1em;
     display: flex;
-    justify-content: space-between;
     background-color: black;
     font-size: larger;
     font-weight: bold;
+    position: fixed;
+    margin: 84px 0 0 0;
+    justify-content: space-around;
+    width: 100%;
 }
 
 #month-nav a{
@@ -13,7 +15,7 @@
 
 h2{
     font-size: 3em;
-    margin: 0.5em;
+    margin: 225px 0.5em 0.5em 0.5em;
     text-shadow:
     -1px -1px 0 rgb(255, 232, 164),
     1px -1px 0 rgb(255, 232, 164),
@@ -139,6 +141,11 @@ h2{
     flex-direction: column;
     align-items: center;
 }
+
+.date-item-container select{
+    border-radius: 1em;
+    text-align: center;
+}
 .move-recipe-form{
     display: none;
     flex-direction: column;
@@ -168,18 +175,64 @@ h2{
 }
 
 @media only screen and (max-width: 850px){
+    body{
+        font-size: 3em;
+    }
+    h1{
+        font-size: 1.5em;
+    }
+    #dropdown-btn{
+        margin: 0 1em 0 1em;
+    }
+    
+    #calendar-container{
+        margin: 1em 0 0 0;
+    }
+
     #month-nav{
-        justify-self: center;
-        justify-content: inherit;
-        width: fit-content;
+        position: fixed;
+        margin-top: 135px;
+        justify-content: center;
+        width: 100%;
+        font-size: 25px;
     }
 
     h2{
+        margin-top: 250px;
+        font-size: 2em;
         text-align: center;
     }
 
     #main-nav{
-        top: 68px;
+        top: 135px;
         margin: 0;
+    }
+
+    .week{
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+        width: 90%;
+        align-items: center;
+    }
+    .day{
+        width: 90%;
+    }
+    .blank-day{
+        display: none;
+    }
+    .days-of-week{
+        display: none;
+    }
+
+    #pick-month-form select{
+        font-size: 25px;
+        padding: 15px;
+
+    }
+    
+    .date-item-container select{
+        
+        font-size: 40px;
     }
 }

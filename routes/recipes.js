@@ -28,9 +28,7 @@ router.get('/', async function (req, res, next) {
   if (req.session.authenticated){
     const userId = req.session.user.id;
     const userInfo = await query.findUserById(userId);
-    console.log(userInfo);
     favorites = userInfo.favorites;
-    console.log(favorites);
     if (favorites === null){
       favorites = [];
     }
@@ -50,7 +48,6 @@ router.get('/', async function (req, res, next) {
         }
       }
     }
-    console.log(recipe.favorite)
     options.recipeImages.push(await helper.getSignedUrl(recipe.image, recipeBucket));
   });
   options.yearsArray = [];
@@ -177,8 +174,6 @@ router.post('/createRecipe', helper.ensureAuthentication, [check('title').escape
       req.flash('error', 'Please provide the amount of servings.')
       return res.redirect('/recipes/createRecipe');
     }
-    let servingTemp = parseInt(recipe.servings);
-    recipe.servings = servingTemp;
 
     if (!recipe.ingredients) {
       req.flash('error', 'All recipes must have at least 1 ingredient');
@@ -195,19 +190,12 @@ router.post('/createRecipe', helper.ensureAuthentication, [check('title').escape
     }
 
     for (let i = 0; i < recipe.ingredients.length; i++) {
-      if ((!recipe.ingredients[i]) || (!recipe.quantity[i]) || (!recipe.unit[i])) {
-        req.flash('error', 'Each ingredient must have a quantity and a unit of measurement.');
+      if ((!recipe.ingredients[i])) {
+        req.flash('error', 'Cannot add empty ingredients');
         return res.redirect('/recipes/createRecipe');
       }
     }
-    for (let i = 0; i < recipe.quantity.length; i++) {
-      let quantityTemp = parseInt(recipe.quantity[i])
-      recipe.quantity[i] = quantityTemp;
-      if (typeof recipe.quantity[i] !== 'number') {
-        req.flash('error', 'Quantity must be a number');
-        return res.redirect('/recipes/createRecipe');
-      }
-    }
+
     let tempIngredientsArr = recipe.ingredients;
     recipe.ingredients = [];
     for (let i = 0; i < tempIngredientsArr.length; i++) {
@@ -259,7 +247,19 @@ router.get('/editRecipe/:id', helper.ensureAuthentication, async function (req, 
   return res.render('editRecipe', { options });
 });
 
-//add checks to input data
+router.post('/checkTitle', helper.ensureAuthentication, async function (req, res, next){
+  let newTitle = req.body.title;
+  let duplicate = await query.getRecipeByTitle(newTitle);
+    if (duplicate.length === 1){
+      if (duplicate[0].title.toLowerCase() === newTitle.toLowerCase()){
+        return res.json({success:true, duplicate:true});
+      }
+    }
+    else{
+      return res.json({success:true, duplicate:false});
+    }
+});
+
 router.post('/editRecipe/:id', helper.ensureAuthentication, [check('title').escape(), check('servings').escape(), 
   check('ingredients').escape(), check('quantity').escape(), check('unit').escape(), check('ingredients').escape(),
   check('directions').escape(), check('tags').escape()],
@@ -417,7 +417,6 @@ router.post('/handleFavorite/:id/:action', helper.ensureAuthentication, async fu
   }
   else{
     const newFavorites = userInfo.favorites.filter((favorite)=> favorite !== recipeId);
-    console.log(newFavorites);
     await query.handleFavorites(userId, newFavorites);
   }
   res.json({success: true});

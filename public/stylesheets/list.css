@@ -62,12 +62,12 @@ h2{
 #new-item-btn{
     display: block;
     justify-self: center;
+    margin: 2em 0;
 }
 
 #add-item-btn{
     display: none;
     justify-self: center;
-    margin-top: 1em;
 }
 
 .item-components p{ 
@@ -80,13 +80,14 @@ h2{
 }
 
 .small-input{
-    width: 15%;
+    width: 25%;
 }
 
 #new-item-container{
     display: none;
     justify-self: center;
     margin-top: 1em;
+    width: 90%;
 }
 
 label{
@@ -106,4 +107,6 @@ label{
         top: 68px;
         margin: 0;
     }
+
+
 }

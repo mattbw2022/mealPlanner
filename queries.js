@@ -339,7 +339,6 @@ async function populateCalendarForNewUser(userId, date) {
                tagIds = [parseInt(tag_arr, 10)];
             }
          }
-         console.log(tagIds);
          const query = `SELECT * FROM recipes WHERE tag_ids && $1`
          const results = await pool.query(query, [tagIds]);
          return results.rows;
@@ -587,8 +586,11 @@ async function getMaxOrMinYear(user_id, needMax){
    
 }
 
+async function getRecipeByTitle(title){
+   const result = await pool.query('SELECT title FROM recipes WHERE title = $1', [title]);
+   return result.rows;
+}
 async function handleFavorites(id, favorites){
-   console.log(favorites);
    try {
       await pool.query('UPDATE users SET favorites = $1 WHERE id = $2', [favorites, id]);
 
@@ -635,6 +637,7 @@ const queries = {
    updateCalendars: updateCalendars,
    getMaxOrMinYear: getMaxOrMinYear,
    handleFavorites: handleFavorites,
+   getRecipeByTitle: getRecipeByTitle,
 }
 
 module.exports = queries;

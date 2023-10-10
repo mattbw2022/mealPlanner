@@ -94,10 +94,8 @@ app.use('/register', registerRouter);
 app.use('/calendar', calendarRouter);
 app.use('/logout', logoutRouter);
 
-console.log(Date.now('July 20, 69 00:20:18'));
 const checkDate = new Date();
 checkDate.setMilliseconds();
-console.log(checkDate.getMilliseconds());
 setInterval(async () => {
   const date = getDate(helper.createTimestamp(Date.now()));
   const addDate = date.year + 1;
@@ -144,7 +142,7 @@ setInterval(async () => {
   else{
     console.log('No calendar deletetions needed.');
   }
-}, 600000);
+}, 4320000); //check every 12 hours
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

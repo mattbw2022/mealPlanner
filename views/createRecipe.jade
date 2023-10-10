@@ -9,26 +9,27 @@ block content
     form#newRecipe(action="/recipes/createRecipe", method="post", enctype="multipart/form-data")
         h2 Recipe Title 
         input#title(type="text", name="title" placeholder='Hamburger')
-        if noTitle === true 
-            p.err-msg A meal title is required.
+        p.error-msg(id="no-title") A meal title is required.
         if isDuplicate === true
-            p.err-msg The meal title entered already exists, please choose another name.
+            p.error-msg The meal title entered already exists, please choose another name.
+        p.error-msg(id="duplicate-title") The meal title entered already exists, please choose another name.
+        
         h2 Servings 
         input#servings(type="text", name="servings", placeholder="8")
+        p.error-msg(id="no-servings") Amount of servings is required.
         h2 Ingredients
         #ingredients
             #ingredient-container(class="count-ingredient")
                 .input-container
                     label(for="quantity") Qty  
-                    input.quantity(type="number" name="quantity" placeholder="1" min='0')
+                    input.quantity(type="text" name="quantity" placeholder="optional" min='0')
                 .input-container
                     label(for="unit") Unit 
-                    input.unit(type="text" name="unit" placeholder="lb")
+                    input.unit(type="text" name="unit" placeholder="optional")
                 .input-container 
-                    label(for="ingredients") Ingredients
-                    input.ingredient(type="text" name="ingredients" placeholder= "Ground beef")
+                    label(for="ingredients") Ingredient
+                    input.ingredient(type="text" name="ingredients")
                 button.remove-ingredient(type="button") -
-        p#nan-msg Quantity must be a number
         button#add-ingredient(type="button") Add Ingredient
             if noIngredients === true
                 p.err-msg Ingredients are required.

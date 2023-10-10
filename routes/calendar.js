@@ -117,7 +117,6 @@ router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, n
   const recipeIds = await query.getRecipeIdsByMonth(date.year, date.month, userId);
   if (recipeIds.length === 0){
     const yearsAvailable = await query.getYearsAvailable();
-    console.log(yearsAvailable);
     req.flash('error', `Calendar data is only available from ${yearsAvailable[0].min} to ${yearsAvailable[0].max}`);
     return res.redirect('/calendar');
   }
@@ -126,7 +125,6 @@ router.get('/lastMonth', helper.ensureAuthentication, async function(req, res, n
 })
 
 router.post('/selectMonth', helper.ensureAuthentication, async function (req, res, next) {
-  console.log(req.session.activeDate);
   const activeDate = req.session.activeDate;
   let options = {};
   const userId = req.session.user.id;

@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
             }
         }
         else{
-            nav.style.display === 'none';
             for (let i = 0; i < nav.childNodes.length; i++){
                 nav.childNodes[i].style.display = 'none';
             }
@@ -18,8 +17,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
         
     });
 
+    document.addEventListener('click', (event) =>{
+        const clickedElement = event.target;
+        const screenWidth = document.documentElement.clientWidth || document.body.clientWidth;
+        const elementId = event.target.id;
+        const mainNav = document.getElementById('main-nav');
+        if (elementId !== 'dropdown-btn' && (mainNav.firstChild.display !== 'none' || mainNav.firstChild.display !== '') && screenWidth < 1011){
+            for (let i = 0; i < mainNav.childNodes.length; i++){
+                mainNav.childNodes[i].style.display = 'none';
+            }
+        }
+    })
+
+
     function trackScreenSize() {
-        const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const screenWidth = document.documentElement.clientWidth || document.body.clientWidth;
         const dropdownBtn = document.getElementById('dropdown-btn');
         const nav = document.getElementById('main-nav');
         if (screenWidth < 1011){

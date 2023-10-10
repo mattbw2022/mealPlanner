@@ -5,8 +5,12 @@ block scripts
     script(src="/javascripts/index.js")  
 block content
   body
+  #intro 
+    h2 Pick, plan and add recipes. Then create custom lists and add ingredients from recipes!
+  a(href="/register")#sign-up-btn
+    button(type="button") Sign Up! 
   #features-section
-    //- h2 Pick recipes, plan your meals and make a shopping list on one platform! 
+    img(src="/images/features.png", alt="feature collage")
   section
     #random-recipe-container
       #random-btn-container
@@ -15,8 +19,8 @@ block content
       #placeholder
         img(src="/images/question-mark.png", alt="Question Mark") 
       each recipe, i in options.recipes
-        div(class="recipe-card-" + i +" recipe-card")
-          a#random-recipe-link(href="/recipes/individualrecipe/" + recipe.id)=recipe.title
+        a#random-recipe-link(href="/recipes/individualrecipe/" + recipe.id class="recipe-card-" + i +" recipe-card")
+          p.recipe-title=recipe.title
           img.recipe-img( src=recipe.image, alt=recipe.title)
     .fresh-recipes-container(id='scrollbar1') 
       h2 Fresh Recipes 

@@ -10,7 +10,6 @@ router.get('/', helper.ensureAuthentication, async function (req, res, next){
     const userId = req.session.user.id;
     const lists = await query.getListsByUserId(userId);
     options.lists = lists;
-    console.log(options);
     return res.render('userLists', {options})
 });
 
@@ -91,15 +90,12 @@ router.post('/addFromRecipe/:listId', helper.ensureAuthentication, async functio
 
     const recipe = await query.getRecipeById(recipeId);
     const list = await query.getListByListId(listId);
-    console.log(recipe.ingredients.length);
     for (let i = 0; i < recipe.ingredients.length; i++){
-        if (ingredientIndexes.includes(i)){
             list.items.push({
                 quantity: recipe.ingredients[i].quantity,
                 unit: recipe.ingredients[i].unit,
                 item: recipe.ingredients[i].ingredient
             });
-        }
     }
     await query.updateItems(listId, list.items);
 

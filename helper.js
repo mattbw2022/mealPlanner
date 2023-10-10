@@ -148,7 +148,6 @@ async function addImage(req, bucketName){
           else if (bucketName === 'mealplanner-recipe-images'){
             imgName = 'recipe';
           }
-          
           filename = `${imgName}-image-${Date.now()}.${fileInfo.ext}`;
           const params = {
             Bucket: bucketName,
