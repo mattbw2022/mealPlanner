@@ -17,7 +17,6 @@ const {getDate} = require('./calendar');
 const query = require('./queries');
 const helmet = require('helmet');
 const logger = require('./logger')
-const serverless = require('serverless-http');
 app.use(helmet());
 
 app.use(passport.initialize());
@@ -80,9 +79,7 @@ app.use(session({
     tableName: 'sessions' 
   })
 }));
-app.use('/app/', router);
 
-const handler = serverless(app);
 
 app.use(flash());
 app.use(helper.isLoggedIn);
