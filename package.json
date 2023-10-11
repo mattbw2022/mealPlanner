@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "node app.js",
     "start": "node ./bin/www",
     "test": "jest"
   },
