@@ -2,9 +2,9 @@ var createError = require('http-errors');
 require('dotenv').config();
 var express = require('express');
 var path = require('path');
-var logger = require('morgan');
+var morgan = require('morgan');
 var session = require('express-session');
-var store = new session.MemoryStore();
+// var store = new session.MemoryStore();
 var LocalStrategy = require('passport-local').Strategy;
 var app = express();
 var passport = require('passport');
@@ -12,10 +12,12 @@ const queries = require('./queries');
 const helper = require('./helper');
 const flash = require('connect-flash');
 const pool = require('./connection');
+const pgSession = require('connect-pg-simple')(session);
 const {getDate} = require('./calendar');
 const query = require('./queries');
-// const helmet = require('helmet');
-// app.use(helmet());
+const helmet = require('helmet');
+const logger = require('./logger')
+app.use(helmet());
 
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {
@@ -48,18 +50,36 @@ passport.use(new LocalStrategy(
 ))
 
 
+
+// app.use(session({
+//   secret: "D53gxl41G", // Secret used to sign the session ID cookie
+//   cookie: {
+//     maxAge: 172800000, // 2 days in milliseconds
+//     secure: process.env.NODE_ENV === 'true', // Set to true in production
+//     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+//     httpOnly: true,    // Only accessible through HTTP(S) requests
+//   },
+//   resave: false,
+//   saveUninitialized: false,
+//   store: store,
+// }));
+
 app.use(session({
-  secret: "D53gxl41G", // Secret used to sign the session ID cookie
+  secret: process.env.SESSION_SECRET,
   cookie: {
-    maxAge: 172800000, // 2 days in milliseconds
-    secure: process.env.NODE_ENV === 'production', // Set to true in production
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+    secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    httpOnly: true,    // Only accessible through HTTP(S) requests
+    httpOnly: true,
   },
   resave: false,
   saveUninitialized: false,
-  store: store,
+  store: new pgSession({
+    pool,
+    tableName: 'sessions' 
+  })
 }));
+
 
 app.use(flash());
 app.use(helper.isLoggedIn);
@@ -77,11 +97,10 @@ var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -115,10 +134,10 @@ setInterval(async () => {
     } catch (error) {
       console.error('Error executing query:', error);
     }
-    console.log('Calendar updates successful.');
+    logger.info('Calendar updates successful.');
   }
   else{
-    console.log('No calendar additions needed.');
+    logger.info('No calendar additions needed.');
   }
   const deleteDate = date.year - 2;
   const userIdDeletionQuery = await pool.query(
@@ -136,11 +155,11 @@ setInterval(async () => {
         pool.query('DELETE FROM calendars WHERE user_id = $1 AND year = $2', [userIdDeletes[i], deleteDate]);
       }
     } catch (error) {
-      console.error('Error executing query:', error);
+      logger.error('Error executing query:', error);
     }
   }
   else{
-    console.log('No calendar deletetions needed.');
+    logger.info('No calendar deletetions needed.');
   }
 }, 4320000); //check every 12 hours
 

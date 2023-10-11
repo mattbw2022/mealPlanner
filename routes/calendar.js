@@ -4,6 +4,7 @@ var router = express.Router();
 const query = require('../queries');
 const c = require('../calendar');
 const calendar = require('../calendar');
+const logger = require('../logger');
 
 router.get('/', helper.ensureAuthentication, async function(req, res, next) {
     const userId = req.session.user.id;
@@ -30,7 +31,7 @@ router.get('/', helper.ensureAuthentication, async function(req, res, next) {
       };
       return res.render('calendar', {options});  
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       req.flash('error', 'An unexpected error occured');
       if (req.session.authenticaed){
         return res.redirect('/profile');
@@ -80,7 +81,7 @@ router.get('/nextMonth', helper.ensureAuthentication, async function(req, res, n
     }
   }
   catch (error){
-    console.log('Error finding min/max year from database');
+    logger.error('Error finding min/max year from database');
     req.flash('error', 'An unexpected error occured.');
     return res.redirect('/calendar');
   }

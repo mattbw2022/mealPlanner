@@ -7,8 +7,17 @@ const saltRounds = 10;
 const { check, validationResult } = require('express-validator');
 let noUser = false;
 let wrongPassword = false;
+const logger = require('../logger');
 
 router.get('/', function(req, res, next) {
+  try {
+    logger.info('Login page');
+
+  } catch (error) {
+    console.log(error);
+  }
+
+
     res.render('login', undefined);
   });
 
@@ -58,7 +67,7 @@ router.post('/forgotPassword',check('email').isEmail(), async function (req, res
     try {
       userInfo = await queries.findUserByEmail(email);
     } catch (error) {
-      console.log(error); 
+      logger.error(error); 
       req.flash('error', 'An unexpected error occurred');
       return redirect('/forgotPassword');
     }
@@ -67,7 +76,7 @@ router.post('/forgotPassword',check('email').isEmail(), async function (req, res
     try {
       userInfo = await queries.findUserByUsername(username); 
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       req.flash('error', 'An unexpected error occurred');
       return redirect('/forgotPassword');
     }

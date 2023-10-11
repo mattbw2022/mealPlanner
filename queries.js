@@ -1,5 +1,6 @@
 const pool = require('./connection');
 const {isLeapYear} = require('./calendar');
+const logger = require('./logger');
 
 async function createUser(user){
    let securityQuestion;
@@ -19,7 +20,7 @@ async function createUser(user){
       return newUser.rows[0];
 
    }catch(err){
-      console.log(err);
+      logger.error(err);
    }
 }
 
@@ -144,7 +145,7 @@ async function addRecipe(recipe, user_id, image, time){
       return newMeal.rows[0];
 
    }catch(err){
-      console.log(err);
+      logger.error(err);
    }
 }
 
@@ -332,7 +333,6 @@ async function populateCalendarForNewUser(userId, date) {
       try{
          if (tag_arr){
             if (tag_arr.length > 1){
-               console.log('Array Length: ' + tag_arr.length);
                tagIds = tag_arr.map(tag => parseInt(tag, 10)); 
             }
             else{
@@ -345,7 +345,7 @@ async function populateCalendarForNewUser(userId, date) {
          
       }
       catch(err){
-         console.log(err)
+         logger.error(err)
       }
  }
 
@@ -394,7 +394,7 @@ async function populateCalendarForNewUser(userId, date) {
             ending_id = day_id;
             break;
          default:
-         return console.log('ERROR');
+         return logger.error('ERROR');
       }
 
       const query = `SELECT * FROM calendars WHERE day_id BETWEEN $1 AND $2 AND user_id = $3 ORDER BY day_id ASC`;
