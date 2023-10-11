@@ -17,6 +17,7 @@ const {getDate} = require('./calendar');
 const query = require('./queries');
 const helmet = require('helmet');
 const logger = require('./logger')
+require('dotenv').config();
 app.use(helmet());
 
 app.use(passport.initialize());
