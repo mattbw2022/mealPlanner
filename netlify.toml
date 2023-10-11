@@ -1,4 +1,2 @@
-[[redirects]]
-  from = "/*"
-  status = 200
-  to = "/index.jade"
+[[build]]
+  functions = "functions"

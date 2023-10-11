@@ -6,7 +6,6 @@ var morgan = require('morgan');
 var session = require('express-session');
 // var store = new session.MemoryStore();
 var LocalStrategy = require('passport-local').Strategy;
-var app = express();
 var passport = require('passport');
 const queries = require('./queries');
 const helper = require('./helper');
@@ -17,6 +16,8 @@ const {getDate} = require('./calendar');
 const query = require('./queries');
 const helmet = require('helmet');
 const logger = require('./logger')
+const serverLess = require('serverless-http');
+var app = express();
 app.use(helmet());
 
 app.use(passport.initialize());
@@ -87,7 +88,7 @@ app.use((req, res, next) => {
   res.locals.messages = req.flash();
   next();
 });
-
+var router = express.Router();
 var indexRouter = require('./routes/index');
 var recipesRouter = require('./routes/recipes');
 var listsRouter = require('./routes/lists');
@@ -99,7 +100,7 @@ var logoutRouter = require('./routes/logout');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.use('/.netlify/function/app', router)
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -177,4 +178,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports.handler = serverLess(app);
