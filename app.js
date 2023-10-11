@@ -113,55 +113,55 @@ app.use('/register', registerRouter);
 app.use('/calendar', calendarRouter);
 app.use('/logout', logoutRouter);
 
-// const checkDate = new Date();
-// checkDate.setMilliseconds();
-// setInterval(async () => {
-//   const date = getDate(helper.createTimestamp(Date.now()));
-//   const addDate = date.year + 1;
-//   const userIdAdditionQuery = await pool.query(
-//   `SELECT DISTINCT user_id 
-//   FROM calendars 
-//   WHERE user_id NOT IN (
-//       SELECT DISTINCT user_id 
-//       FROM calendars 
-//       WHERE year = $1);`, [addDate]);
-//   const userIdAdditions = userIdAdditionQuery.rows;
-//   if (userIdAdditions.length >= 1){
-//     try {
-//       for (let i = 0; i < userIdAdditions.length; i++){ 
-//         query.updateCalendars(date.year, userIdAdditions[i]);
-//       }
-//     } catch (error) {
-//       console.error('Error executing query:', error);
-//     }
-//     logger.info('Calendar updates successful.');
-//   }
-//   else{
-//     logger.info('No calendar additions needed.');
-//   }
-//   const deleteDate = date.year - 2;
-//   const userIdDeletionQuery = await pool.query(
-//     `SELECT DISTINCT user_id 
-//     FROM calendars 
-//     WHERE user_id IN (
-//         SELECT DISTINCT user_id 
-//         FROM calendars 
-//         WHERE year = $1);`, [deleteDate]
-//   )
-//   const userIdDeletes = userIdDeletionQuery.rows;
-//   if (userIdDeletes.length >= 1){
-//     try {
-//       for (let i = 0; i < userIdDeletes.length; i++){ 
-//         pool.query('DELETE FROM calendars WHERE user_id = $1 AND year = $2', [userIdDeletes[i], deleteDate]);
-//       }
-//     } catch (error) {
-//       logger.error('Error executing query:', error);
-//     }
-//   }
-//   else{
-//     logger.info('No calendar deletetions needed.');
-//   }
-// }, 4320000); //check every 12 hours
+const checkDate = new Date();
+checkDate.setMilliseconds();
+setInterval(async () => {
+  const date = getDate(helper.createTimestamp(Date.now()));
+  const addDate = date.year + 1;
+  const userIdAdditionQuery = await pool.query(
+  `SELECT DISTINCT user_id 
+  FROM calendars 
+  WHERE user_id NOT IN (
+      SELECT DISTINCT user_id 
+      FROM calendars 
+      WHERE year = $1);`, [addDate]);
+  const userIdAdditions = userIdAdditionQuery.rows;
+  if (userIdAdditions.length >= 1){
+    try {
+      for (let i = 0; i < userIdAdditions.length; i++){ 
+        query.updateCalendars(date.year, userIdAdditions[i]);
+      }
+    } catch (error) {
+      console.error('Error executing query:', error);
+    }
+    logger.info('Calendar updates successful.');
+  }
+  else{
+    logger.info('No calendar additions needed.');
+  }
+  const deleteDate = date.year - 2;
+  const userIdDeletionQuery = await pool.query(
+    `SELECT DISTINCT user_id 
+    FROM calendars 
+    WHERE user_id IN (
+        SELECT DISTINCT user_id 
+        FROM calendars 
+        WHERE year = $1);`, [deleteDate]
+  )
+  const userIdDeletes = userIdDeletionQuery.rows;
+  if (userIdDeletes.length >= 1){
+    try {
+      for (let i = 0; i < userIdDeletes.length; i++){ 
+        pool.query('DELETE FROM calendars WHERE user_id = $1 AND year = $2', [userIdDeletes[i], deleteDate]);
+      }
+    } catch (error) {
+      logger.error('Error executing query:', error);
+    }
+  }
+  else{
+    logger.info('No calendar deletetions needed.');
+  }
+}, 4320000); //check every 12 hours
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
