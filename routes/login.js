@@ -10,14 +10,6 @@ let wrongPassword = false;
 const logger = require('../logger');
 
 router.get('/', function(req, res, next) {
-  try {
-    logger.info('Login page');
-
-  } catch (error) {
-    console.log(error);
-  }
-
-
     res.render('login', undefined);
   });
 

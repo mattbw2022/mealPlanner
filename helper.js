@@ -5,6 +5,7 @@ const fs = require('fs');
 const fileType = require('file-type-ext');  
 const multer = require('multer');
 const sharp = require('sharp');
+const logger = require('./logger');
 
 
 AWS.config.update({
@@ -32,6 +33,7 @@ function isLoggedIn(req, res, next) {
   function ensureAuthentication(req, res, next) {
     if (!req.session.authenticated || !req.session.user || !req.session.user.id) {
       req.flash('error', 'You must be logged in to add recipes to a calendar or create recipes.');
+      logger.info('Not Authenticated')
       return res.redirect('/login');
     }
     next();

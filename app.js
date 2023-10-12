@@ -17,7 +17,18 @@ const {getDate} = require('./calendar');
 const query = require('./queries');
 const helmet = require('helmet');
 const logger = require('./logger')
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com'],
+      imgSrc: ["'self'", 'mealplanner-recipe-images.s3.us-east-2.amazonaws.com', 
+      'mealplanner-user-images.s3.us-east-2.amazonaws.com'],
+      fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
+    },
+  })
+);
 
 app.use(passport.initialize());
 passport.serializeUser((user, done) => {
