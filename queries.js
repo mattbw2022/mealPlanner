@@ -101,7 +101,7 @@ async function findUserById(id){
       const user = results.rows[0];
       return user;      
    } catch (error) {
-      throw new Error('Unable to find user by id in users table');  
+      logger.error(error);  
    }
 }
 
@@ -117,8 +117,8 @@ async function addToCalendar(day, month, year, user_id, meal_id){
          await pool.query(query, values);
    }
    catch(error){
-      throw new Error('Unable to add to calendars table.');
-   }
+      logger.error(error);
+   }  
 }
 
 async function addRecipe(recipe, user_id, image, time){
@@ -155,7 +155,7 @@ async function getAllRecipes(){
       const results = await pool.query(query);
       return results.rows;      
    } catch (error) {
-      throw new Error('Unable to get all recipes from recipes table');
+      logger.error(error);
    }
 
 }
