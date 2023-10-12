@@ -97,8 +97,7 @@ var calendarRouter = require('./routes/calendar');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
-
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/public/views'));
 app.set('view engine', 'jade');
 
 app.use(morgan('dev'));
