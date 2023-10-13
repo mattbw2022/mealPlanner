@@ -10,6 +10,7 @@ let wrongPassword = false;
 const logger = require('../logger');
 
 router.get('/', function(req, res, next) {
+    console.log(req.session);
     res.render('login', undefined);
   });
 
@@ -40,8 +41,8 @@ router.post('/', [check('email').isEmail().normalizeEmail()] , async function(re
           id: user.id,
           sessionID: req.sessionID
         }
+        console.log(req.session);
         res.redirect("/profile")
-
     } else {
       wrongPassword = true;
       res.render("login", {wrongPassword: wrongPassword});

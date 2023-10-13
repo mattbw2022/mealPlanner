@@ -2,19 +2,14 @@ var express = require('express');
 var router = express.Router();
 const helper = require('../helper');
 const query = require('../queries');
-const axios = require('axios');
-const cheerio = require('cheerio');
 const calendar = require('../calendar');
-
-
-
 const userBucket = 'mealplanner-user-images';
 const recipeBucket = 'mealplanner-recipe-images';
 
 
 router.get('/', async function(req, res, next) {
   let options = {};
-
+  console.log('session');
   let allRecipes = await query.getAllRecipes();
     for(let i = 0; i < allRecipes.length; i++){
       allRecipes[i].image = await helper.getSignedUrl(allRecipes[i].image, recipeBucket);

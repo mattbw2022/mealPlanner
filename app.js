@@ -22,7 +22,7 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'https://fonts.googleapis.com'],
       imgSrc: ["'self'", 'mealplanner-recipe-images.s3.us-east-2.amazonaws.com', 
       'mealplanner-user-images.s3.us-east-2.amazonaws.com'],
       fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
