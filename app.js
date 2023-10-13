@@ -22,7 +22,8 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'https://fonts.googleapis.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'mealplanner-recipe-images.s3.us-east-2.amazonaws.com', 
       'mealplanner-user-images.s3.us-east-2.amazonaws.com'],
       fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
@@ -66,7 +67,7 @@ passport.use(new LocalStrategy(
 //   secret: "D53gxl41G", // Secret used to sign the session ID cookie
 //   cookie: {
 //     maxAge: 172800000, // 2 days in milliseconds
-//     secure: process.env.NODE_ENV === 'true', // Set to true in production
+//     secure: process.env.NODE_ENV === 'false', // Set to true in production
 //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
 //     httpOnly: true,    // Only accessible through HTTP(S) requests
 //   },
@@ -79,7 +80,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     httpOnly: true,
   },
