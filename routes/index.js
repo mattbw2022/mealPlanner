@@ -9,7 +9,7 @@ const recipeBucket = 'mealplanner-recipe-images';
 
 router.get('/', async function(req, res, next) {
   let options = {};
-  console.log('session');
+  console.log(req.session);
   let allRecipes = await query.getAllRecipes();
     for(let i = 0; i < allRecipes.length; i++){
       allRecipes[i].image = await helper.getSignedUrl(allRecipes[i].image, recipeBucket);
