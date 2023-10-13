@@ -22,8 +22,8 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'https://fonts.googleapis.com',
-    'https://fonts.gstatic.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 
+      'fonts.googleapis.com', 'fonts.gstatic.com'],
       imgSrc: ["'self'", 'mealplanner-recipe-images.s3.us-east-2.amazonaws.com', 
       'mealplanner-user-images.s3.us-east-2.amazonaws.com'],
       fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
@@ -75,7 +75,7 @@ passport.use(new LocalStrategy(
 //   saveUninitialized: false,
 //   store: store,
 // }));
-
+app.set("trust proxy", 1);
 app.use(session({
   secret: process.env.SESSION_SECRET,
   cookie: {
