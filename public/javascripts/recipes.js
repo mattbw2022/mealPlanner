@@ -67,8 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function swapCalendarImg(event){
       const id = event.target.id;
       const index = id.split('-');
-      const whiteCalendar = document.getElementById(`white-${index}`);
-      const goldCalendar = document.getElementById(`gold-${index}`); 
+      console.log('index');
+      const whiteCalendar = document.getElementById(`white-${index[1]}`);
+      const goldCalendar = document.getElementById(`gold-${index[1]}`); 
       if (event.type === 'mouseover'){ 
         whiteCalendar.style.display = 'none';
         goldCalendar.style.display = 'grid';
