@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function prepAddRecipe(event) {
         const button = event.target;
-        const formId = button.id.split('-')
+        const formId = button.id.split('-');
         const otherButton = document.getElementById(`white-${formId[1]}`);
         const form = document.getElementById(`form-${formId[1]}`);
         form.style.display = 'grid';
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function swapCalendarImg(event){
       const id = event.target.id;
-      const index = id[(id.length - 1)]
+      const index = id.split('-');
       const whiteCalendar = document.getElementById(`white-${index}`);
       const goldCalendar = document.getElementById(`gold-${index}`); 
       if (event.type === 'mouseover'){ 
