@@ -19,7 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         favoriteBtn.addEventListener('click', handleFavorite)
     }
     for (const calendar of whiteCalendars){
-      calendar.addEventListener('mouseover', swapCalendarImg);
+      if (isMobileTablet()){
+        calendar.addEventListener('click', prepAddRecipe);
+      }
+      else{
+        calendar.addEventListener('mouseover', swapCalendarImg);
+      }
     }
     for (const button of addRecipeButtons) {
         document.getElementById(button.id).style.display = 'none';
